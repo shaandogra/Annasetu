@@ -113,12 +113,21 @@ a {
 }
 
 .brand-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  object-position: center 36%;
+  background: #080d1a;
+  border: 2px solid #10b981;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.6), inset 0 0 8px rgba(16, 185, 129, 0.35);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.brand-logo:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.85);
 }
 
 .brand-title {
@@ -1090,45 +1099,263 @@ a {
   color: #fff;
 }
 
-/* Auth Portal Layout */
-.auth-wrapper {
-  max-width: 980px;
-  margin: 1.5rem auto 3rem;
+/* Top-Right Minimal Auth Portal Layout */
+.top-right-auth-layout {
+  max-width: 1350px;
+  margin: 0.5rem auto 2.5rem;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+  grid-template-columns: 1.15fr 390px;
+  gap: 2.5rem;
+  align-items: start;
 }
 
-@media (min-width: 860px) {
-  .auth-wrapper {
-    grid-template-columns: 1.15fr 0.85fr;
-    align-items: start;
-  }
+.auth-showcase-panel {
+  padding: 0.5rem 0;
 }
 
-.auth-card {
-  padding: 2.25rem;
+.brand-tag-glow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.775rem;
+  font-weight: 700;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 1rem;
+}
+
+.auth-showcase-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 0.85rem;
+  background: linear-gradient(135deg, #ffffff 40%, #a7f3d0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-showcase-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+  max-width: 640px;
+}
+
+.auth-metrics-compact {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  max-width: 580px;
+}
+
+.auth-metric-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.85rem;
+}
+
+.auth-metric-num {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.auth-metric-lbl {
+  font-size: 0.725rem;
+  color: var(--text-muted);
+}
+
+.auth-trust-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+
+.trust-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-muted);
+}
+
+.trust-badge-item strong {
+  color: #ffffff;
+}
+
+/* Minimal Auth Card (Positioned to Top Right) */
+.auth-card-minimal {
+  padding: 1.5rem 1.6rem;
+  border-radius: var(--radius-lg);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin-left: auto; /* Push to right */
 }
 
-.auth-card::before {
+.auth-card-minimal::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 3px;
   background: linear-gradient(90deg, #10b981, #3b82f6);
-  transition: background var(--transition-smooth);
 }
 
-.auth-card.role-donor-active::before {
+.auth-card-minimal.role-donor-active::before {
   background: linear-gradient(90deg, #10b981, #059669);
 }
 
-.auth-card.role-ngo-active::before {
+.auth-card-minimal.role-ngo-active::before {
   background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+/* Auth Card Visible Logo & Brand */
+.auth-card-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-card-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 36%;
+  background: #080d1a;
+  border: 2px solid #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+  flex-shrink: 0;
+}
+
+.auth-brand-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.auth-brand-heading h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+  color: #ffffff;
+}
+
+.auth-brand-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-pill);
+}
+
+.auth-card-sub {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+}
+
+/* Minimal Segmented Tabs */
+.minimal-role-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+.minimal-role-tabs .auth-role-btn {
+  padding: 0.45rem 0.4rem;
+  font-size: 0.8rem;
+}
+
+.minimal-mode-switch {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1.15rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.minimal-mode-switch .auth-mode-tab {
+  font-size: 0.85rem;
+  padding: 0.35rem 0 0.55rem;
+}
+
+.form-input-minimal {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Minimal Quick Test Credentials Chips */
+.demo-minimal-box {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.demo-minimal-label {
+  display: block;
+  font-size: 0.725rem;
+  color: var(--text-dim);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.45rem;
+}
+
+.demo-minimal-chips {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.mini-chip-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 0.3rem 0.55rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mini-chip-btn:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.mini-chip-btn.ngo-chip:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #93c5fd;
+}
+
+.mini-chip-btn.warn-chip:hover {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
 }
 
 /* Unified Role Switcher Pills inside Login Page */

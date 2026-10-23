@@ -853,9 +853,11 @@ function updateAuthRoleUI() {
 
     if (labelUserId) labelUserId.innerText = 'Donor User ID or Official Email';
     if (inputUserId) inputUserId.placeholder = 'e.g. donor_hotel or donor@grandpalace.com';
-    if (roleHint) roleHint.innerText = 'Role: Food Donor';
+    if (roleHint) roleHint.innerText = 'Donor Access';
+    const sub = document.getElementById('authSubtitleRole');
+    if (sub) sub.innerText = 'Secure Food Donor Gateway';
     if (btnSubmit) {
-      btnSubmit.innerHTML = '⚡ Sign In as Food Donor';
+      btnSubmit.innerHTML = '⚡ Sign In as Donor';
       btnSubmit.style.background = 'linear-gradient(135deg, #10b981 0%, #047857 100%)';
     }
   } else {
@@ -867,9 +869,11 @@ function updateAuthRoleUI() {
 
     if (labelUserId) labelUserId.innerText = 'NGO User ID or Official Email';
     if (inputUserId) inputUserId.placeholder = 'e.g. ngo_asha or contact@ashashelter.org';
-    if (roleHint) roleHint.innerText = 'Role: Recipient Shelter / NGO';
+    if (roleHint) roleHint.innerText = 'Shelter NGO Access';
+    const sub = document.getElementById('authSubtitleRole');
+    if (sub) sub.innerText = 'Verified Recipient Shelter Gateway';
     if (btnSubmit) {
-      btnSubmit.innerHTML = '⚡ Sign In as Recipient NGO';
+      btnSubmit.innerHTML = '⚡ Sign In as NGO';
       btnSubmit.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
     }
   }

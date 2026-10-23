@@ -189,217 +189,206 @@
     </section>
 
     <!-- ==========================================
-         VIEW 0: UNIFIED AUTHENTICATION (NGO & DONORS)
+         VIEW 0: TOP-RIGHT MINIMAL PORTAL AUTHENTICATION
          ========================================== -->
     <section id="viewAuth" class="portal-view">
-      <div class="view-header">
-        <div class="view-title-group">
-          <h2>🔐 Unified Portal Access: Donors & Verified NGOs</h2>
-          <p class="view-subtitle">Single gateway for commercial food donors and verified community shelters with role-based cryptographic clearance.</p>
-        </div>
-      </div>
+      <div class="auth-wrapper top-right-auth-layout">
+        
+        <!-- Left Side: Atmospheric Platform Briefing & Live Proof -->
+        <div class="auth-showcase-panel">
+          <div class="brand-tag-glow">
+            <span class="pulse-dot"></span>
+            <span>FSSAI Compliant · Real-Time Cold-Chain Security</span>
+          </div>
 
-      <div class="auth-wrapper">
-        <!-- Main Login & Registration Card -->
-        <div class="glass-panel auth-card role-donor-active" id="authMainCard">
+          <h1 class="auth-showcase-title">
+            Time-Critical Surplus Food Rescue & Verification
+          </h1>
+
+          <p class="auth-showcase-desc">
+            Hotels, commercial kitchens, and banquets discard fresh, untouched meals while shelters starve just kilometers away. AnnaSetu bridges this gap before meals perish using proximity matching, atomic reservation locks, and cryptographic 4-digit handover codes.
+          </p>
+
+          <div class="auth-metrics-compact">
+            <div class="auth-metric-item">
+              <div class="auth-metric-num">365+</div>
+              <div class="auth-metric-lbl">Meals Rescued Today</div>
+            </div>
+            <div class="auth-metric-item">
+              <div class="auth-metric-num">1.8 km</div>
+              <div class="auth-metric-lbl">Avg Response Radius</div>
+            </div>
+            <div class="auth-metric-item">
+              <div class="auth-metric-num">100%</div>
+              <div class="auth-metric-lbl">PIN Verified Handoffs</div>
+            </div>
+          </div>
+
+          <div class="auth-trust-badges">
+            <div class="trust-badge-item">
+              <span>🛡️</span> <strong>Zero Double-Claims</strong> · Atomic locking engine
+            </div>
+            <div class="trust-badge-item">
+              <span>⏱️</span> <strong>Strict Countdown</strong> · Auto-expires past shelf-life
+            </div>
+            <div class="trust-badge-item">
+              <span>📋</span> <strong>Immutable Log</strong> · Full municipal chain of custody
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Top-Right Minimal Login Card -->
+        <div class="glass-panel auth-card auth-card-minimal role-donor-active" id="authMainCard">
           
-          <!-- Unified Role Selector Pills (Food Donor vs Recipient NGO) -->
-          <div class="auth-role-tabs">
+          <!-- Visible AnnaSetu Logo & Brand Header inside Login Card -->
+          <div class="auth-card-brand">
+            <img src="assets/logo.jpg" alt="AnnaSetu Emblem" class="auth-card-logo" id="authCardLogo">
+            <div class="auth-brand-text">
+              <div class="auth-brand-heading">
+                <h3>AnnaSetu</h3>
+                <span class="auth-brand-pill">Portal Access</span>
+              </div>
+              <span class="auth-card-sub" id="authSubtitleRole">Secure Food Donor Gateway</span>
+            </div>
+          </div>
+
+          <!-- Minimal Segmented Role Toggle (Donor vs NGO) -->
+          <div class="auth-role-tabs minimal-role-tabs">
             <button class="auth-role-btn active donor" id="btnRoleDonor" type="button" onclick="setAuthRole('donor')">
-              🏨 Food Donor (Kitchen/Hotel)
+              🏨 Food Donor
             </button>
             <button class="auth-role-btn ngo" id="btnRoleNgo" type="button" onclick="setAuthRole('ngo')">
-              🤝 Recipient NGO (Shelter/Home)
+              🤝 Recipient NGO
             </button>
           </div>
 
-          <!-- Mode Toggle: Sign In vs Create Account -->
-          <div class="auth-mode-switch">
+          <!-- Minimal Mode Switch: Sign In vs Register -->
+          <div class="auth-mode-switch minimal-mode-switch">
             <button class="auth-mode-tab active" id="tabModeSignIn" type="button" onclick="setAuthMode('signin')">
-              🔑 Sign In
+              Sign In
             </button>
             <button class="auth-mode-tab" id="tabModeRegister" type="button" onclick="setAuthMode('register')">
-              📝 Register New Organization
+              Create Account
             </button>
           </div>
 
-          <!-- Dynamic Error Alert Banner (with animated shake) -->
+          <!-- Error Alert Banner (with animated shake) -->
           <div class="auth-error-alert" id="authErrorAlert">
             <div class="error-title">
               <span>⚠️</span>
               <span id="authErrorTitle">Authentication Error</span>
             </div>
-            <div id="authErrorMessage"></div>
+            <div id="authErrorMessage" style="font-size: 0.8rem;"></div>
             <div id="authErrorAction"></div>
           </div>
 
-          <!-- TAB 1: SIGN IN FORM -->
+          <!-- TAB 1: MINIMAL SIGN IN FORM -->
           <form id="formSignIn" onsubmit="handleAuthLogin(event)">
-            <div class="form-group">
-              <label class="form-label" for="authUserId" id="labelAuthUserId">
-                Donor User ID or Official Email
+            <div class="form-group" style="margin-bottom: 0.85rem;">
+              <label class="form-label" for="authUserId" id="labelAuthUserId" style="font-size: 0.8rem;">
+                User ID or Official Email
               </label>
-              <input type="text" id="authUserId" class="form-input" placeholder="e.g. donor_hotel or donor@grandpalace.com" required autocomplete="username">
+              <input type="text" id="authUserId" class="form-input form-input-minimal" placeholder="e.g. donor_hotel or email@domain.com" required autocomplete="username">
             </div>
 
-            <div class="form-group">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-                <label class="form-label" for="authPassword" style="margin-bottom: 0;">Password</label>
-                <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.8rem; color: #93c5fd; text-decoration: underline;">
-                  Forgot Password?
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <label class="form-label" for="authPassword" style="font-size: 0.8rem; margin-bottom: 0;">Password</label>
+                <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.75rem; color: #93c5fd; text-decoration: underline;">
+                  Forgot?
                 </a>
               </div>
               <div class="password-field-group">
-                <input type="password" id="authPassword" class="form-input" placeholder="Enter account password" required autocomplete="current-password">
+                <input type="password" id="authPassword" class="form-input form-input-minimal" placeholder="••••••••" required autocomplete="current-password">
                 <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('authPassword')" title="Show / Hide Password">
                   👁️
                 </button>
               </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-              <label style="font-size: 0.825rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.45rem; cursor: pointer;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <label style="font-size: 0.775rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
                 <input type="checkbox" id="authRemember" checked style="accent-color: var(--primary);">
-                Remember this workstation
+                Remember session
               </label>
-              <span style="font-size: 0.775rem; color: var(--text-dim);" id="roleIndicatorHint">
-                Role: Food Donor
+              <span style="font-size: 0.725rem; color: var(--text-dim);" id="roleIndicatorHint">
+                Donor Access
               </span>
             </div>
 
-            <button type="submit" class="btn-primary" id="btnSubmitAuth" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.85rem;">
-              ⚡ Sign In as Food Donor
+            <button type="submit" class="btn-primary" id="btnSubmitAuth" style="width: 100%; justify-content: center; font-size: 0.925rem; padding: 0.75rem;">
+              ⚡ Sign In
             </button>
           </form>
 
-          <!-- TAB 2: REGISTER ACCOUNT FORM (Hidden initially) -->
+          <!-- TAB 2: MINIMAL REGISTER FORM -->
           <form id="formRegister" onsubmit="handleAuthRegister(event)" style="display: none;">
-            
-            <div class="form-group">
-              <label class="form-label" for="regOrgName">Organization / Facility Name</label>
-              <input type="text" id="regOrgName" class="form-input" placeholder="e.g. Apex Luxury Banquets or Hope Shelter" required>
+            <div class="form-group" style="margin-bottom: 0.7rem;">
+              <label class="form-label" for="regOrgName" style="font-size: 0.775rem;">Organization Name</label>
+              <input type="text" id="regOrgName" class="form-input form-input-minimal" placeholder="e.g. Grand Palace Kitchen" required>
             </div>
 
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="regUserId">Desired User ID</label>
-                <input type="text" id="regUserId" class="form-input" placeholder="e.g. apex_kitchen" required pattern="[A-Za-z0-9_]{3,20}" title="Letters, numbers and underscores only (3-20 chars)">
+            <div class="form-row-2" style="margin-bottom: 0.7rem;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="regUserId" style="font-size: 0.775rem;">User ID</label>
+                <input type="text" id="regUserId" class="form-input form-input-minimal" placeholder="e.g. grand_kitchen" required pattern="[A-Za-z0-9_]{3,20}">
               </div>
-              <div class="form-group">
-                <label class="form-label" for="regPhone">Helpline / Phone Number</label>
-                <input type="tel" id="regPhone" class="form-input" placeholder="+91 98765-XXXXX" required>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="regPhone" style="font-size: 0.775rem;">Phone</label>
+                <input type="tel" id="regPhone" class="form-input form-input-minimal" placeholder="+91 98765-XXXXX" required>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label" for="regEmail">Official Email Address</label>
-              <input type="email" id="regEmail" class="form-input" placeholder="contact@organization.org" required>
-              <span style="font-size: 0.725rem; color: var(--text-dim); margin-top: 0.2rem; display: block;">
-                ℹ️ A 6-digit cryptographic verification code will be dispatched to this email.
-              </span>
+            <div class="form-group" style="margin-bottom: 0.7rem;">
+              <label class="form-label" for="regEmail" style="font-size: 0.775rem;">Official Email</label>
+              <input type="email" id="regEmail" class="form-input form-input-minimal" placeholder="contact@domain.com" required>
             </div>
 
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="regPassword">Password (Min 6 chars)</label>
+            <div class="form-row-2" style="margin-bottom: 0.7rem;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="regPassword" style="font-size: 0.775rem;">Password</label>
                 <div class="password-field-group">
-                  <input type="password" id="regPassword" class="form-input" placeholder="••••••••" required minlength="6">
+                  <input type="password" id="regPassword" class="form-input form-input-minimal" placeholder="••••••••" required minlength="6">
                   <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('regPassword')">👁️</button>
                 </div>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="regPasswordConfirm">Confirm Password</label>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="regPasswordConfirm" style="font-size: 0.775rem;">Confirm</label>
                 <div class="password-field-group">
-                  <input type="password" id="regPasswordConfirm" class="form-input" placeholder="••••••••" required minlength="6">
+                  <input type="password" id="regPasswordConfirm" class="form-input form-input-minimal" placeholder="••••••••" required minlength="6">
                   <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('regPasswordConfirm')">👁️</button>
                 </div>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label" for="regAddress">Physical Dispatch / Kitchen Address</label>
-              <input type="text" id="regAddress" class="form-input" placeholder="e.g. Industrial Area Gate 3, Sector 12" required>
+            <div class="form-group" style="margin-bottom: 0.85rem;">
+              <label class="form-label" for="regAddress" style="font-size: 0.775rem;">Physical Address</label>
+              <input type="text" id="regAddress" class="form-input form-input-minimal" placeholder="Gate 2, MG Road" required>
             </div>
 
-            <button type="submit" class="btn-primary" id="btnSubmitRegister" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.85rem;">
-              ✉️ Create Account & Verify Email
+            <button type="submit" class="btn-primary" id="btnSubmitRegister" style="width: 100%; justify-content: center; font-size: 0.9rem; padding: 0.75rem;">
+              ✉️ Create & Verify Email
             </button>
           </form>
 
-          <!-- Interactive Demo Accounts Panel (Judge & Rapid Testing Mode) -->
-          <div class="demo-accounts-panel">
-            <div class="demo-accounts-title">
-              <span>⚡</span>
-              <span>1-Click Test Credentials (Click to Auto-Fill)</span>
-            </div>
-            <div class="demo-chips-grid">
-              
-              <button type="button" class="demo-chip-btn" onclick="fillDemoCredentials('donor_hotel', 'GrandPalace@2026', 'donor')">
-                <div>
-                  <div class="demo-chip-name">🏨 Hotel Grand Palace (Donor)</div>
-                  <div class="demo-chip-desc">ID: <code>donor_hotel</code> · Pass: <code>GrandPalace@2026</code></div>
-                </div>
-                <span class="demo-chip-badge">Verified</span>
+          <!-- Minimal Quick-Fill Test Credentials Chips -->
+          <div class="demo-minimal-box">
+            <span class="demo-minimal-label">⚡ 1-Click Test Credentials:</span>
+            <div class="demo-minimal-chips">
+              <button type="button" class="mini-chip-btn" onclick="fillDemoCredentials('donor_hotel', 'GrandPalace@2026', 'donor')" title="Login as Hotel Grand Palace">
+                🏨 Donor
               </button>
-
-              <button type="button" class="demo-chip-btn" onclick="fillDemoCredentials('ngo_asha', 'AshaShelter@2026', 'ngo')">
-                <div>
-                  <div class="demo-chip-name">🤝 Asha Community Shelter (NGO)</div>
-                  <div class="demo-chip-desc">ID: <code>ngo_asha</code> · Pass: <code>AshaShelter@2026</code></div>
-                </div>
-                <span class="demo-chip-badge">Verified</span>
+              <button type="button" class="mini-chip-btn ngo-chip" onclick="fillDemoCredentials('ngo_asha', 'AshaShelter@2026', 'ngo')" title="Login as Asha Shelter NGO">
+                🤝 Shelter NGO
               </button>
-
-              <button type="button" class="demo-chip-btn" onclick="fillDemoCredentials('donor_bakery', 'Bakery@2026', 'donor')">
-                <div>
-                  <div class="demo-chip-name">⚠️ Artisan Bakery Hub (Unverified Test)</div>
-                  <div class="demo-chip-desc">ID: <code>donor_bakery</code> · Triggers Email Verification Error & Flow</div>
-                </div>
-                <span class="demo-chip-badge warn">Needs Email Verify</span>
+              <button type="button" class="mini-chip-btn warn-chip" onclick="fillDemoCredentials('donor_bakery', 'Bakery@2026', 'donor')" title="Test Unverified Email Flow">
+                ⚠️ Test Email OTP
               </button>
-
             </div>
           </div>
 
         </div>
 
-        <!-- Sidebar Feature Highlights & Security Standards -->
-        <div class="glass-panel auth-info-card">
-          <h3 style="font-size: 1.25rem;">Why AnnaSetu Enforces Role Verification</h3>
-          
-          <div class="auth-feature-item">
-            <div class="auth-feature-icon">⏱️</div>
-            <div class="auth-feature-text">
-              <h4>Perishable Countdown Window</h4>
-              <p>Cooked kitchen surplus has a strict 2 to 4 hour shelf-life. Only verified accounts can issue atomic pickup locks to prevent delays.</p>
-            </div>
-          </div>
-
-          <div class="auth-feature-item">
-            <div class="auth-feature-icon">🛡️</div>
-            <div class="auth-feature-text">
-              <h4>Cryptographic Handover PINs</h4>
-              <p>Every claim generates an immutable 4-digit pickup token. Physical handovers are verified in-person at the kitchen loading dock.</p>
-            </div>
-          </div>
-
-          <div class="auth-feature-item">
-            <div class="auth-feature-icon">📋</div>
-            <div class="auth-feature-text">
-              <h4>FSSAI Chain-of-Custody</h4>
-              <p>Both donor and shelter identities are recorded in the municipality's real-time food recovery telemetry ledger.</p>
-            </div>
-          </div>
-
-          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-md); padding: 1rem;">
-            <div style="font-size: 0.85rem; font-weight: 700; color: #34d399; margin-bottom: 0.35rem;">
-              🧪 Evaluation Instructions for Hackathon Judges
-            </div>
-            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
-              Use the 1-click test chips on the left to sign in as either role, test intentional wrong credentials to see error handling, or test the unverified account to experience live email verification!
-            </p>
-          </div>
-        </div>
       </div>
     </section>
 
