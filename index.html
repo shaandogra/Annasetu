@@ -649,10 +649,28 @@
     <section id="viewDonor" class="portal-view w-full">
       <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-12 flex flex-col gap-8">
         
-        <div>
-          <span class="text-xs font-bold tracking-widest text-primary uppercase font-['Public_Sans']">Food Donor Command</span>
-          <h2 class="text-3xl md:text-4xl font-['Noto_Serif'] font-bold text-on-surface mt-1">Hotel Grand Palace Central Kitchen</h2>
-          <p class="text-sm text-on-surface-variant mt-2">Publish fresh surplus with strict perishability windows and verify recipient physical pickup PINs.</p>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-surface-variant/40">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold tracking-widest text-primary uppercase font-['Public_Sans']">Food Donor Command</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-800 text-[11px] font-bold border border-emerald-500/30 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px] text-emerald-600">verified</span> FSSAI &amp; GSTIN Verified
+              </span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-['Noto_Serif'] font-bold text-on-surface mt-1" id="donorHeaderBusinessName">Hotel Grand Palace Central Kitchen</h2>
+            <div class="flex flex-wrap items-center gap-3 mt-2 text-xs text-on-surface-variant">
+              <span class="flex items-center gap-1 text-emerald-700 font-semibold" id="donorHeaderFssai">
+                <span class="material-symbols-outlined text-[15px]">shield</span> FSSAI Central License #11521018000412 (4.9★ Green Hygiene)
+              </span>
+              <span>•</span>
+              <span class="flex items-center gap-1 text-blue-700 font-semibold" id="donorHeaderGstin">
+                <span class="material-symbols-outlined text-[15px]">account_balance</span> GSTIN: 07AABCH1234F1Z9 (Active Taxpayer)
+              </span>
+            </div>
+          </div>
+          <button class="px-5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-semibold text-xs border border-outline-variant/30 flex items-center gap-2 shadow-sm transition-all whitespace-nowrap self-start md:self-auto" onclick="openDonorRegisterModal()">
+            <span class="material-symbols-outlined text-[17px] text-emerald-600">add_business</span> Register New Kitchen (KYC)
+          </button>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1010,6 +1028,17 @@
             </div>
           </div>
 
+          <!-- Commercial Food Donor Registration Link -->
+          <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-4">
+            <div>
+              <strong class="text-xs text-emerald-950 block font-semibold">Commercial Kitchen, Hotel or Caterer?</strong>
+              <span class="text-[11px] text-emerald-800">Register with verified FSSAI Food Safety License &amp; GSTIN for municipal CSR clearance.</span>
+            </div>
+            <button class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all whitespace-nowrap flex items-center gap-1.5" onclick="openDonorRegisterModal()">
+              <span class="material-symbols-outlined text-[16px]">verified</span> Register Kitchen
+            </button>
+          </div>
+
           <!-- Citizen Volunteer Quick Signup Link -->
           <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-4">
             <div>
@@ -1057,6 +1086,11 @@
             <button class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2 mt-2" id="btnSubmitAuth" type="submit">
               <span class="material-symbols-outlined text-[18px]">login</span> Sign In to Portal
             </button>
+
+            <div class="text-center text-xs text-on-surface-variant pt-2 border-t border-surface-variant/40 flex items-center justify-center gap-1.5">
+              <span>New food donor?</span>
+              <button type="button" class="text-emerald-700 font-bold hover:underline" onclick="openDonorRegisterModal()">Register with FSSAI &amp; GST</button>
+            </div>
           </form>
         </div>
 
@@ -1221,6 +1255,205 @@
         <input class="w-full bg-surface-container-low text-sm px-4 py-3 rounded-xl border border-outline-variant/30" id="forgotConfirmPassword" placeholder="Confirm New Password" type="password"/>
         <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="submitPasswordReset()">Confirm &amp; Update Password</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal 6b: Commercial Food Donor Registration & KYC Dialog (FSSAI + GSTIN) -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDonorRegister">
+    <div class="bg-surface-container-lowest rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-emerald-500/30 flex flex-col gap-6 modal-spring max-h-[92vh] overflow-y-auto">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[24px]">verified</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Commercial Food Donor Registration</h3>
+            <p class="text-xs text-on-surface-variant">FSSAI FoSCoS e-KYC &amp; GSTIN Verification for safe surplus redistribution</p>
+          </div>
+        </div>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/40 transition-colors" onclick="closeModal('modalDonorRegister')">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <form id="formDonorRegister" onsubmit="handleDonorRegister(event)" class="flex flex-col gap-5">
+        
+        <!-- Section 1: Business Identity -->
+        <div class="flex flex-col gap-3">
+          <span class="text-xs font-bold text-primary uppercase font-['Public_Sans'] flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">domain</span> 1. Commercial Food Establishment Profile
+          </span>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Establishment / Kitchen Legal Name *</label>
+              <input type="text" id="dRegName" required placeholder="e.g. Hotel Grand Palace Central Kitchen" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Establishment Category *</label>
+              <select id="dRegCategory" required class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="5-Star Hotel / Luxury Dining">5-Star Hotel / Luxury Dining</option>
+                <option value="Commercial Catering / Banquet Service">Commercial Catering / Banquet Service</option>
+                <option value="Corporate Cafeteria Hub / Tech Park Canteen">Corporate Cafeteria Hub / Tech Park Canteen</option>
+                <option value="Artisan Bakery & Confectionery Unit">Artisan Bakery &amp; Confectionery Unit</option>
+                <option value="QSR / Restaurant Chain Hub">QSR / Restaurant Chain Hub</option>
+                <option value="Institutional Food Facility">Institutional Food Facility</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Kitchen Address &amp; Gate *</label>
+              <input type="text" id="dRegAddress" required placeholder="e.g. Gate 2, Commercial Kitchen Yard, Sector 18" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Operating Sector / City *</label>
+              <select id="dRegSector" required class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="Sector 18 Commercial Hub">Sector 18 Commercial Hub</option>
+                <option value="Sector 62 IT & Institutional Area">Sector 62 IT &amp; Institutional Area</option>
+                <option value="Indirapuram / Vasundhara">Indirapuram / Vasundhara</option>
+                <option value="Connaught Place & Central Zone">Connaught Place &amp; Central Zone</option>
+                <option value="Sector 50 Hospitality Belt">Sector 50 Hospitality Belt</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Food Safety Officer / Executive Chef *</label>
+              <input type="text" id="dRegChef" required placeholder="e.g. Chef Sanjay Kapoor" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Kitchen Dispatch Phone *</label>
+              <input type="tel" id="dRegPhone" required placeholder="+91 98765 43210" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: FSSAI License e-KYC Verification Box -->
+        <div class="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/30 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-emerald-600 text-[20px]">shield</span>
+              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">FSSAI FoSCoS License e-KYC (14 Digits) *</span>
+            </div>
+            <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/10 text-emerald-800 border border-emerald-500/20" id="badgeFssaiStatus">Required e-KYC</span>
+          </div>
+
+          <p class="text-[11px] text-on-surface-variant leading-relaxed">
+            Every donor must hold an active FSSAI Central/State license under the Food Safety and Standards Act to guarantee zero contamination and legal safety clearance.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-2">
+            <div class="relative flex-1">
+              <input type="text" id="dRegFssai" maxlength="14" placeholder="14-Digit FSSAI License No." oninput="formatFssaiInput(this)" class="w-full bg-surface-container-low text-on-surface font-mono tracking-wider text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <span class="absolute right-3 top-2.5 text-xs text-on-surface-variant font-mono" id="fssaiDigitCounter">0/14</span>
+            </div>
+            <button type="button" id="btnVerifyFssai" onclick="verifyFssaiKyc()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">verified</span> Verify with FoSCoS
+            </button>
+            <button type="button" onclick="quickFillDemoFssai()" class="px-3 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-semibold border border-outline-variant/30 transition-all whitespace-nowrap" title="Auto-fill sample FSSAI License">
+              ⚡ Demo FSSAI
+            </button>
+          </div>
+
+          <!-- Verified FSSAI Card (initially hidden) -->
+          <div id="fssaiVerifiedCard" class="hidden items-center justify-between p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-950">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-emerald-600 text-[22px]">health_and_safety</span>
+              <div>
+                <strong class="font-bold block" id="fssaiCertCategory">Central FSSAI License (Hotel / Commercial Kitchen)</strong>
+                <span class="text-[11px] font-mono text-emerald-800" id="fssaiCertNumber">License #11521018000412 · Hygiene Rating: 4.9/5 ★ (Green Grade)</span>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-bold text-[10px]">FoSCoS Clear ✓</span>
+          </div>
+
+          <input type="hidden" id="dRegFssaiVerified" value="false">
+        </div>
+
+        <!-- Section 3: GSTIN Entity Verification Box -->
+        <div class="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/30 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[20px]">account_balance</span>
+              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">GSTIN Business Taxpayer Verification (15 Characters) *</span>
+            </div>
+            <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-primary/10 text-primary border border-primary/20" id="badgeGstinStatus">Required e-KYC</span>
+          </div>
+
+          <p class="text-[11px] text-on-surface-variant leading-relaxed">
+            Verifying your GSTIN validates business registration for CSR compliance and zero-liability municipal food rescue indemnification.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-2">
+            <div class="relative flex-1">
+              <input type="text" id="dRegGstin" maxlength="15" placeholder="e.g. 07AABCH1234F1Z9" oninput="formatGstinInput(this)" class="w-full bg-surface-container-low text-on-surface font-mono uppercase tracking-wider text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+              <span class="absolute right-3 top-2.5 text-xs text-on-surface-variant font-mono" id="gstinDigitCounter">0/15</span>
+            </div>
+            <button type="button" id="btnVerifyGstin" onclick="verifyGstinKyc()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-on-primary font-bold text-xs shadow-sm transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">task_alt</span> Verify GSTIN
+            </button>
+            <button type="button" onclick="quickFillDemoGstin()" class="px-3 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-semibold border border-outline-variant/30 transition-all whitespace-nowrap" title="Auto-fill sample GSTIN">
+              ⚡ Demo GSTIN
+            </button>
+          </div>
+
+          <!-- Verified GSTIN Card (initially hidden) -->
+          <div id="gstinVerifiedCard" class="hidden items-center justify-between p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-950">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-primary text-[22px]">verified</span>
+              <div>
+                <strong class="font-bold block" id="gstinLegalStatus">Active Regular Taxpayer · Goods &amp; Services Tax Network</strong>
+                <span class="text-[11px] font-mono text-blue-800" id="gstinCertNumber">GSTIN: 07AABCH1234F1Z9 · State Jurisdiction Zone 07</span>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-bold text-[10px]">Active Taxpayer ✓</span>
+          </div>
+
+          <input type="hidden" id="dRegGstinVerified" value="false">
+        </div>
+
+        <!-- Section 4: Account Credentials -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Official Business Email *</label>
+            <input type="email" id="dRegEmail" required placeholder="contact@grandpalace.com" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">User ID / Handle *</label>
+            <input type="text" id="dRegUsername" required placeholder="donor_hotel" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Account Password *</label>
+            <input type="password" id="dRegPassword" required placeholder="Min 6 characters" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Confirm Password *</label>
+            <input type="password" id="dRegConfirmPassword" required placeholder="Confirm password" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+          </div>
+        </div>
+
+        <!-- FSSAI Food Safe Donation Pledge -->
+        <label class="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-on-surface cursor-pointer">
+          <input type="checkbox" id="dRegPledge" required class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+          <span>
+            <strong>FSSAI Surplus Food Recovery Pledge (2019 Regulations):</strong> We certify that all surplus meals posted will adhere to food safety criteria, packed in clean food-grade containers within safe thermal holding limits (&gt;60°C hot / &lt;5°C cold).
+          </span>
+        </label>
+
+        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition-all">
+          <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+          Register Certified Donor &amp; Activate Kitchen Command
+        </button>
+
+      </form>
     </div>
   </div>
 

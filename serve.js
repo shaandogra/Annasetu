@@ -38,6 +38,12 @@ function ensureDataStore() {
         organization: "Hotel Grand Palace",
         phone: "+91 98765-43210",
         address: "Grand Palace Central Kitchen Gate 2, MG Road",
+        fssaiNumber: "11521018000412",
+        fssaiVerified: true,
+        hygieneRating: "4.9/5 ★ FSSAI Green",
+        gstin: "07AABCH1234F1Z9",
+        gstinVerified: true,
+        establishmentType: "5-Star Hotel & Central Banquet",
         verified: true,
         createdAt: new Date().toISOString()
       },
@@ -62,6 +68,12 @@ function ensureDataStore() {
         organization: "City Artisan Bakery",
         phone: "+91 98765-11223",
         address: "Connaught Lane Bakery Hub, Block C",
+        fssaiNumber: "11522025000188",
+        fssaiVerified: true,
+        hygieneRating: "4.8/5 ★ Clean Bake",
+        gstin: "07AABCB9981K1Z2",
+        gstinVerified: true,
+        establishmentType: "Artisan Bakery & Confectionery",
         verified: false,
         verifyOtp: "582914",
         otpExpiry: Date.now() + 24 * 3600 * 1000,
@@ -148,6 +160,12 @@ function sanitizeUser(u) {
     vehicle: u.vehicle || '',
     aadhaar: u.aadhaar || '',
     aadhaarVerified: !!u.aadhaarVerified,
+    fssaiNumber: u.fssaiNumber || '',
+    fssaiVerified: !!u.fssaiVerified,
+    hygieneRating: u.hygieneRating || '4.9/5 ★',
+    gstin: u.gstin || '',
+    gstinVerified: !!u.gstinVerified,
+    establishmentType: u.establishmentType || '',
     verified: !!u.verified
   };
 }
@@ -312,6 +330,12 @@ const server = http.createServer(async (req, res) => {
         vehicle: String(body.vehicle || '').trim(),
         aadhaar: String(body.aadhaar || '').trim(),
         aadhaarVerified: !!body.aadhaarVerified,
+        fssaiNumber: String(body.fssaiNumber || '').trim(),
+        fssaiVerified: !!body.fssaiVerified,
+        hygieneRating: String(body.hygieneRating || '4.9/5 ★ FSSAI Green').trim(),
+        gstin: String(body.gstin || '').trim().toUpperCase(),
+        gstinVerified: !!body.gstinVerified,
+        establishmentType: String(body.establishmentType || '').trim(),
         verified: false,
         verifyOtp,
         otpExpiry: Date.now() + 15 * 60 * 1000,
@@ -446,6 +470,77 @@ const server = http.createServer(async (req, res) => {
         maskedAadhaar: masked,
         demoOtp,
         txnId
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 3c. FSSAI LICENSE KYC VERIFICATION API (FOSCOS SIMULATOR FOR DONORS)
+  if (reqPath === '/api/auth/verify-fssai' && req.method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const rawFssai = String(body.fssaiNumber || '').replace(/\D/g, '');
+
+      if (!/^\d{14}$/.test(rawFssai)) {
+        return sendJson(res, 400, {
+          success: false,
+          error: 'FSSAI License must be exactly 14 numeric digits (e.g. 11521018000412).'
+        });
+      }
+
+      console.log(`\n========================================`);
+      console.log(`[FSSAI FoSCoS e-KYC VERIFIER - DONOR AUDIT]`);
+      console.log(`FSSAI Number: ${rawFssai}`);
+      console.log(`Hygiene Rating: 4.9/5 ★ (Green Grade Safe Surplus)`);
+      console.log(`License Category: Central Food Business Operator`);
+      console.log(`Safe Holding Audit: PASSED (Zero Contamination Protocol)`);
+      console.log(`========================================\n`);
+
+      return sendJson(res, 200, {
+        success: true,
+        message: `FSSAI License #${rawFssai} verified with national FoSCoS portal.`,
+        fssaiNumber: rawFssai,
+        licenseCategory: 'Central FSSAI License (Hotel & Commercial Kitchen)',
+        hygieneRating: '4.9/5 ★ Food Hygiene Rating',
+        expiryDate: '2029-12-31',
+        safeSurplusClearance: true
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 3d. GSTIN VERIFICATION API (GSTN TAXPAYER REGISTRY SIMULATOR FOR DONORS)
+  if (reqPath === '/api/auth/verify-gstin' && req.method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const rawGstin = String(body.gstin || '').trim().toUpperCase().replace(/[^0-9A-Z]/g, '');
+
+      if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(rawGstin)) {
+        return sendJson(res, 400, {
+          success: false,
+          error: 'Please enter a valid 15-character Indian GSTIN (e.g. 07AABCH1234F1Z9).'
+        });
+      }
+
+      const stateCode = rawGstin.substring(0, 2);
+      const panPart = rawGstin.substring(2, 12);
+
+      console.log(`\n========================================`);
+      console.log(`[GSTN TAXPAYER VERIFIER - DONOR AUDIT]`);
+      console.log(`GSTIN: ${rawGstin}`);
+      console.log(`State Jurisdiction: Code ${stateCode} (Active Regular Taxpayer)`);
+      console.log(`Associated PAN: ${panPart}`);
+      console.log(`========================================\n`);
+
+      return sendJson(res, 200, {
+        success: true,
+        message: `GSTIN ${rawGstin} verified active on Goods & Services Tax Network.`,
+        gstin: rawGstin,
+        legalStatus: 'Active Regular Taxpayer',
+        pan: panPart,
+        stateCode
       });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
