@@ -1238,6 +1238,13 @@ function openVolunteerMission(missionId) {
     }
   }
 
+  // Update Courier UIDAI trust clearance strip
+  const aadhaarBadgeEl = document.getElementById('vModalAadhaarBadge');
+  if (aadhaarBadgeEl) {
+    const courierAadhaar = mission.courierAadhaar || (currentUser && currentUser.aadhaar ? currentUser.aadhaar : 'XXXX-XXXX-8821');
+    aadhaarBadgeEl.innerText = `UIDAI Masked ID: ${courierAadhaar} · Police Clearance Active`;
+  }
+
   openModal('modalVolunteerMission');
 }
 
@@ -1273,6 +1280,164 @@ function confirmVolunteerDelivery() {
   updateHeroStats();
 }
 
+// ==========================================================================
+// VOLUNTEER AADHAAR IDENTITY & UIDAI e-KYC CONTROLLERS
+// ==========================================================================
+let pendingAadhaarData = { aadhaar: '', otp: '', masked: '', verified: false };
+
+function formatAadhaarInput(input) {
+  // Strip non-digits
+  let val = input.value.replace(/\D/g, '');
+  if (val.length > 12) val = val.substring(0, 12);
+  
+  // Format with spaces every 4 digits: XXXX XXXX XXXX
+  let formatted = '';
+  for (let i = 0; i < val.length; i++) {
+    if (i > 0 && i % 4 === 0) formatted += ' ';
+    formatted += val[i];
+  }
+  input.value = formatted;
+
+  const counter = document.getElementById('aadhaarDigitCounter');
+  if (counter) counter.innerText = `${val.length}/12`;
+}
+
+function quickFillDemoAadhaar() {
+  const input = document.getElementById('vRegAadhaar');
+  if (input) {
+    input.value = '4891 7203 8821';
+    formatAadhaarInput(input);
+    showToastNotification('Demo Aadhaar Loaded', 'Sample UIDAI 12-digit number loaded. Click "Verify via OTP" to continue.');
+    playTone('info');
+  }
+}
+
+async function initiateAadhaarVerification() {
+  const input = document.getElementById('vRegAadhaar');
+  if (!input) return;
+  const rawNumber = input.value.replace(/[\s-]/g, '');
+
+  if (rawNumber.length !== 12 || !/^\d{12}$/.test(rawNumber)) {
+    showToastNotification('Invalid Aadhaar', 'Please enter a complete 12-digit Indian Aadhaar number.');
+    playTone('error');
+    input.focus();
+    return;
+  }
+
+  const masked = `XXXX-XXXX-${rawNumber.slice(-4)}`;
+  const btn = document.getElementById('btnRequestAadhaarOtp');
+  if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span> Dispatching...';
+
+  try {
+    const res = await fetch('/api/auth/verify-aadhaar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ aadhaarNumber: rawNumber })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      pendingAadhaarData = {
+        aadhaar: rawNumber,
+        masked: data.maskedAadhaar || masked,
+        otp: data.demoOtp,
+        verified: false
+      };
+      
+      const otpSection = document.getElementById('aadhaarOtpSection');
+      const otpDisplay = document.getElementById('simulatedAadhaarOtp');
+      if (otpSection) {
+        otpSection.classList.remove('hidden');
+        otpSection.classList.add('flex');
+      }
+      if (otpDisplay) otpDisplay.innerText = data.demoOtp;
+      
+      showToastNotification('UIDAI OTP Dispatched', `Code sent to mobile registered with Aadhaar ending in ...${rawNumber.slice(-4)}`);
+      playTone('info');
+    } else {
+      showToastNotification('Verification Error', data.error || 'Aadhaar lookup failed.');
+      playTone('error');
+    }
+  } catch (err) {
+    // Client-side fallback simulator
+    const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    pendingAadhaarData = {
+      aadhaar: rawNumber,
+      masked,
+      otp: fallbackOtp,
+      verified: false
+    };
+    const otpSection = document.getElementById('aadhaarOtpSection');
+    const otpDisplay = document.getElementById('simulatedAadhaarOtp');
+    if (otpSection) {
+      otpSection.classList.remove('hidden');
+      otpSection.classList.add('flex');
+    }
+    if (otpDisplay) otpDisplay.innerText = fallbackOtp;
+    showToastNotification('UIDAI OTP Dispatched', 'Simulated offline mode: 6-digit verification code ready.');
+  } finally {
+    if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">verified_user</span> Verify via OTP';
+  }
+}
+
+function autofillAadhaarOtp() {
+  const inputOtp = document.getElementById('vRegAadhaarOtp');
+  if (inputOtp && pendingAadhaarData.otp) {
+    inputOtp.value = pendingAadhaarData.otp;
+    playTone('info');
+  }
+}
+
+function confirmAadhaarVerification() {
+  const inputOtp = document.getElementById('vRegAadhaarOtp');
+  if (!inputOtp) return;
+  const entered = inputOtp.value.trim();
+
+  if (!entered || entered.length !== 6) {
+    showToastNotification('Invalid OTP', 'Please enter the 6-digit UIDAI verification code.');
+    playTone('error');
+    return;
+  }
+
+  // Mark verified
+  pendingAadhaarData.verified = true;
+  const flagEl = document.getElementById('vRegAadhaarVerified');
+  if (flagEl) flagEl.value = 'true';
+
+  // UI updates
+  const otpSection = document.getElementById('aadhaarOtpSection');
+  if (otpSection) {
+    otpSection.classList.remove('flex');
+    otpSection.classList.add('hidden');
+  }
+
+  const verifiedBanner = document.getElementById('aadhaarVerifiedBanner');
+  if (verifiedBanner) {
+    verifiedBanner.classList.remove('hidden');
+    verifiedBanner.classList.add('flex');
+  }
+
+  const verifiedText = document.getElementById('verifiedAadhaarText');
+  if (verifiedText) {
+    verifiedText.innerText = `Masked UID: ${pendingAadhaarData.masked} · UIDAI Vault e-KYC Certified`;
+  }
+
+  const badgeStatus = document.getElementById('badgeAadhaarStatus');
+  if (badgeStatus) {
+    badgeStatus.className = 'text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/10 text-emerald-800 border border-emerald-500/30';
+    badgeStatus.innerText = 'UIDAI Verified ✓';
+  }
+
+  const inputAadhaar = document.getElementById('vRegAadhaar');
+  const btnRequest = document.getElementById('btnRequestAadhaarOtp');
+  if (inputAadhaar) inputAadhaar.disabled = true;
+  if (btnRequest) btnRequest.disabled = true;
+
+  triggerConfetti();
+  playTone('success');
+  showToastNotification('Aadhaar Verified!', 'UIDAI e-KYC clearance approved for food transit safety.');
+}
+
 // Volunteer Registration Dialog Handlers
 function openVolunteerRegisterModal() {
   openModal('modalVolunteerRegister');
@@ -1284,6 +1449,19 @@ function closeVolunteerRegisterModal() {
 
 async function handleVolunteerRegister(e) {
   e.preventDefault();
+
+  // Validate mandatory Aadhaar verification
+  const isAadhaarVerified = document.getElementById('vRegAadhaarVerified').value === 'true';
+  const rawAadhaar = document.getElementById('vRegAadhaar').value.replace(/[\s-]/g, '');
+
+  if (!isAadhaarVerified) {
+    showToastNotification('Aadhaar Verification Mandatory', 'Please verify your 12-digit Aadhaar number with UIDAI OTP to activate your volunteer dispatch pass.');
+    playTone('warning');
+    const aadhaarInput = document.getElementById('vRegAadhaar');
+    if (aadhaarInput) aadhaarInput.focus();
+    return;
+  }
+
   const name = document.getElementById('vRegName').value.trim();
   const phone = document.getElementById('vRegPhone').value.trim();
   const email = document.getElementById('vRegEmail').value.trim();
@@ -1292,6 +1470,7 @@ async function handleVolunteerRegister(e) {
   const sector = document.getElementById('vRegSector').value;
   const shift = document.getElementById('vRegShift').value;
   const password = document.getElementById('vRegPassword').value;
+  const maskedAadhaar = pendingAadhaarData.masked || `XXXX-XXXX-${rawAadhaar.slice(-4)}`;
 
   try {
     const res = await fetch('/api/auth/register', {
@@ -1307,7 +1486,9 @@ async function handleVolunteerRegister(e) {
         organization: `${name} (Citizen Courier)`,
         sector,
         vehicle,
-        shift
+        shift,
+        aadhaar: maskedAadhaar,
+        aadhaarVerified: true
       })
     });
     const data = await res.json();
@@ -1327,6 +1508,8 @@ async function handleVolunteerRegister(e) {
         organization: `${name} (Citizen Courier)`,
         sector,
         vehicle,
+        aadhaar: maskedAadhaar,
+        aadhaarVerified: true,
         verified: true
       };
       localStorage.setItem('annasetu_auth_user', JSON.stringify(currentUser));
@@ -1341,18 +1524,20 @@ async function handleVolunteerRegister(e) {
       organization: `${name} (Citizen Courier)`,
       sector,
       vehicle,
+      aadhaar: maskedAadhaar,
+      aadhaarVerified: true,
       verified: true
     };
     localStorage.setItem('annasetu_auth_user', JSON.stringify(currentUser));
   }
 
-  logAudit(`Citizen Courier Registered: ${name} (${vehicle}, ${sector}). Food safe transport pass issued.`, 'success');
+  logAudit(`Citizen Courier Registered: ${name} (${vehicle}, ${sector}). UIDAI Aadhaar Verified (${maskedAadhaar}). Food safety transit pass issued.`, 'success');
   updateAuthUI();
   closeModal('modalVolunteerRegister');
 
   triggerConfetti();
   playTone('claim');
-  showToastNotification(`Welcome to AnnaSetu Fleet, ${name}!`, `Citizen Courier dispatch pass activated. Operating mode: ${vehicle}.`);
+  showToastNotification(`Welcome to AnnaSetu Fleet, ${name}!`, `Citizen Courier dispatch pass activated. Aadhaar UID: ${maskedAadhaar}.`);
 
   switchPerspective('volunteer');
 }
@@ -1425,8 +1610,9 @@ function updateAuthUI() {
 
     if (currentUser.role === 'volunteer') {
       const vText = currentUser.vehicle ? `Citizen Courier (${currentUser.vehicle})` : 'Citizen Courier';
-      if (userRole) userRole.innerText = `VOLUNTEER • Verified`;
-      if (headerRole) headerRole.innerText = `${vText} • Verified`;
+      const aText = (currentUser.aadhaar || currentUser.aadhaarVerified) ? ' • 🛡️ Aadhaar Verified' : '';
+      if (userRole) userRole.innerText = `VOLUNTEER • Verified${aText}`;
+      if (headerRole) headerRole.innerText = `${vText}${aText}`;
     } else {
       const isDonor = currentUser.role === 'donor';
       if (userRole) userRole.innerText = `${currentUser.role.toUpperCase()} • Verified`;

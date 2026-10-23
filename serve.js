@@ -77,6 +77,8 @@ function ensureDataStore() {
         phone: "+91 98450-12345",
         address: "Sector 4 Civic Dispatch Point",
         vehicle: "Electric Two-Wheeler / Thermal Backpack",
+        aadhaar: "XXXX-XXXX-8821",
+        aadhaarVerified: true,
         verified: true,
         createdAt: new Date().toISOString()
       }
@@ -144,6 +146,8 @@ function sanitizeUser(u) {
     phone: u.phone || '',
     address: u.address || '',
     vehicle: u.vehicle || '',
+    aadhaar: u.aadhaar || '',
+    aadhaarVerified: !!u.aadhaarVerified,
     verified: !!u.verified
   };
 }
@@ -306,6 +310,8 @@ const server = http.createServer(async (req, res) => {
         phone: String(phone || '').trim(),
         address: String(address || '').trim(),
         vehicle: String(body.vehicle || '').trim(),
+        aadhaar: String(body.aadhaar || '').trim(),
+        aadhaarVerified: !!body.aadhaarVerified,
         verified: false,
         verifyOtp,
         otpExpiry: Date.now() + 15 * 60 * 1000,
@@ -403,6 +409,43 @@ const server = http.createServer(async (req, res) => {
         message: '🎉 Email verified successfully! Your account is fully active.',
         token,
         user: sanitizeUser(user)
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 3b. AADHAAR e-KYC VERIFICATION API (UIDAI SIMULATOR FOR VOLUNTEERS)
+  if (reqPath === '/api/auth/verify-aadhaar' && req.method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const rawNumber = String(body.aadhaarNumber || '').replace(/[\s-]/g, '');
+
+      if (!/^\d{12}$/.test(rawNumber)) {
+        return sendJson(res, 400, {
+          success: false,
+          error: 'Please enter a valid 12-digit Indian Aadhaar number.'
+        });
+      }
+
+      // Generate Masked Aadhaar (e.g. XXXX-XXXX-4892) and 6-digit OTP
+      const masked = `XXXX-XXXX-${rawNumber.slice(-4)}`;
+      const demoOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      const txnId = 'UIDAI-eKYC-' + Date.now().toString(36).toUpperCase();
+
+      console.log(`\n========================================`);
+      console.log(`[UIDAI e-KYC SIMULATOR - VOLUNTEER AUTH]`);
+      console.log(`Aadhaar: ${masked}`);
+      console.log(`Txn ID: ${txnId}`);
+      console.log(`UIDAI OTP sent to linked mobile: >>> ${demoOtp} <<<`);
+      console.log(`========================================\n`);
+
+      return sendJson(res, 200, {
+        success: true,
+        message: `UIDAI e-KYC authentication initiated. 6-digit OTP sent to mobile registered with Aadhaar ${masked}.`,
+        maskedAadhaar: masked,
+        demoOtp,
+        txnId
       });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
