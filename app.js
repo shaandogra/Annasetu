@@ -800,6 +800,10 @@ function updateTimerBadges() {
     if (el) {
       el.innerHTML = `<span class="material-symbols-outlined text-[14px]">schedule</span> Expires in ${formatCountdown(item.remainingSeconds)}`;
     }
+    const donorEl = document.getElementById(`donorTimer_${item.id}`);
+    if (donorEl) {
+      donorEl.innerHTML = `<span class="material-symbols-outlined text-[15px] text-amber-600">schedule</span> Expires: ${formatCountdown(item.remainingSeconds)}`;
+    }
   });
 }
 
@@ -831,49 +835,115 @@ function renderDonorView() {
   const badge = document.getElementById('badgeDonorActiveCount');
   if (badge) badge.innerText = `${activeCount} Active`;
 
+  const kpiActive = document.getElementById('donorKpiActiveCount');
+  if (kpiActive) kpiActive.innerText = `${activeCount} Batches Live`;
+
+  const kpiMeals = document.getElementById('donorKpiMealsCount');
+  if (kpiMeals) {
+    const totalServings = donorListings.reduce((sum, item) => sum + (item.servings || 0), 0);
+    kpiMeals.innerText = `${totalServings} Portions`;
+  }
+
   if (donorListings.length === 0) {
-    feed.innerHTML = `<div class="text-sm text-on-surface-variant p-6 text-center">No listings published yet. Use the form on the left to publish fresh meals!</div>`;
+    feed.innerHTML = `
+      <div class="p-8 rounded-2xl bg-surface-container-low border border-surface-variant/40 text-center flex flex-col items-center justify-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">soup_kitchen</span>
+        </div>
+        <div class="text-sm font-semibold text-on-surface">No surplus listings published yet</div>
+        <p class="text-xs text-on-surface-variant max-w-sm">Use the form on the left to publish fresh meals for nearby shelters &amp; volunteer couriers.</p>
+      </div>`;
     return;
   }
 
   feed.innerHTML = donorListings.map(item => {
-    let statusClass = 'bg-primary/10 text-primary';
-    if (item.status === 'CLAIMED') statusClass = 'bg-amber-100 text-amber-800 font-bold';
-    if (item.status === 'COMPLETED') statusClass = 'bg-emerald-100 text-emerald-800 font-bold';
-    if (item.status === 'EXPIRED') statusClass = 'bg-slate-200 text-slate-700';
+    const isClaimed = item.status === 'CLAIMED';
+    const isCompleted = item.status === 'COMPLETED';
+    const isAvailable = item.status === 'AVAILABLE';
+
+    let cardBorder = 'border-surface-variant/60 bg-surface-container-low/70';
+    let statusPill = `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary border border-primary/20 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span> Live on Recipient Radar</span>`;
+
+    if (isClaimed) {
+      cardBorder = 'border-amber-500/60 bg-amber-500/5 ring-1 ring-amber-500/20';
+      statusPill = `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-900 border border-amber-500/30 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Claimed · Rider Dispatched</span>`;
+    } else if (isCompleted) {
+      cardBorder = 'border-emerald-500/40 bg-emerald-500/5';
+      statusPill = `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-900 border border-emerald-500/30 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px] text-emerald-700">check_circle</span> Custody Transferred · Rescued</span>`;
+    }
+
+    const dietaryBadge = (item.dietary || '').toLowerCase().includes('veg')
+      ? `<span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold">🟢 ${escapeHtml(item.dietary || 'Vegetarian')}</span>`
+      : `<span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold">🍴 ${escapeHtml(item.dietary || 'Standard')}</span>`;
 
     return `
-      <div class="p-5 rounded-2xl bg-surface-container-low border border-surface-variant/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div class="flex flex-col gap-1">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="font-bold text-sm text-on-surface">${escapeHtml(item.title)}</span>
-            <span class="text-[11px] px-2.5 py-0.5 rounded-full uppercase ${statusClass}">${item.status}</span>
+      <div class="p-5 rounded-2xl ${cardBorder} border transition-all flex flex-col gap-4 shadow-xs">
+        
+        <!-- Header row of batch card -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span class="font-['Noto_Serif'] font-bold text-base text-on-surface">${escapeHtml(item.title)}</span>
+            <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">${item.id}</span>
           </div>
-          <div class="text-xs text-on-surface-variant">
-            ${item.servings} Servings · ${item.dietary} · Remaining: ${formatCountdown(item.remainingSeconds)}
-          </div>
-          ${item.status === 'CLAIMED' ? `<div class="text-xs text-amber-700 font-semibold mt-0.5">Claimed by ${escapeHtml(item.claimedBy || 'Shelter NGO')}. Awaiting driver PIN verification.</div>` : ''}
+          <div>${statusPill}</div>
         </div>
 
-        <div class="flex items-center gap-2 self-end sm:self-auto">
-          ${item.status === 'CLAIMED' ? `
-            <button class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold shadow-md hover:bg-primary/90 transition-all flex items-center gap-1.5" onclick="openVerifyPinModal('${item.id}')">
-              <span class="material-symbols-outlined text-[16px]">key</span> Verify Driver PIN
-            </button>
-          ` : ''}
-
-          ${item.status === 'AVAILABLE' ? `
-            <button class="px-3 py-2 rounded-xl text-error text-xs font-semibold hover:bg-error-container/40 transition-colors" onclick="cancelListing('${item.id}')">
-              Cancel
-            </button>
-          ` : ''}
-
-          ${item.status === 'COMPLETED' ? `
-            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
-              <span class="material-symbols-outlined text-[16px]">check_circle</span> Rescued
-            </span>
-          ` : ''}
+        <!-- Meta row: Servings, Dietary, Timer, Address -->
+        <div class="flex flex-wrap items-center gap-2.5 text-xs text-on-surface-variant">
+          <span class="px-2.5 py-1 rounded-lg bg-surface-container-high text-on-surface font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[15px] text-primary">groups</span> ${item.servings} Portions
+          </span>
+          ${dietaryBadge}
+          <span class="px-2.5 py-1 rounded-lg bg-surface-container-high text-on-surface font-medium flex items-center gap-1.5" id="donorTimer_${item.id}">
+            <span class="material-symbols-outlined text-[15px] text-amber-600">schedule</span> Expires: ${formatCountdown(item.remainingSeconds)}
+          </span>
+          <span class="flex items-center gap-1 text-[11px] text-on-surface-variant font-medium">
+            <span class="material-symbols-outlined text-[14px] text-outline">location_on</span> ${escapeHtml(item.address || 'Central Dispatch Gate')}
+          </span>
         </div>
+
+        <!-- Claimed En Route Banner & PIN Verification Trigger -->
+        ${isClaimed ? `
+          <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-amber-700 text-[22px] flex-shrink-0 mt-0.5">electric_moped</span>
+              <div>
+                <strong class="text-xs font-bold block text-amber-950">Volunteer Courier En Route for Custody Handover</strong>
+                <span class="text-[11px] text-amber-800 leading-tight block">Claimed by <b>${escapeHtml(item.claimedBy || 'Verified Community Shelter')}</b>. When driver arrives, verify physical meal temperature and ask driver for their 4-digit PIN.</span>
+              </div>
+            </div>
+            <button class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold text-xs shadow-md flex items-center gap-2 cursor-pointer transition-all self-end sm:self-center whitespace-nowrap hover:shadow-lg" onclick="openVerifyPinModal('${item.id}')">
+              <span class="material-symbols-outlined text-[17px]">vpn_key</span>
+              <span>Verify Driver PIN</span>
+              <span class="bg-black/25 px-1.5 py-0.5 rounded text-[10px] font-mono tracking-wider ml-0.5" title="Convenience Demo PIN">PIN: ${item.pickupPin}</span>
+            </button>
+          </div>
+        ` : ''}
+
+        <!-- Bottom Actions Row -->
+        <div class="flex items-center justify-between pt-2 border-t border-surface-variant/30 text-xs">
+          <div class="text-[11px] text-on-surface-variant flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[15px] text-emerald-600">shield</span>
+            <span>Inspected under FSSAI Hygiene Protocol · Thermal Safe</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            ${isAvailable ? `
+              <button class="px-3 py-1.5 rounded-xl text-error text-xs font-semibold hover:bg-error-container/40 transition-colors cursor-pointer flex items-center gap-1" onclick="cancelListing('${item.id}')">
+                <span class="material-symbols-outlined text-[15px]">cancel</span>
+                <span>Cancel Batch</span>
+              </button>
+            ` : ''}
+
+            ${isCompleted ? `
+              <button class="px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300 transition-colors flex items-center gap-1.5 cursor-pointer" onclick="openCsrCertificateModal()">
+                <span class="material-symbols-outlined text-[16px] text-emerald-700">description</span>
+                <span>80G Receipt</span>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+
       </div>
     `;
   }).join('');
