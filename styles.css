@@ -247,6 +247,35 @@ button:active {
   transform: scale(0.975);
 }
 
+/* Utilities for Two-Tier Command Header */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.brand-header-tier {
+  background: rgba(250, 249, 250, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-functions-tier {
+  background: rgba(245, 243, 244, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.nav-link {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-link:hover:not(.bg-primary) {
+  transform: translateY(-1px);
+}
+
 /* Confetti Overlay */
 #confettiCanvas {
   position: fixed;
@@ -257,3 +286,4 @@ button:active {
   pointer-events: none;
   z-index: 9999;
 }
+

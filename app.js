@@ -408,6 +408,9 @@ function renderAvailableFoodFeed() {
   const countEl = document.getElementById('activeListingsCount');
   if (countEl) countEl.innerText = `${filtered.length} active listings`;
 
+  const navBadge = document.getElementById('navAvailableCountBadge');
+  if (navBadge) navBadge.innerText = filtered.length;
+
   if (filtered.length === 0) {
     feed.innerHTML = `
       <div class="bg-surface-container-lowest rounded-2xl p-12 text-center border border-surface-variant/60 shadow-sm flex flex-col items-center gap-3">
@@ -951,6 +954,8 @@ function setRadius(km) {
   currentRadiusKm = km;
   const label = document.getElementById('labelCurrentRadius');
   if (label) label.innerText = `${km} km`;
+  const quick = document.getElementById('quickRadiusIndicator');
+  if (quick) quick.innerText = `${km} km`;
   closeModal('modalRadius');
   showToastNotification(`Radar Updated`, `Scanning radius set to ${km} km.`);
   renderAvailableFoodFeed();
@@ -1023,15 +1028,23 @@ function updateAuthUI() {
   const avatarText = document.getElementById('userAvatarText');
   const userName = document.getElementById('dropdownUserName');
   const userRole = document.getElementById('dropdownUserRole');
+  const headerName = document.getElementById('headerProfileName');
+  const headerRole = document.getElementById('headerProfileRole');
 
   if (currentUser) {
+    const displayName = currentUser.organization || currentUser.name;
+    const isDonor = currentUser.role === 'donor';
     if (avatarText) avatarText.innerText = currentUser.name.charAt(0).toUpperCase();
-    if (userName) userName.innerText = currentUser.organization || currentUser.name;
+    if (userName) userName.innerText = displayName;
     if (userRole) userRole.innerText = `${currentUser.role.toUpperCase()} • Verified`;
+    if (headerName) headerName.innerText = displayName;
+    if (headerRole) headerRole.innerText = `${isDonor ? 'Food Donor' : 'Recipient NGO'} • Verified`;
   } else {
     if (avatarText) avatarText.innerText = 'A';
     if (userName) userName.innerText = 'Asha Community Shelter';
     if (userRole) userRole.innerText = 'Recipient NGO • Sector 4';
+    if (headerName) headerName.innerText = 'Asha Community Shelter';
+    if (headerRole) headerRole.innerText = 'Recipient NGO • Sector 4';
   }
 }
 
