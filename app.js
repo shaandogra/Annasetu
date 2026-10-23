@@ -364,7 +364,6 @@ function switchPerspective(role) {
   if (role === 'admin') role = 'admin';
   if (role === 'judge') role = 'judge';
   if (role === 'volunteer') role = 'volunteer';
-  if (role === 'presentation' || role === 'pitch-deck') role = 'presentation';
 
   document.querySelectorAll('.portal-view').forEach(el => el.classList.remove('active-view'));
   document.querySelectorAll('.nav-link').forEach(el => {
@@ -388,10 +387,6 @@ function switchPerspective(role) {
   } else if (role === 'volunteer') {
     targetViewId = 'viewVolunteer';
     targetPath = 'volunteer';
-  } else if (role === 'presentation') {
-    targetViewId = 'viewPitchDeck';
-    targetPath = 'pitch-deck';
-    showDeckSlide(currentDeckSlide);
   } else if (role === 'admin') {
     targetViewId = 'viewAdmin';
     targetPath = 'impact-and-analytics';
@@ -2311,113 +2306,6 @@ function escapeHtml(str) {
     "'": '&#39;'
   })[m]);
 }
-
-// ==========================================================================
-// HACKATHON PITCH DECK & PRESENTATION CONTROLLER
-// ==========================================================================
-let currentDeckSlide = 1;
-const totalDeckSlides = 10;
-let autoPlayPitchInterval = null;
-
-function showDeckSlide(index) {
-  if (index < 1) index = 1;
-  if (index > totalDeckSlides) index = totalDeckSlides;
-  currentDeckSlide = index;
-
-  // Update slide visibility
-  for (let i = 1; i <= totalDeckSlides; i++) {
-    const slide = document.getElementById(`slide-${i}`);
-    if (slide) {
-      if (i === currentDeckSlide) {
-        slide.classList.remove('hidden');
-        slide.classList.add('active-slide');
-      } else {
-        slide.classList.remove('active-slide');
-        slide.classList.add('hidden');
-      }
-    }
-  }
-
-  // Update counter
-  const counter = document.getElementById('currentSlideNum');
-  if (counter) counter.innerText = currentDeckSlide;
-
-  // Update pill buttons
-  const pills = document.querySelectorAll('.deck-pill');
-  pills.forEach((p, idx) => {
-    if (idx + 1 === currentDeckSlide) {
-      p.className = 'deck-pill px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-primary text-on-primary shadow-xs';
-    } else {
-      p.className = 'deck-pill px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:bg-surface-container-high transition-all';
-    }
-  });
-
-  // Button disabled states
-  const prevBtn = document.getElementById('btnPrevSlide');
-  const nextBtn = document.getElementById('btnNextSlide');
-  if (prevBtn) prevBtn.disabled = (currentDeckSlide === 1);
-  if (nextBtn) nextBtn.disabled = (currentDeckSlide === totalDeckSlides);
-}
-
-function nextDeckSlide() {
-  if (currentDeckSlide < totalDeckSlides) {
-    showDeckSlide(currentDeckSlide + 1);
-    playTone('info');
-  }
-}
-
-function prevDeckSlide() {
-  if (currentDeckSlide > 1) {
-    showDeckSlide(currentDeckSlide - 1);
-    playTone('info');
-  }
-}
-
-function jumpToDeckSlide(index) {
-  showDeckSlide(index);
-  playTone('info');
-}
-
-function toggleAutoPlayPitch() {
-  const icon = document.getElementById('autoPlayIcon');
-  const btn = document.getElementById('btnAutoPlay');
-
-  if (autoPlayPitchInterval) {
-    clearInterval(autoPlayPitchInterval);
-    autoPlayPitchInterval = null;
-    if (icon) icon.innerText = 'play_arrow';
-    if (btn) btn.className = 'px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-500/30 text-xs font-bold flex items-center gap-1 transition-all';
-    showToastNotification('Auto-Play Paused', 'Pitch deck slideshow is now manual.');
-  } else {
-    autoPlayPitchInterval = setInterval(() => {
-      if (currentDeckSlide < totalDeckSlides) {
-        nextDeckSlide();
-      } else {
-        showDeckSlide(1);
-      }
-    }, 6000);
-    if (icon) icon.innerText = 'pause';
-    if (btn) btn.className = 'px-3 py-2 rounded-xl bg-amber-600 text-white shadow-sm text-xs font-bold flex items-center gap-1 transition-all';
-    showToastNotification('Auto-Play Active', 'Advancing slides every 6 seconds for pitch demonstration.');
-    playTone('success');
-  }
-}
-
-function printPitchDeck() {
-  window.print();
-}
-
-// Keyboard shortcuts for slides
-window.addEventListener('keydown', (e) => {
-  const pitchView = document.getElementById('viewPitchDeck');
-  if (pitchView && pitchView.classList.contains('active-view')) {
-    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-      nextDeckSlide();
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-      prevDeckSlide();
-    }
-  }
-});
 
 // ==========================================================================
 // SECTION 80G & CSR TAX EXEMPTION CERTIFICATE CONTROLLER
