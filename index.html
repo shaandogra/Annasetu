@@ -1,687 +1,869 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_standard" name="shell-type"/>
   <title>AnnaSetu — Rapid Surplus Food Rescue & Verification Platform</title>
   <meta name="description" content="Coordinate timely, safe redistribution of surplus food from commercial kitchens to verified community shelters with cryptographic chain-of-custody.">
+  
+  <!-- Tailwind CSS & Theme Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface": "#1b1c1d",
+            "on-surface-variant": "#434653",
+            "tertiary-fixed-dim": "#dcc661",
+            "secondary-fixed-dim": "#c2c7cc",
+            "surface-container-low": "#f5f3f4",
+            "outline": "#737784",
+            "surface-variant": "#e3e2e3",
+            "on-background": "#1b1c1d",
+            "on-tertiary-fixed-variant": "#524600",
+            "surface-container-high": "#e9e8e9",
+            "on-error-container": "#93000a",
+            "inverse-surface": "#303031",
+            "surface-container-lowest": "#ffffff",
+            "inverse-primary": "#b1c5ff",
+            "on-tertiary-fixed": "#211b00",
+            "on-tertiary-container": "#4a3f00",
+            "primary-fixed": "#d9e2ff",
+            "on-secondary-fixed": "#171c20",
+            "tertiary-container": "#bfab49",
+            "on-secondary-container": "#606569",
+            "primary-fixed-dim": "#b1c5ff",
+            "error": "#ba1a1a",
+            "surface-container": "#efedee",
+            "outline-variant": "#c3c6d5",
+            "on-secondary-fixed-variant": "#42474b",
+            "secondary-fixed": "#dfe3e8",
+            "on-error": "#ffffff",
+            "on-primary-container": "#e7ebff",
+            "on-primary-fixed-variant": "#00419d",
+            "surface-container-highest": "#e3e2e3",
+            "primary": "#3366cc",
+            "on-secondary": "#ffffff",
+            "surface": "#faf9fa",
+            "tertiary": "#6d5e00",
+            "secondary": "#5a5f63",
+            "error-container": "#ffdad6",
+            "primary-container": "#d9e2ff",
+            "background": "#faf9fa",
+            "on-primary": "#ffffff",
+            "secondary-container": "#dfe3e8",
+            "tertiary-fixed": "#f9e37a",
+            "surface-dim": "#dbdadb",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#faf9fa",
+            "inverse-on-surface": "#f2f0f1",
+            "surface-tint": "#3366cc",
+            "on-primary-fixed": "#001946"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "fontFamily": {
+            "headline": ["Noto Serif", "serif"],
+            "display": ["Noto Serif", "serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Public Sans", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+
+  <!-- Google Fonts & Material Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Public+Sans:wght@600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
 
-  <!-- Top Navigation & Role Switcher Bar -->
-  <header class="app-header">
-    <div class="header-content">
-      <div class="brand-wrapper">
-        <img src="assets/logo.jpg" alt="AnnaSetu Logo" class="brand-logo" id="appLogo">
-        <div class="brand-title">
-          AnnaSetu
-          <span class="brand-badge">24h MVP</span>
+<body class="bg-surface font-['Inter'] text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-primary">
+
+  <!-- Celebration Confetti Canvas for Claims -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- ==========================================================================
+       FIXED TOP NAVIGATION HEADER
+       ========================================================================== -->
+  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-b border-surface-variant/40 transition-all">
+    <div class="h-20 max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
+      
+      <!-- Logo & Brand Badge -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchPerspective('available-food')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-blue-400 text-on-primary flex items-center justify-center font-bold text-xl shadow-md">
+          <span class="material-symbols-outlined text-[24px]">soup_kitchen</span>
+        </div>
+        <div>
+          <span class="font-['Noto_Serif'] text-xl font-bold tracking-tight text-on-surface uppercase">Annasetu</span>
+          <span class="hidden sm:inline-block ml-2 text-[10px] font-bold font-['Public_Sans'] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">FSSAI VERIFIED</span>
         </div>
       </div>
 
-      <!-- Desktop Perspective Persona Switcher -->
-      <nav class="role-switcher-container desktop-nav" aria-label="Perspective Switcher">
-        <button class="role-tab-btn" id="tabAuth" onclick="switchPerspective('auth')">
-          🔐 Portal Login
-        </button>
-        <button class="role-tab-btn active" id="tabDonor" onclick="switchPerspective('donor')">
-          🏨 Donor View
-        </button>
-        <button class="role-tab-btn ngo-tab" id="tabNgo" onclick="switchPerspective('ngo')">
-          🤝 Recipient NGO View
-        </button>
-        <button class="role-tab-btn admin-tab" id="tabAdmin" onclick="switchPerspective('admin')">
-          🛡️ Coordinator & Map
-        </button>
-        <button class="role-tab-btn judge-tab" id="tabJudge" onclick="switchPerspective('judge')">
-          🏆 Pitch & Demo Guide
-        </button>
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-1.5" aria-label="Main Navigation">
+        <a class="nav-link text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-3.5 py-2 rounded-lg" data-path="dashboard" href="javascript:void(0)" onclick="switchPerspective('dashboard')">
+          Dashboard
+        </a>
+        <a class="nav-link text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-3.5 py-2 rounded-lg" data-path="donate-food" href="javascript:void(0)" onclick="switchPerspective('donor')">
+          Donate Food
+        </a>
+        <a aria-current="page" class="nav-link transition-colors bg-primary text-on-primary font-semibold px-4 py-2 rounded-lg shadow-sm" data-path="available-food" href="javascript:void(0)" onclick="switchPerspective('available-food')">
+          Available Food
+        </a>
+        <a class="nav-link text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-3.5 py-2 rounded-lg" data-path="impact-and-analytics" href="javascript:void(0)" onclick="switchPerspective('admin')">
+          Impact &amp; Analytics
+        </a>
+        <a class="nav-link text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-3.5 py-2 rounded-lg" data-path="community" href="javascript:void(0)" onclick="switchPerspective('judge')">
+          Judge Pitch Guide
+        </a>
       </nav>
 
-      <div class="header-actions">
-        <div id="headerAuthBadge"></div>
-        <div class="live-indicator desktop-only">
-          <span class="pulse-dot"></span>
-          <span>Live Sync</span>
+      <!-- Header Actions: Live Dot, Reset, Notification & User Avatar -->
+      <div class="flex items-center gap-3">
+        <!-- Live Sync Pill -->
+        <div class="hidden xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>Live Radar</span>
         </div>
-        <button class="btn-secondary-sm desktop-only" id="btnResetData" onclick="resetDemoData()" title="Reload clean demo data">
-          ↺ Reset Demo
+
+        <!-- 1-Click Reset Demo Dataset -->
+        <button class="hidden sm:flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface bg-surface-container-low hover:bg-surface-container-high px-3 py-2 rounded-lg border border-outline-variant/30 transition-colors" onclick="resetDemoData()" title="Reload clean benchmark demo data">
+          <span class="material-symbols-outlined text-[16px]">refresh</span>
+          <span>Reset Demo</span>
         </button>
-        <!-- Mobile Hamburger Menu Button -->
-        <button class="hamburger-btn" id="btnHamburger" aria-label="Toggle Navigation Menu" onclick="toggleMobileNav()">
-          <span class="bar bar-1"></span>
-          <span class="bar bar-2"></span>
-          <span class="bar bar-3"></span>
+
+        <!-- Notification Button with Dropdown -->
+        <div class="relative">
+          <button class="relative p-2.5 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" onclick="toggleNotificationDropdown()" id="btnNotification" aria-label="Notifications">
+            <span class="material-symbols-outlined text-[22px]">notifications</span>
+            <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-surface"></span>
+          </button>
+          
+          <!-- Dropdown Popup -->
+          <div class="absolute right-0 mt-2 w-80 bg-surface-container-lowest border border-outline-variant/40 rounded-2xl shadow-xl p-4 hidden z-50 animate-in fade-in zoom-in-95 duration-150" id="notificationDropdown">
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-surface-variant/50">
+              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Live Dispatch Stream</span>
+              <span class="text-[11px] text-primary font-bold">2 New</span>
+            </div>
+            <div class="flex flex-col gap-2.5 text-xs">
+              <div class="p-2 rounded-lg bg-surface-container-low flex items-start gap-2">
+                <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+                <div>
+                  <strong class="text-on-surface block">Grand Banquet Biryani Verified</strong>
+                  <span class="text-on-surface-variant text-[11px]">85 meals dispatched to Asha Shelter.</span>
+                </div>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-container-low flex items-start gap-2">
+                <span class="material-symbols-outlined text-tertiary text-[18px]">schedule</span>
+                <div>
+                  <strong class="text-on-surface block">Sourdough Loaves Expiring Soon</strong>
+                  <span class="text-on-surface-variant text-[11px]">Pickup window under 3 hours in Sector 4.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Profile Pill -->
+        <div class="relative">
+          <button class="flex items-center gap-2 p-1.5 rounded-full hover:bg-surface-container-high transition-colors" onclick="toggleUserDropdown()" id="btnUserMenu">
+            <div class="w-9 h-9 rounded-full bg-primary-container text-primary flex items-center justify-center font-semibold text-sm shadow-sm" id="userAvatarText">
+              <span>A</span>
+            </div>
+          </button>
+
+          <!-- User Dropdown Menu -->
+          <div class="absolute right-0 mt-2 w-64 bg-surface-container-lowest border border-outline-variant/40 rounded-2xl shadow-xl p-3 hidden z-50 animate-in fade-in zoom-in-95 duration-150" id="userMenuDropdown">
+            <div class="p-2 border-b border-surface-variant/40 mb-1">
+              <div class="text-sm font-bold text-on-surface" id="dropdownUserName">Asha Community Shelter</div>
+              <div class="text-xs text-on-surface-variant" id="dropdownUserRole">Recipient NGO • Sector 4</div>
+            </div>
+            <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2" onclick="switchPerspective('auth'); toggleUserDropdown();">
+              <span class="material-symbols-outlined text-[16px] text-primary">key</span>
+              <span>Portal Authentication / Switch</span>
+            </button>
+            <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2" onclick="switchPerspective('donor'); toggleUserDropdown();">
+              <span class="material-symbols-outlined text-[16px] text-primary">hotel</span>
+              <span>Switch to Food Donor View</span>
+            </button>
+            <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2" onclick="switchPerspective('available-food'); toggleUserDropdown();">
+              <span class="material-symbols-outlined text-[16px] text-primary">volunteer_activism</span>
+              <span>Switch to Shelter Radar View</span>
+            </button>
+            <div class="border-t border-surface-variant/40 my-1"></div>
+            <button class="w-full text-left px-3 py-2 text-xs font-semibold text-error hover:bg-error-container/30 rounded-lg transition-colors flex items-center gap-2" onclick="handleLogout(); toggleUserDropdown();">
+              <span class="material-symbols-outlined text-[16px]">logout</span>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="lg:hidden p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant" onclick="toggleMobileNav()" aria-label="Toggle Menu">
+          <span class="material-symbols-outlined text-[24px]">menu</span>
         </button>
+
       </div>
     </div>
   </header>
 
-  <!-- Mobile Slide-Out Navigation Drawer & Backdrop -->
-  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="closeMobileNav()"></div>
-  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobile Navigation">
-    <div class="mobile-nav-header">
-      <div class="brand-wrapper">
-        <img src="assets/logo.jpg" alt="AnnaSetu" class="brand-logo" style="width:36px;height:36px;">
-        <span class="brand-title" style="font-size:1.25rem;">AnnaSetu</span>
+  <!-- Mobile Navigation Drawer & Backdrop -->
+  <div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden transition-opacity" id="mobileNavBackdrop" onclick="closeMobileNav()"></div>
+  <aside class="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-surface-container-lowest shadow-2xl z-50 p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300" id="mobileNavDrawer">
+    <div>
+      <div class="flex items-center justify-between pb-6 border-b border-surface-variant/40">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center font-bold text-base">A</div>
+          <span class="font-['Noto_Serif'] text-lg font-bold">AnnaSetu</span>
+        </div>
+        <button class="p-2 rounded-full hover:bg-surface-container-high text-on-surface-variant" onclick="closeMobileNav()">
+          <span class="material-symbols-outlined text-[22px]">close</span>
+        </button>
       </div>
-      <button class="mobile-nav-close" id="btnCloseMobileNav" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
+
+      <nav class="flex flex-col gap-2 pt-6">
+        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('dashboard'); closeMobileNav();">
+          <span class="material-symbols-outlined text-primary">dashboard</span> Dashboard
+        </button>
+        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('donor'); closeMobileNav();">
+          <span class="material-symbols-outlined text-primary">restaurant</span> Donate Food
+        </button>
+        <button class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm bg-primary text-on-primary flex items-center gap-3" onclick="switchPerspective('available-food'); closeMobileNav();">
+          <span class="material-symbols-outlined">radar</span> Available Food
+        </button>
+        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('admin'); closeMobileNav();">
+          <span class="material-symbols-outlined text-primary">analytics</span> Impact &amp; Analytics
+        </button>
+        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('judge'); closeMobileNav();">
+          <span class="material-symbols-outlined text-primary">emoji_events</span> Judge Pitch Guide
+        </button>
+        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('auth'); closeMobileNav();">
+          <span class="material-symbols-outlined text-primary">lock</span> Portal Login
+        </button>
+      </nav>
     </div>
 
-    <!-- Mobile User Profile & Auth Status -->
-    <div class="mobile-nav-auth" id="mobileAuthCard">
-      <!-- Dynamically populated via app.js -->
-    </div>
-
-    <div class="mobile-nav-links">
-      <div class="mobile-nav-heading">Platform Perspectives</div>
-      
-      <button class="mobile-nav-item" id="mobTabAuth" onclick="switchPerspective('auth'); closeMobileNav();">
-        <span class="mobile-nav-icon">🔐</span>
-        <div class="mobile-nav-text">
-          <span class="mobile-nav-title">Portal Access / Login</span>
-          <span class="mobile-nav-sub">Single page for Donors & NGOs</span>
-        </div>
+    <div class="pt-6 border-t border-surface-variant/40 flex flex-col gap-3">
+      <button class="w-full py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-xs font-bold text-on-surface transition-colors flex items-center justify-center gap-1.5" onclick="resetDemoData(); closeMobileNav();">
+        <span class="material-symbols-outlined text-[16px]">refresh</span> Reset Demo Data
       </button>
-
-      <button class="mobile-nav-item active" id="mobTabDonor" onclick="switchPerspective('donor'); closeMobileNav();">
-        <span class="mobile-nav-icon">🏨</span>
-        <div class="mobile-nav-text">
-          <span class="mobile-nav-title">Food Donor Command</span>
-          <span class="mobile-nav-sub">Post surplus meals & verify PIN</span>
-        </div>
-      </button>
-
-      <button class="mobile-nav-item" id="mobTabNgo" onclick="switchPerspective('ngo'); closeMobileNav();">
-        <span class="mobile-nav-icon">🤝</span>
-        <div class="mobile-nav-text">
-          <span class="mobile-nav-title">Recipient NGO Radar</span>
-          <span class="mobile-nav-sub">Urgency match & atomic claim</span>
-        </div>
-      </button>
-
-      <button class="mobile-nav-item" id="mobTabAdmin" onclick="switchPerspective('admin'); closeMobileNav();">
-        <span class="mobile-nav-icon">🛡️</span>
-        <div class="mobile-nav-text">
-          <span class="mobile-nav-title">GIS Fleet & Operations</span>
-          <span class="mobile-nav-sub">City telemetry & audit trail</span>
-        </div>
-      </button>
-
-      <button class="mobile-nav-item" id="mobTabJudge" onclick="switchPerspective('judge'); closeMobileNav();">
-        <span class="mobile-nav-icon">🏆</span>
-        <div class="mobile-nav-text">
-          <span class="mobile-nav-title">Pitch & Demo Guide</span>
-          <span class="mobile-nav-sub">Step-by-step judge walkthrough</span>
-        </div>
-      </button>
-    </div>
-
-    <div class="mobile-nav-footer">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-        <div class="live-indicator">
-          <span class="pulse-dot"></span>
-          <span>Live Sync Online</span>
-        </div>
-        <span style="font-size: 0.75rem; color: #10b981; font-weight: 700;">v2.0 Mobile</span>
-      </div>
-      <button class="btn-secondary-sm" onclick="resetDemoData(); closeMobileNav();" style="width: 100%; justify-content: center; padding: 0.65rem;">
-        ↺ Reset Demo Dataset
-      </button>
+      <div class="text-[11px] text-on-surface-variant text-center font-mono">FSSAI Protocol Active · v2.4</div>
     </div>
   </aside>
 
-  <!-- Mobile Bottom Quick Navigation Bar (Thumb Friendly) -->
-  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Bottom Quick Navigation">
-    <button class="bottom-nav-item active" id="bNavDonor" onclick="switchPerspective('donor')">
-      <span class="bnav-icon">🏨</span>
-      <span class="bnav-label">Donor</span>
-    </button>
-    <button class="bottom-nav-item" id="bNavNgo" onclick="switchPerspective('ngo')">
-      <span class="bnav-icon">🤝</span>
-      <span class="bnav-label">Shelter</span>
-    </button>
-    <button class="bottom-nav-item" id="bNavAdmin" onclick="switchPerspective('admin')">
-      <span class="bnav-icon">🛡️</span>
-      <span class="bnav-label">Map</span>
-    </button>
-    <button class="bottom-nav-item" id="bNavAuth" onclick="switchPerspective('auth')">
-      <span class="bnav-icon">🔐</span>
-      <span class="bnav-label">Login</span>
-    </button>
-    <button class="bottom-nav-item" id="bNavMenu" onclick="toggleMobileNav()">
-      <span class="bnav-icon">☰</span>
-      <span class="bnav-label">Menu</span>
-    </button>
-  </nav>
+  <!-- ==========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================== -->
+  <main class="w-full pt-20 bg-surface flex-1">
 
-  <main class="app-main">
-
-    <!-- High-Impact Hero Banner & Global Metrics -->
-    <section class="hero-banner-card glass-panel" aria-label="Platform Overview">
-      <img src="assets/hero.jpg" alt="Surplus meals ready for community redistribution" class="hero-bg-img">
-      <div class="hero-overlay-gradient"></div>
-      <div class="hero-content">
-        <span class="hero-tag">Zero Hunger · Zero Food Waste</span>
-        <h1 class="hero-title">Bridging Surplus Food to Verified Shelters</h1>
-        <p class="hero-description">
-          A real-time logistics engine connecting restaurant surplus with community shelters before food expires. Features proximity scoring, atomic reservation locks, and secure PIN-verified handoffs.
-        </p>
-        <div class="hero-stats-row">
-          <div class="hero-stat-item">
-            <div class="hero-stat-num" id="statMealsRescued">365</div>
-            <div class="hero-stat-label">Meals Rescued Today</div>
-          </div>
-          <div class="hero-stat-item">
-            <div class="hero-stat-num" id="statActiveClaims">2</div>
-            <div class="hero-stat-label">Active Handoffs</div>
-          </div>
-          <div class="hero-stat-item">
-            <div class="hero-stat-num" id="statCo2Saved">146 kg</div>
-            <div class="hero-stat-label">CO₂ Emitted Prevented</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================
-         VIEW 0: TOP-RIGHT MINIMAL PORTAL AUTHENTICATION
-         ========================================== -->
-    <section id="viewAuth" class="portal-view">
-      <div class="auth-wrapper top-right-auth-layout">
-        
-        <!-- Left Side: Atmospheric Platform Briefing & Live Proof -->
-        <div class="auth-showcase-panel">
-          <div class="brand-tag-glow">
-            <span class="pulse-dot"></span>
-            <span>FSSAI Compliant · Real-Time Cold-Chain Security</span>
-          </div>
-
-          <h1 class="auth-showcase-title">
-            Time-Critical Surplus Food Rescue & Verification
-          </h1>
-
-          <p class="auth-showcase-desc">
-            Hotels, commercial kitchens, and banquets discard fresh, untouched meals while shelters starve just kilometers away. AnnaSetu bridges this gap before meals perish using proximity matching, atomic reservation locks, and cryptographic 4-digit handover codes.
-          </p>
-
-          <div class="auth-metrics-compact">
-            <div class="auth-metric-item">
-              <div class="auth-metric-num">365+</div>
-              <div class="auth-metric-lbl">Meals Rescued Today</div>
-            </div>
-            <div class="auth-metric-item">
-              <div class="auth-metric-num">1.8 km</div>
-              <div class="auth-metric-lbl">Avg Response Radius</div>
-            </div>
-            <div class="auth-metric-item">
-              <div class="auth-metric-num">100%</div>
-              <div class="auth-metric-lbl">PIN Verified Handoffs</div>
-            </div>
-          </div>
-
-          <div class="auth-trust-badges">
-            <div class="trust-badge-item">
-              <span>🛡️</span> <strong>Zero Double-Claims</strong> · Atomic locking engine
-            </div>
-            <div class="trust-badge-item">
-              <span>⏱️</span> <strong>Strict Countdown</strong> · Auto-expires past shelf-life
-            </div>
-            <div class="trust-badge-item">
-              <span>📋</span> <strong>Immutable Log</strong> · Full municipal chain of custody
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Side: Top-Right Minimal Login Card -->
-        <div class="glass-panel auth-card auth-card-minimal role-donor-active" id="authMainCard">
+    <!-- ========================================================================
+         VIEW 1: AVAILABLE SURPLUS FOOD (PRIMARY USER REQUESTED INTERFACE)
+         ======================================================================== -->
+    <section id="viewAvailableFood" class="portal-view active-view w-full">
+      
+      <!-- Top Banner / Search & Filter Section -->
+      <section class="w-full bg-surface-container-low py-14 px-6 md:px-12 border-b border-surface-variant/40">
+        <div class="max-w-[1400px] mx-auto flex flex-col gap-8">
           
-          <!-- Visible AnnaSetu Logo & Brand Header inside Login Card -->
-          <div class="auth-card-brand">
-            <img src="assets/logo.jpg" alt="AnnaSetu Emblem" class="auth-card-logo" id="authCardLogo">
-            <div class="auth-brand-text">
-              <div class="auth-brand-heading">
-                <h3>AnnaSetu</h3>
-                <span class="auth-brand-pill">Portal Access</span>
-              </div>
-              <span class="auth-card-sub" id="authSubtitleRole">Secure Food Donor Gateway</span>
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <span class="text-xs font-bold tracking-widest text-primary uppercase mb-3 block font-['Public_Sans'] flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                Real-Time Logistics Feed
+              </span>
+              <h1 class="text-3xl md:text-5xl font-['Noto_Serif'] font-bold text-on-surface tracking-tight">Available Surplus Food</h1>
+              <p class="text-base text-on-surface-variant mt-3 max-w-2xl font-normal leading-relaxed">
+                Browse active donations ready for immediate pickup and redistribution in your sector. Ranked by proximity and remaining shelf-life urgency.
+              </p>
+            </div>
+            
+            <!-- Interactive Radar Radius Badge -->
+            <div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2.5 rounded-xl border border-outline-variant/30 shadow-sm self-start md:self-auto">
+              <span class="material-symbols-outlined text-primary text-[20px] animate-spin" style="animation-duration: 10s;">radar</span>
+              <span class="text-sm text-on-surface">Radius: <strong class="text-primary font-semibold" id="labelCurrentRadius">5 km</strong></span>
+              <button class="text-on-surface-variant hover:text-primary ml-2 text-sm underline font-medium transition-colors" onclick="openRadiusModal()">Change</button>
             </div>
           </div>
 
-          <!-- Minimal Segmented Role Toggle (Donor vs NGO) -->
-          <div class="auth-role-tabs minimal-role-tabs">
-            <button class="auth-role-btn active donor" id="btnRoleDonor" type="button" onclick="setAuthRole('donor')">
-              🏨 Food Donor
-            </button>
-            <button class="auth-role-btn ngo" id="btnRoleNgo" type="button" onclick="setAuthRole('ngo')">
-              🤝 Recipient NGO
-            </button>
-          </div>
-
-          <!-- Minimal Mode Switch: Sign In vs Register -->
-          <div class="auth-mode-switch minimal-mode-switch">
-            <button class="auth-mode-tab active" id="tabModeSignIn" type="button" onclick="setAuthMode('signin')">
-              Sign In
-            </button>
-            <button class="auth-mode-tab" id="tabModeRegister" type="button" onclick="setAuthMode('register')">
-              Create Account
-            </button>
-          </div>
-
-          <!-- Error Alert Banner (with animated shake) -->
-          <div class="auth-error-alert" id="authErrorAlert">
-            <div class="error-title">
-              <span>⚠️</span>
-              <span id="authErrorTitle">Authentication Error</span>
-            </div>
-            <div id="authErrorMessage" style="font-size: 0.8rem;"></div>
-            <div id="authErrorAction"></div>
-          </div>
-
-          <!-- TAB 1: MINIMAL SIGN IN FORM -->
-          <form id="formSignIn" onsubmit="handleAuthLogin(event)">
-            <div class="form-group" style="margin-bottom: 0.85rem;">
-              <label class="form-label" for="authUserId" id="labelAuthUserId" style="font-size: 0.8rem;">
-                User ID or Official Email
-              </label>
-              <input type="text" id="authUserId" class="form-input form-input-minimal" placeholder="e.g. donor_hotel or email@domain.com" required autocomplete="username">
+          <!-- Dynamic Filter Bar -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-2">
+            
+            <!-- Search Input -->
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-4 text-outline text-[20px]">search</span>
+              <input class="w-full bg-surface-container-lowest text-on-surface text-sm pl-11 pr-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm transition-all" id="searchInput" placeholder="Search food items, donors..." type="text" oninput="handleSearchInput(event)"/>
             </div>
 
-            <div class="form-group" style="margin-bottom: 0.75rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <label class="form-label" for="authPassword" style="font-size: 0.8rem; margin-bottom: 0;">Password</label>
-                <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.75rem; color: #93c5fd; text-decoration: underline;">
-                  Forgot?
-                </a>
-              </div>
-              <div class="password-field-group">
-                <input type="password" id="authPassword" class="form-input form-input-minimal" placeholder="••••••••" required autocomplete="current-password">
-                <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('authPassword')" title="Show / Hide Password">
-                  👁️
-                </button>
-              </div>
+            <!-- Dietary Filter Dropdown -->
+            <div class="relative">
+              <select class="w-full bg-surface-container-lowest text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer shadow-sm transition-all" id="dietaryFilterSelect" onchange="handleDietaryFilter(event)">
+                <option value="all">All Dietary Tags</option>
+                <option value="veg">Vegetarian / Vegan</option>
+                <option value="halal">Halal Certified</option>
+                <option value="gluten-free">Gluten-Free</option>
+                <option value="non_veg">Non-Vegetarian</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-              <label style="font-size: 0.775rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                <input type="checkbox" id="authRemember" checked style="accent-color: var(--primary);">
-                Remember session
-              </label>
-              <span style="font-size: 0.725rem; color: var(--text-dim);" id="roleIndicatorHint">
-                Donor Access
+            <!-- Urgency Filter Dropdown -->
+            <div class="relative">
+              <select class="w-full bg-surface-container-lowest text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer shadow-sm transition-all" id="urgencyFilterSelect" onchange="handleUrgencyFilter(event)">
+                <option value="all">Urgency: All Windows</option>
+                <option value="critical">&lt; 2 Hours (Critical)</option>
+                <option value="moderate">&lt; 4 Hours</option>
+                <option value="today">Today (&lt; 8 Hours)</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
+            </div>
+
+            <!-- Quantity Filter Dropdown -->
+            <div class="relative">
+              <select class="w-full bg-surface-container-lowest text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer shadow-sm transition-all" id="quantityFilterSelect" onchange="handleQuantityFilter(event)">
+                <option value="all">Quantity: Any Size</option>
+                <option value="small">Small (&lt; 25 meals)</option>
+                <option value="medium">Medium (25-100 meals)</option>
+                <option value="large">Large (100+ meals)</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
+            </div>
+
+            <!-- Sort By Dropdown -->
+            <div class="relative">
+              <select class="w-full bg-surface-container-lowest text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer shadow-sm transition-all" id="sortBySelect" onchange="handleSortBy(event)">
+                <option value="urgency-proximity">Sort: Urgency &amp; Proximity</option>
+                <option value="nearest">Nearest First</option>
+                <option value="quantity">Largest Quantity</option>
+                <option value="expiring">Expiring Soonest</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Main Content Grid / Telemetry & List -->
+      <section class="max-w-[1400px] mx-auto w-full px-6 md:px-12 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
+        
+        <!-- Left 2 Cols: Listing Cards Feed -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+          
+          <div class="flex items-center justify-between pb-2">
+            <span class="text-sm text-on-surface-variant">Showing <strong class="text-on-surface font-semibold" id="activeListingsCount">12 active listings</strong> in your range</span>
+            <div class="flex items-center gap-2">
+              <button class="px-4 py-1.5 rounded-lg bg-primary text-on-primary text-sm font-semibold shadow-sm transition-all" id="btnFilterAll" onclick="setUrgentToggle('all')">All Active</button>
+              <button class="px-4 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface text-sm border border-outline-variant/20 transition-all" id="btnFilterUrgent" onclick="setUrgentToggle('urgent')">Urgent Only</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Feed Container -->
+          <div class="flex flex-col gap-6" id="availableFoodFeed">
+            <!-- Dynamically populated via app.js with rich staggered animations -->
+          </div>
+
+        </div>
+
+        <!-- Right Col: Interactive Map & Live Telemetry Sidebar -->
+        <div class="flex flex-col gap-6">
+          
+          <!-- Live Sector Map Card -->
+          <div class="bg-surface-container-lowest rounded-2xl p-7 flex flex-col gap-5 border border-surface-variant/60 shadow-md">
+            <div class="flex items-center justify-between">
+              <h2 class="text-2xl font-['Noto_Serif'] font-bold text-on-surface">Live Sector Map</h2>
+              <span class="text-xs font-bold text-primary uppercase bg-primary/10 px-3 py-1 rounded-full font-['Public_Sans'] flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                Active GIS
               </span>
             </div>
-
-            <button type="submit" class="btn-primary" id="btnSubmitAuth" style="width: 100%; justify-content: center; font-size: 0.925rem; padding: 0.75rem;">
-              ⚡ Sign In
-            </button>
-          </form>
-
-          <!-- TAB 2: MINIMAL REGISTER FORM -->
-          <form id="formRegister" onsubmit="handleAuthRegister(event)" style="display: none;">
-            <div class="form-group" style="margin-bottom: 0.7rem;">
-              <label class="form-label" for="regOrgName" style="font-size: 0.775rem;">Organization Name</label>
-              <input type="text" id="regOrgName" class="form-input form-input-minimal" placeholder="e.g. Grand Palace Kitchen" required>
-            </div>
-
-            <div class="form-row-2" style="margin-bottom: 0.7rem;">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label" for="regUserId" style="font-size: 0.775rem;">User ID</label>
-                <input type="text" id="regUserId" class="form-input form-input-minimal" placeholder="e.g. grand_kitchen" required pattern="[A-Za-z0-9_]{3,20}">
-              </div>
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label" for="regPhone" style="font-size: 0.775rem;">Phone</label>
-                <input type="tel" id="regPhone" class="form-input form-input-minimal" placeholder="+91 98765-XXXXX" required>
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0.7rem;">
-              <label class="form-label" for="regEmail" style="font-size: 0.775rem;">Official Email</label>
-              <input type="email" id="regEmail" class="form-input form-input-minimal" placeholder="contact@domain.com" required>
-            </div>
-
-            <div class="form-row-2" style="margin-bottom: 0.7rem;">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label" for="regPassword" style="font-size: 0.775rem;">Password</label>
-                <div class="password-field-group">
-                  <input type="password" id="regPassword" class="form-input form-input-minimal" placeholder="••••••••" required minlength="6">
-                  <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('regPassword')">👁️</button>
-                </div>
-              </div>
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label" for="regPasswordConfirm" style="font-size: 0.775rem;">Confirm</label>
-                <div class="password-field-group">
-                  <input type="password" id="regPasswordConfirm" class="form-input form-input-minimal" placeholder="••••••••" required minlength="6">
-                  <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('regPasswordConfirm')">👁️</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0.85rem;">
-              <label class="form-label" for="regAddress" style="font-size: 0.775rem;">Physical Address</label>
-              <input type="text" id="regAddress" class="form-input form-input-minimal" placeholder="Gate 2, MG Road" required>
-            </div>
-
-            <button type="submit" class="btn-primary" id="btnSubmitRegister" style="width: 100%; justify-content: center; font-size: 0.9rem; padding: 0.75rem;">
-              ✉️ Create & Verify Email
-            </button>
-          </form>
-
-          <!-- Minimal Quick-Fill Test Credentials Chips -->
-          <div class="demo-minimal-box">
-            <span class="demo-minimal-label">⚡ 1-Click Test Credentials:</span>
-            <div class="demo-minimal-chips">
-              <button type="button" class="mini-chip-btn" onclick="fillDemoCredentials('donor_hotel', 'GrandPalace@2026', 'donor')" title="Login as Hotel Grand Palace">
-                🏨 Donor
-              </button>
-              <button type="button" class="mini-chip-btn ngo-chip" onclick="fillDemoCredentials('ngo_asha', 'AshaShelter@2026', 'ngo')" title="Login as Asha Shelter NGO">
-                🤝 Shelter NGO
-              </button>
-              <button type="button" class="mini-chip-btn warn-chip" onclick="fillDemoCredentials('donor_bakery', 'Bakery@2026', 'donor')" title="Test Unverified Email Flow">
-                ⚠️ Test Email OTP
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==========================================
-         VIEW 1: DONOR PORTAL (Hotel Grand Palace)
-         ========================================== -->
-    <section id="viewDonor" class="portal-view active-view">
-      <div class="view-header">
-        <div class="view-title-group">
-          <h2>🏨 Donor Command: Hotel Grand Palace</h2>
-          <p class="view-subtitle">Post unconsumed kitchen surplus with strict expiry limits & verify secure recipient handoffs.</p>
-        </div>
-      </div>
-
-      <div class="donor-grid">
-        <!-- New Surplus Listing Form -->
-        <div class="glass-panel form-card">
-          <h3 style="margin-bottom: 1.25rem; font-size: 1.2rem;">Post Fresh Surplus Food</h3>
-          <form id="formNewListing" onsubmit="handlePostListing(event)">
+            <p class="text-sm text-on-surface-variant leading-relaxed">Real-time GPS nodes of active donations and nearby volunteer dispatch riders in Sector 4.</p>
             
-            <div class="form-group">
-              <label class="form-label" for="foodTitle">Meal / Food Description</label>
-              <input type="text" id="foodTitle" class="form-input" placeholder="e.g. 40 Portions Paneer Rice & Dal" required>
-            </div>
-
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="foodCategory">Food Category</label>
-                <select id="foodCategory" class="form-select" required>
-                  <option value="COOKED">Cooked Meal (Perishable)</option>
-                  <option value="BAKERY">Bakery & Breads</option>
-                  <option value="PRODUCE">Raw Fresh Produce</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="dietaryType">Dietary Classification</label>
-                <select id="dietaryType" class="form-select">
-                  <option value="VEG">Pure Vegetarian</option>
-                  <option value="NON_VEG">Non-Vegetarian</option>
-                  <option value="VEGAN">Vegan</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="servingsCount">Portion Count (Servings)</label>
-                <input type="number" id="servingsCount" class="form-input" min="1" max="1000" value="40" required>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="pickupWindowHours">Pickup Window</label>
-                <select id="pickupWindowHours" class="form-select">
-                  <option value="2">Expires in 2 Hours</option>
-                  <option value="3" selected>Expires in 3 Hours</option>
-                  <option value="5">Expires in 5 Hours</option>
-                  <option value="8">Expires in 8 Hours</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="handlingNotes">Packaging & Handling Notes</label>
-              <textarea id="handlingNotes" class="form-textarea" rows="2" placeholder="e.g. Packed in 2 thermal insulated containers. Keep covered."></textarea>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="pickupAddress">Kitchen Pickup Location</label>
-              <input type="text" id="pickupAddress" class="form-input" value="Grand Palace Central Kitchen Gate 2, MG Road" required>
-            </div>
-
-            <button type="submit" class="btn-primary" id="btnSubmitListing">
-              ⚡ Publish Surplus Listing
-            </button>
-            <p style="font-size: 0.725rem; color: var(--text-dim); margin-top: 0.75rem; text-align: center;">
-              ✓ By submitting, donor affirms food was stored at safe temperature standards.
-            </p>
-          </form>
-        </div>
-
-        <!-- Donor Active & History Listings -->
-        <div class="glass-panel" style="padding: 1.75rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-            <h3 style="font-size: 1.2rem;">Your Active Listings & Handoffs</h3>
-            <span class="badge badge-available" id="badgeDonorActiveCount">2 Active</span>
-          </div>
-          <div class="listings-feed" id="donorListingsFeed">
-            <!-- Dynamically populated via app.js -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================
-         VIEW 2: RECIPIENT NGO VIEW (Asha Shelter)
-         ========================================== -->
-    <section id="viewNgo" class="portal-view">
-      <div class="view-header">
-        <div class="view-title-group">
-          <h2>🤝 Recipient Portal: Asha Community Shelter</h2>
-          <p class="view-subtitle">Showing available surplus food sorted by proximity and expiry urgency. One-click reservation with atomic lock.</p>
-        </div>
-      </div>
-
-      <!-- Filters & Proximity Radar Bar -->
-      <div class="filters-bar">
-        <span style="font-size: 0.85rem; font-weight: 700; color: #fff;">Radar Radius:</span>
-        <button class="filter-pill active" onclick="setNgoFilter('all')">All Ranges (5 km)</button>
-        <button class="filter-pill" onclick="setNgoFilter('cooked')">Cooked Meals Only</button>
-        <button class="filter-pill" onclick="setNgoFilter('veg')">Vegetarian Only</button>
-        <button class="filter-pill" onclick="setNgoFilter('urgent')">Expiring &lt; 2 hrs</button>
-      </div>
-
-      <div class="listings-feed" id="ngoListingsFeed">
-        <!-- Dynamically populated via app.js -->
-      </div>
-    </section>
-
-    <!-- ==========================================
-         VIEW 3: COORDINATOR & LIVE MAP VIEW
-         ========================================== -->
-    <section id="viewAdmin" class="portal-view">
-      <div class="view-header">
-        <div class="view-title-group">
-          <h2>🛡️ Operations Command & Live Triage Map</h2>
-          <p class="view-subtitle">Real-time citywide food recovery grid, active courier dispatches, and immutable food-safety audit trail.</p>
-        </div>
-      </div>
-
-      <div class="coordinator-grid">
-        <!-- Live City GIS & Grid Simulator -->
-        <div class="glass-panel map-container-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <h3 style="font-size: 1.15rem;">Live Fleet & Node Activity Map</h3>
-            <span class="badge badge-completed">GPS Telemetry Online</span>
-          </div>
-
-          <div class="interactive-map-frame" id="mapFrame">
-            <!-- High-Tech SVG Map with Animated Routes and Nodes -->
-            <svg class="map-svg" viewBox="0 0 700 400" id="cityMapSvg">
-              <defs>
-                <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-                </pattern>
-                <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.8"/>
-                  <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.8"/>
-                </linearGradient>
-              </defs>
-
-              <rect width="100%" height="100%" fill="#0a0f1d"/>
-              <rect width="100%" height="100%" fill="url(#gridPattern)"/>
-
-              <!-- City road network representation -->
-              <path d="M 50 120 Q 250 80 450 150 T 650 180" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="none"/>
-              <path d="M 120 50 Q 180 200 240 350" stroke="rgba(255,255,255,0.08)" stroke-width="5" fill="none"/>
-              <path d="M 350 50 L 350 350" stroke="rgba(255,255,255,0.06)" stroke-width="4" fill="none"/>
-              <path d="M 80 280 Q 300 320 620 270" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="none"/>
-
-              <!-- Active In-Route Dispatch Vector -->
-              <path id="activeRoutePath" d="M 220 130 C 280 180, 320 220, 480 240" stroke="url(#routeGradient)" stroke-width="3" stroke-dasharray="6,6" fill="none"/>
+            <!-- High-Tech Telemetry Map Box with Real-Time Scanning & Pins -->
+            <div class="w-full h-72 rounded-xl bg-cover bg-center relative overflow-hidden flex items-center justify-center border border-surface-variant/40 shadow-inner group" data-location="Metropolitan Area Sector 4" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC9dEeN14cvNCv2uvl-t09-imc5gA-Un5cfgF8lO3vBTgn8jvieEcA19uSTfqH25OTPfu7Kt_Y-vcHqs1QudwHV0C0mhPLnmXOLQB4L2mk1xxYeYBuRc0jlqT3RFR0xPMvg7ib82T0ZjwD2hqw3yZLRd4DQZ0_zIGnFEVcV2XdnKM0XcxpcRg6HBOASMQO8YIOJplB7QQypLbe9lRqxmHu61DDGT1HydiYP4alCD65XFXuEciCdZSQe')">
               
-              <!-- Nodes: Donors (Green) -->
-              <g class="map-node" transform="translate(220, 130)" onclick="inspectMapNode('Hotel Grand Palace')">
-                <circle r="14" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="2"/>
-                <circle r="6" fill="#10b981"/>
-                <text x="20" y="5" fill="#a7f3d0" font-size="11" font-weight="700">Hotel Grand Palace (Donor)</text>
-              </g>
+              <!-- Darkened Glass Overlay -->
+              <div class="absolute inset-0 bg-surface/25 backdrop-blur-[0.5px]"></div>
+              
+              <!-- Animated Radar Scanning Beam -->
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="w-64 h-64 rounded-full border border-primary/20 animate-sonar-ring"></div>
+                <div class="w-64 h-64 rounded-full border border-primary/10 animate-sonar-ring-delay"></div>
+                <div class="w-64 h-64 rounded-full bg-gradient-to-tr from-primary/10 to-transparent animate-radar-sweep opacity-75"></div>
+              </div>
 
-              <g class="map-node" transform="translate(140, 260)" onclick="inspectMapNode('TechPark Cafeteria')">
-                <circle r="12" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="2"/>
-                <circle r="5" fill="#10b981"/>
-                <text x="18" y="4" fill="#a7f3d0" font-size="10">TechPark Cafeteria</text>
-              </g>
+              <!-- Pin 1: Grand Banquet (85 Meals) -->
+              <div class="absolute top-1/4 left-1/3 flex flex-col items-center cursor-pointer animate-pin-float" onclick="inspectMapNode('Grand Banquet & Catering (85 Meals)')" title="Click to view details">
+                <span class="px-2 py-0.5 rounded bg-primary text-on-primary text-[11px] font-bold shadow-lg">85 Meals</span>
+                <span class="material-symbols-outlined text-primary text-[32px] drop-shadow-[0_0_8px_rgba(51,102,204,0.7)]">location_on</span>
+              </div>
 
-              <!-- Nodes: Recipients (Blue) -->
-              <g class="map-node" transform="translate(480, 240)" onclick="inspectMapNode('Asha Community Shelter')">
-                <circle r="14" fill="rgba(59, 130, 246, 0.2)" stroke="#3b82f6" stroke-width="2"/>
-                <circle r="6" fill="#3b82f6"/>
-                <text x="20" y="5" fill="#93c5fd" font-size="11" font-weight="700">Asha Shelter (NGO)</text>
-              </g>
+              <!-- Pin 2: Daily Bread (40 Items) -->
+              <div class="absolute bottom-1/3 right-1/4 flex flex-col items-center cursor-pointer animate-pin-float-slow" onclick="inspectMapNode('Daily Bread Bakery (40 Items)')" title="Click to view details">
+                <span class="px-2 py-0.5 rounded bg-tertiary text-on-tertiary text-[11px] font-bold shadow-lg">40 Items</span>
+                <span class="material-symbols-outlined text-tertiary text-[32px] drop-shadow-[0_0_8px_rgba(109,94,0,0.6)]">location_on</span>
+              </div>
 
-              <g class="map-node" transform="translate(560, 110)" onclick="inspectMapNode('Seva Children Home')">
-                <circle r="12" fill="rgba(59, 130, 246, 0.2)" stroke="#3b82f6" stroke-width="2"/>
-                <circle r="5" fill="#3b82f6"/>
-                <text x="18" y="4" fill="#93c5fd" font-size="10">Seva Home</text>
-              </g>
+              <!-- Pin 3: TechCorp (120 Boxes) -->
+              <div class="absolute top-1/2 right-1/3 flex flex-col items-center cursor-pointer animate-pin-float-alt" onclick="inspectMapNode('TechCorp Campus (120 Boxes)')" title="Click to view details">
+                <span class="px-2 py-0.5 rounded bg-secondary text-on-secondary text-[11px] font-bold shadow-lg">120 Boxes</span>
+                <span class="material-symbols-outlined text-secondary text-[32px] drop-shadow-[0_0_8px_rgba(90,95,99,0.7)]">location_on</span>
+              </div>
 
-              <!-- In-transit courier icon -->
-              <g id="courierIcon" transform="translate(350, 195)">
-                <circle r="8" fill="#f59e0b" filter="drop-shadow(0 0 6px #f59e0b)"/>
-                <text x="-4" y="3" fill="#000" font-size="8" font-weight="900">⚡</text>
-              </g>
-            </svg>
+              <!-- User Pin: Your Hub (Sector 4) -->
+              <div class="absolute bottom-4 left-4 bg-surface-container-lowest/95 px-3.5 py-2 rounded-xl backdrop-blur-md border border-outline-variant/40 flex items-center gap-2 shadow-md">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+                <span class="text-xs text-on-surface font-semibold">Your Hub (Sector 4)</span>
+              </div>
+            </div>
 
-            <div class="map-hud-legend">
-              <div class="legend-item"><span class="legend-dot" style="background: #10b981;"></span> Donors</div>
-              <div class="legend-item"><span class="legend-dot" style="background: #3b82f6;"></span> Verified NGOs</div>
-              <div class="legend-item"><span class="legend-dot" style="background: #f59e0b;"></span> In-Transit Rescue</div>
+            <!-- Telemetry Status Metrics -->
+            <div class="flex flex-col gap-3 pt-3 border-t border-surface-variant/40">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-on-surface-variant">Active Volunteers Nearby:</span>
+                <strong class="text-on-surface font-semibold flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 14 Drivers Available
+                </strong>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-on-surface-variant">Average Dispatch Time:</span>
+                <strong class="text-primary font-semibold">18 Minutes</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency Hotline Card -->
+          <div class="bg-surface-container-low rounded-2xl p-7 border border-surface-variant/60 shadow-md flex flex-col gap-5">
+            <div class="flex items-center gap-4">
+              <div class="p-3 bg-primary-container/60 rounded-xl text-primary">
+                <span class="material-symbols-outlined text-[28px]">support_agent</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-['Noto_Serif'] font-bold text-on-surface">Need Bulk Redistribution?</h3>
+                <p class="text-xs text-on-surface-variant mt-0.5">Coordinate multi-vehicle pickup with logistics command.</p>
+              </div>
+            </div>
+            <button class="w-full py-3.5 rounded-xl bg-surface-container-lowest text-on-surface text-sm font-semibold hover:bg-surface-container-high transition-all border border-outline-variant/30 shadow-sm flex items-center justify-center gap-2" onclick="openDispatchHotlineModal()">
+              <span class="material-symbols-outlined text-[18px] text-primary">call</span>
+              <span>Contact Dispatch Command</span>
+            </button>
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+    <!-- ========================================================================
+         VIEW 2: DASHBOARD (EXECUTIVE OVERVIEW & LOGISTICS METRICS)
+         ======================================================================== -->
+    <section id="viewDashboard" class="portal-view w-full">
+      <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-12 flex flex-col gap-10">
+        
+        <!-- Hero Overview Banner -->
+        <div class="relative bg-gradient-to-r from-blue-900/90 to-indigo-950/95 text-white rounded-3xl p-8 md:p-12 overflow-hidden shadow-2xl">
+          <div class="relative z-10 max-w-2xl flex flex-col gap-4">
+            <span class="text-xs font-bold tracking-widest text-blue-300 uppercase font-['Public_Sans']">Zero Hunger · Real-Time Cold Chain Verification</span>
+            <h1 class="text-3xl md:text-5xl font-['Noto_Serif'] font-bold tracking-tight">Bridging Surplus Food to Verified Shelters</h1>
+            <p class="text-sm md:text-base text-blue-100 font-normal leading-relaxed">
+              Every night commercial kitchens discard fresh food while shelters starve kilometers away. AnnaSetu ensures time-critical logistics with proximity scoring, atomic reservation locks, and cryptographic PIN handoffs.
+            </p>
+          </div>
+
+          <!-- Live KPI Counters -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 mt-6 border-t border-white/10 relative z-10">
+            <div class="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/15">
+              <div class="text-3xl md:text-4xl font-extrabold text-white" id="statMealsRescued">365</div>
+              <div class="text-xs text-blue-200 mt-1 uppercase font-semibold">Meals Rescued Today</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/15">
+              <div class="text-3xl md:text-4xl font-extrabold text-amber-300" id="statActiveClaims">2</div>
+              <div class="text-xs text-blue-200 mt-1 uppercase font-semibold">Active In-Route Claims</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/15">
+              <div class="text-3xl md:text-4xl font-extrabold text-emerald-300" id="statCo2Saved">146 kg</div>
+              <div class="text-xs text-blue-200 mt-1 uppercase font-semibold">CO₂ Emissions Prevented</div>
             </div>
           </div>
         </div>
 
-        <!-- Real-Time Audit Log & Expiry Shield -->
-        <div class="glass-panel" style="padding: 1.5rem; display: flex; flex-direction: column;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <h3 style="font-size: 1.15rem;">Chain of Custody Audit</h3>
-            <span class="badge badge-available">FSSAI Protocol</span>
+        <!-- Quick Access Portals -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-md hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between" onclick="switchPerspective('available-food')">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-3 bg-primary/10 text-primary rounded-xl">
+                <span class="material-symbols-outlined text-[24px]">radar</span>
+              </div>
+              <h3 class="font-['Noto_Serif'] font-bold text-lg">Available Food</h3>
+            </div>
+            <p class="text-xs text-on-surface-variant mb-4">Browse and claim surplus meals sorted by remaining expiry urgency and distance.</p>
+            <span class="text-xs font-bold text-primary flex items-center gap-1">Open Radar &rarr;</span>
           </div>
 
-          <div class="audit-timeline" id="auditLogTimeline">
-            <!-- Dynamically populated via app.js -->
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-md hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between" onclick="switchPerspective('donor')">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-3 bg-emerald-100 text-emerald-700 rounded-xl">
+                <span class="material-symbols-outlined text-[24px]">restaurant</span>
+              </div>
+              <h3 class="font-['Noto_Serif'] font-bold text-lg">Donor Portal</h3>
+            </div>
+            <p class="text-xs text-on-surface-variant mb-4">Publish kitchen surplus with packaging tags and verify driver pickup PINs.</p>
+            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">Post Surplus &rarr;</span>
+          </div>
+
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-md hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between" onclick="switchPerspective('admin')">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-3 bg-amber-100 text-amber-800 rounded-xl">
+                <span class="material-symbols-outlined text-[24px]">analytics</span>
+              </div>
+              <h3 class="font-['Noto_Serif'] font-bold text-lg">Operations Map</h3>
+            </div>
+            <p class="text-xs text-on-surface-variant mb-4">Monitor city GIS telemetry, active courier dispatches, and immutable audit logs.</p>
+            <span class="text-xs font-bold text-amber-800 flex items-center gap-1">Open Operations &rarr;</span>
+          </div>
+
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-md hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between" onclick="switchPerspective('judge')">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-3 bg-purple-100 text-purple-700 rounded-xl">
+                <span class="material-symbols-outlined text-[24px]">emoji_events</span>
+              </div>
+              <h3 class="font-['Noto_Serif'] font-bold text-lg">Judge Pitch</h3>
+            </div>
+            <p class="text-xs text-on-surface-variant mb-4">Interactive 5-step automated walkthrough for the Srijan Setu 2026 hackathon demo.</p>
+            <span class="text-xs font-bold text-purple-700 flex items-center gap-1">Start Walkthrough &rarr;</span>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- ==========================================
-         VIEW 4: HACKATHON PITCH & DEMO GUIDE
-         ========================================== -->
-    <section id="viewJudge" class="portal-view">
-      <div class="pitch-deck-container">
+    <!-- ========================================================================
+         VIEW 3: DONOR COMMAND (POST MEALS & VERIFY RECIPIENT PIN)
+         ======================================================================== -->
+    <section id="viewDonor" class="portal-view w-full">
+      <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-12 flex flex-col gap-8">
         
-        <div class="glass-panel pitch-header-card">
-          <span class="hero-tag" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">
-            Judge Evaluation Deck · Srijan Setu 2026
-          </span>
-          <h2 style="font-size: 1.85rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-            Why AnnaSetu Is the Winning 24-Hour Prototype
-          </h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 850px;">
-            AnnaSetu bridges time-critical logistics with deterministic safety. Unlike unconstrained AI chatbots that risk hallucinating food safety claims, AnnaSetu enforces an atomic state-machine with 4-digit physical verification codes, auto-expiry calculation, and distance-weighted matching.
+        <div>
+          <span class="text-xs font-bold tracking-widest text-primary uppercase font-['Public_Sans']">Food Donor Command</span>
+          <h2 class="text-3xl md:text-4xl font-['Noto_Serif'] font-bold text-on-surface mt-1">Hotel Grand Palace Central Kitchen</h2>
+          <p class="text-sm text-on-surface-variant mt-2">Publish fresh surplus with strict perishability windows and verify recipient physical pickup PINs.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <!-- Post Surplus Form -->
+          <div class="bg-surface-container-lowest rounded-2xl p-8 border border-surface-variant/60 shadow-md flex flex-col gap-6">
+            <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[22px]">post_add</span>
+              Publish Fresh Surplus
+            </h3>
+
+            <form id="formNewListing" onsubmit="handlePostListing(event)" class="flex flex-col gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-on-surface mb-1.5" for="foodTitle">Meal / Food Description</label>
+                <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="foodTitle" placeholder="e.g. 50 Servings Dal Makhani & Jeera Rice" required type="text"/>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface mb-1.5" for="foodCategory">Category</label>
+                  <select class="w-full bg-surface-container-low text-on-surface text-sm px-3.5 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="foodCategory" required>
+                    <option value="COOKED">Cooked Meal</option>
+                    <option value="BAKERY">Bakery &amp; Breads</option>
+                    <option value="PRODUCE">Raw Fresh Produce</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface mb-1.5" for="dietaryType">Dietary Tag</label>
+                  <select class="w-full bg-surface-container-low text-on-surface text-sm px-3.5 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="dietaryType">
+                    <option value="VEG">Vegetarian</option>
+                    <option value="NON_VEG">Non-Veg</option>
+                    <option value="VEGAN">Vegan</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface mb-1.5" for="servingsCount">Servings (Portions)</label>
+                  <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="servingsCount" max="1000" min="1" required type="number" value="40"/>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface mb-1.5" for="pickupWindowHours">Pickup Window</label>
+                  <select class="w-full bg-surface-container-low text-on-surface text-sm px-3.5 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="pickupWindowHours">
+                    <option value="2">Expires in 2 Hours</option>
+                    <option selected value="3">Expires in 3 Hours</option>
+                    <option value="5">Expires in 5 Hours</option>
+                    <option value="8">Expires in 8 Hours</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-on-surface mb-1.5" for="handlingNotes">Packaging &amp; Handling Notes</label>
+                <textarea class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="handlingNotes" placeholder="Thermal insulated containers. Keep covered." rows="2"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-on-surface mb-1.5" for="pickupAddress">Kitchen Pickup Location</label>
+                <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="pickupAddress" required type="text" value="Grand Palace Central Kitchen Gate 2, MG Road"/>
+              </div>
+
+              <button class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2 mt-2" id="btnSubmitListing" type="submit">
+                <span class="material-symbols-outlined text-[18px]">publish</span> Publish Surplus Listing
+              </button>
+            </form>
+          </div>
+
+          <!-- Active Donor Listings & PIN Verification List -->
+          <div class="lg:col-span-2 bg-surface-container-lowest rounded-2xl p-8 border border-surface-variant/60 shadow-md flex flex-col gap-6">
+            <div class="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+              <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Your Published Surplus Listings</h3>
+              <span class="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary" id="badgeDonorActiveCount">2 Active</span>
+            </div>
+
+            <div class="flex flex-col gap-4" id="donorListingsFeed">
+              <!-- Dynamically populated via app.js -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         VIEW 4: IMPACT & ANALYTICS (OPERATIONS GIS & AUDIT TIMELINE)
+         ======================================================================== -->
+    <section id="viewAdmin" class="portal-view w-full">
+      <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-12 flex flex-col gap-8">
+        
+        <div>
+          <span class="text-xs font-bold tracking-widest text-primary uppercase font-['Public_Sans']">Municipal Operations Command</span>
+          <h2 class="text-3xl md:text-4xl font-['Noto_Serif'] font-bold text-on-surface mt-1">Live Fleet GIS &amp; FSSAI Audit Trail</h2>
+          <p class="text-sm text-on-surface-variant mt-2">Real-time citywide food recovery grid, active courier dispatches, and immutable chain-of-custody.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <!-- Full SVG Vector Telemetry Map -->
+          <div class="lg:col-span-2 bg-surface-container-lowest rounded-2xl p-7 border border-surface-variant/60 shadow-md flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-on-surface font-['Noto_Serif']">Citywide Food Rescue Grid</h3>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">GPS Fleet Sync</span>
+            </div>
+
+            <div class="w-full h-96 rounded-xl bg-slate-900 overflow-hidden relative border border-slate-700 shadow-inner">
+              <svg class="w-full h-full" id="cityMapSvg" viewBox="0 0 700 400">
+                <defs>
+                  <pattern height="40" id="gridPattern" patternUnits="userSpaceOnUse" width="40">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                  </pattern>
+                  <linearGradient id="routeGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.8"/>
+                    <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.8"/>
+                  </linearGradient>
+                </defs>
+                <rect fill="#0f172a" height="100%" width="100%"/>
+                <rect fill="url(#gridPattern)" height="100%" width="100%"/>
+
+                <!-- Road Network -->
+                <path d="M 50 120 Q 250 80 450 150 T 650 180" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6"/>
+                <path d="M 120 50 Q 180 200 240 350" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="5"/>
+                <path d="M 350 50 L 350 350" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+                <path d="M 80 280 Q 300 320 620 270" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6"/>
+
+                <!-- Active In-Route Dispatch Vector -->
+                <path d="M 220 130 C 280 180, 320 220, 480 240" fill="none" id="activeRoutePath" stroke="url(#routeGradient)" stroke-dasharray="6,6" stroke-width="3"/>
+                
+                <!-- Donor Nodes (Green) -->
+                <g class="cursor-pointer" onclick="inspectMapNode('Hotel Grand Palace')" transform="translate(220, 130)">
+                  <circle fill="rgba(16, 185, 129, 0.25)" r="16" stroke="#10b981" stroke-width="2"/>
+                  <circle fill="#10b981" r="7"/>
+                  <text fill="#a7f3d0" font-size="11" font-weight="700" x="22" y="5">Grand Palace (Donor)</text>
+                </g>
+
+                <g class="cursor-pointer" onclick="inspectMapNode('Daily Bread Bakery')" transform="translate(140, 260)">
+                  <circle fill="rgba(16, 185, 129, 0.25)" r="14" stroke="#10b981" stroke-width="2"/>
+                  <circle fill="#10b981" r="6"/>
+                  <text fill="#a7f3d0" font-size="10" x="20" y="4">Daily Bread Bakery</text>
+                </g>
+
+                <!-- Recipient Nodes (Blue) -->
+                <g class="cursor-pointer" onclick="inspectMapNode('Asha Shelter')" transform="translate(480, 240)">
+                  <circle fill="rgba(59, 130, 246, 0.25)" r="16" stroke="#3b82f6" stroke-width="2"/>
+                  <circle fill="#3b82f6" r="7"/>
+                  <text fill="#93c5fd" font-size="11" font-weight="700" x="22" y="5">Asha Shelter (NGO)</text>
+                </g>
+
+                <!-- Courier Pin -->
+                <g id="courierIcon" transform="translate(350, 195)">
+                  <circle fill="#f59e0b" filter="drop-shadow(0 0 6px #f59e0b)" r="10"/>
+                  <text fill="#000" font-size="10" font-weight="900" x="-5" y="4">⚡</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Chain of Custody Audit Log -->
+          <div class="bg-surface-container-lowest rounded-2xl p-7 border border-surface-variant/60 shadow-md flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+              <h3 class="text-lg font-bold text-on-surface font-['Noto_Serif']">FSSAI Audit Log</h3>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">Immutable</span>
+            </div>
+
+            <div class="flex flex-col gap-3 overflow-y-auto max-h-96 pr-1 text-xs" id="auditLogTimeline">
+              <!-- Dynamically populated via app.js -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         VIEW 5: HACKATHON JUDGE PITCH & DEMO GUIDE
+         ======================================================================== -->
+    <section id="viewJudge" class="portal-view w-full">
+      <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-12 flex flex-col gap-8">
+        
+        <div class="bg-surface-container-lowest p-8 md:p-12 rounded-3xl border border-surface-variant/60 shadow-md">
+          <span class="text-xs font-bold tracking-widest text-amber-600 uppercase font-['Public_Sans']">Srijan Setu 2026 Evaluation Deck</span>
+          <h2 class="text-3xl md:text-4xl font-['Noto_Serif'] font-bold text-on-surface mt-2 mb-3">Why AnnaSetu Is the Winning Prototype</h2>
+          <p class="text-sm md:text-base text-on-surface-variant max-w-3xl leading-relaxed">
+            AnnaSetu bridges time-critical surplus logistics with deterministic food safety. Rather than unconstrained AI chatbots that risk hallucinating food safety claims, AnnaSetu enforces an atomic state-machine with 4-digit physical verification PINs, auto-expiry calculation, and distance-weighted matching.
           </p>
         </div>
 
-        <div class="pitch-steps-grid">
-          
-          <div class="glass-panel step-card">
-            <div class="step-num">1</div>
-            <h3 class="step-title">The Kitchen Reality</h3>
-            <p class="step-desc">
-              Banquet halls discard surplus food at 11:30 PM because existing directories are static phonebooks without real-time expiry awareness.
-            </p>
-            <button class="step-btn" onclick="executeDemoStep(1)">
-              Run Step 1: Open Donor Portal
-            </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-sm flex flex-col justify-between gap-4">
+            <div>
+              <span class="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-sm mb-3">1</span>
+              <h3 class="text-lg font-bold text-on-surface">The Kitchen Reality</h3>
+              <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Commercial kitchens discard meals because directories are static phonebooks without remaining shelf-life awareness.</p>
+            </div>
+            <button class="w-full py-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-on-primary text-xs font-bold transition-all" onclick="executeDemoStep(1)">Run Step 1: Open Donor Portal</button>
           </div>
 
-          <div class="step-card glass-panel">
-            <div class="step-num">2</div>
-            <h3 class="step-title">Urgency-Ranked Match</h3>
-            <p class="step-desc">
-              Nearby Asha Shelter gets an immediate notification. The matching engine ranks by remaining shelf-life and proximity (1.8 km).
-            </p>
-            <button class="step-btn" onclick="executeDemoStep(2)">
-              Run Step 2: Open NGO Radar
-            </button>
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-sm flex flex-col justify-between gap-4">
+            <div>
+              <span class="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-sm mb-3">2</span>
+              <h3 class="text-lg font-bold text-on-surface">Urgency Radar Matching</h3>
+              <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Shelters see real-time matches ranked 50% by proximity and 50% by time urgency.</p>
+            </div>
+            <button class="w-full py-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-on-primary text-xs font-bold transition-all" onclick="executeDemoStep(2)">Run Step 2: Open Available Food</button>
           </div>
 
-          <div class="step-card glass-panel">
-            <div class="step-num">3</div>
-            <h3 class="step-title">Atomic Claim & PIN</h3>
-            <p class="step-desc">
-              NGO reserves the food. The listing is instantly locked from other NGOs, and a secure 4-digit handover PIN (e.g., 7419) is issued.
-            </p>
-            <button class="step-btn" onclick="executeDemoStep(3)">
-              Run Step 3: Trigger Live Claim
-            </button>
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-sm flex flex-col justify-between gap-4">
+            <div>
+              <span class="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-sm mb-3">3</span>
+              <h3 class="text-lg font-bold text-on-surface">Atomic Lock &amp; PIN</h3>
+              <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Clicking claim instantly reserves the meal, prevents double claims, and issues a 4-digit PIN.</p>
+            </div>
+            <button class="w-full py-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-on-primary text-xs font-bold transition-all" onclick="executeDemoStep(3)">Run Step 3: Trigger Live Claim</button>
           </div>
 
-          <div class="step-card glass-panel">
-            <div class="step-num">4</div>
-            <h3 class="step-title">Physical Verification</h3>
-            <p class="step-desc">
-              Driver arrives at kitchen. Donor inputs PIN to mark status as "Completed". The transaction is permanently logged in the audit trail.
-            </p>
-            <button class="step-btn" onclick="executeDemoStep(4)">
-              Run Step 4: Verify Handover PIN
-            </button>
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-sm flex flex-col justify-between gap-4">
+            <div>
+              <span class="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-sm mb-3">4</span>
+              <h3 class="text-lg font-bold text-on-surface">Physical Verification</h3>
+              <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Driver arrives at kitchen. Donor inputs PIN to mark status as Completed in the immutable audit log.</p>
+            </div>
+            <button class="w-full py-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-on-primary text-xs font-bold transition-all" onclick="executeDemoStep(4)">Run Step 4: Verify Handover PIN</button>
           </div>
 
-          <div class="step-card glass-panel">
-            <div class="step-num">5</div>
-            <h3 class="step-title">Role Auth & Email Verification</h3>
-            <p class="step-desc">
-              Single-page portal for Donors & NGOs with backend user verification, error handling for wrong credentials, password recovery OTP, and live email verification.
-            </p>
-            <button class="step-btn" onclick="executeDemoStep(5)">
-              Run Step 5: Test Auth & Email Flow
-            </button>
+          <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-variant/60 shadow-sm flex flex-col justify-between gap-4">
+            <div>
+              <span class="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-sm mb-3">5</span>
+              <h3 class="text-lg font-bold text-on-surface">Role Auth &amp; OTP</h3>
+              <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Simulated inbox verification and forgot password flow for verified municipal accounts.</p>
+            </div>
+            <button class="w-full py-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-on-primary text-xs font-bold transition-all" onclick="executeDemoStep(5)">Run Step 5: Test Auth &amp; Email</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         VIEW 6: PORTAL AUTHENTICATION & REGISTRATION
+         ======================================================================== -->
+    <section id="viewAuth" class="portal-view w-full">
+      <div class="max-w-[1000px] mx-auto px-6 md:px-12 py-12 flex flex-col md:flex-row gap-8 items-start">
+        
+        <!-- Left: Briefing -->
+        <div class="flex-1 flex flex-col gap-4">
+          <span class="text-xs font-bold tracking-widest text-primary uppercase font-['Public_Sans']">Verified Portal Access</span>
+          <h2 class="text-3xl font-['Noto_Serif'] font-bold text-on-surface">Secure Donor &amp; NGO Sign In</h2>
+          <p class="text-sm text-on-surface-variant leading-relaxed">
+            Access certified municipal surplus distribution. Accounts require verified business email or NGO shelter registration to prevent food theft and ensure traceability.
+          </p>
+
+          <!-- 1-Click Demo Accounts -->
+          <div class="mt-4 p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-3">
+            <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">⚡ 1-Click Demo Test Accounts:</span>
+            <div class="flex flex-wrap gap-2">
+              <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-xs font-semibold hover:border-primary border border-outline-variant/30 text-on-surface shadow-sm transition-all" onclick="fillDemoCredentials('donor_hotel', 'GrandPalace@2026', 'donor')">
+                🏨 Hotel Grand Palace (Donor)
+              </button>
+              <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-xs font-semibold hover:border-primary border border-outline-variant/30 text-on-surface shadow-sm transition-all" onclick="fillDemoCredentials('ngo_asha', 'AshaShelter@2026', 'ngo')">
+                🤝 Asha Shelter (NGO)
+              </button>
+              <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-xs font-semibold hover:border-amber-500 border border-outline-variant/30 text-amber-800 shadow-sm transition-all" onclick="fillDemoCredentials('donor_bakery', 'Bakery@2026', 'donor')">
+                ⚠️ Test Email OTP Flow
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Login Card -->
+        <div class="w-full md:w-[420px] bg-surface-container-lowest p-8 rounded-2xl border border-surface-variant/60 shadow-xl flex flex-col gap-5">
+          <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[24px]">lock</span>
+              <h3 class="font-['Noto_Serif'] font-bold text-xl text-on-surface">Sign In</h3>
+            </div>
+            <span class="text-xs font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase" id="authSubtitleRole">Donor Gateway</span>
           </div>
 
+          <!-- Role Toggle -->
+          <div class="grid grid-cols-2 gap-2 p-1 bg-surface-container-low rounded-xl">
+            <button class="py-2 text-xs font-bold rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all" id="btnRoleDonor" onclick="setAuthRole('donor')">🏨 Food Donor</button>
+            <button class="py-2 text-xs font-bold rounded-lg text-on-surface-variant hover:text-on-surface transition-all" id="btnRoleNgo" onclick="setAuthRole('ngo')">🤝 Recipient NGO</button>
+          </div>
+
+          <!-- Sign In Form -->
+          <form class="flex flex-col gap-4" id="formSignIn" onsubmit="handleAuthLogin(event)">
+            <div>
+              <label class="block text-xs font-semibold text-on-surface mb-1.5" for="authUserId">User ID or Official Email</label>
+              <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="authUserId" placeholder="e.g. donor_hotel or donor@grandpalace.com" required type="text"/>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-on-surface" for="authPassword">Password</label>
+                <a class="text-xs text-primary underline" href="javascript:void(0)" onclick="openForgotPasswordModal()">Forgot?</a>
+              </div>
+              <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="authPassword" placeholder="••••••••" required type="password"/>
+            </div>
+
+            <button class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2 mt-2" id="btnSubmitAuth" type="submit">
+              <span class="material-symbols-outlined text-[18px]">login</span> Sign In to Portal
+            </button>
+          </form>
         </div>
 
       </div>
@@ -689,208 +871,191 @@
 
   </main>
 
-  <!-- ==========================================
+  <!-- ==========================================================================
        MODALS
-       ========================================== -->
+       ========================================================================== -->
 
-  <!-- Modal: Claim Confirmation with Secure 4-Digit PIN -->
-  <div class="modal-overlay" id="modalClaimConfirm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 style="font-size: 1.25rem;">Reservation Confirmed!</h3>
-        <button class="modal-close-btn" onclick="closeModal('modalClaimConfirm')">&times;</button>
-      </div>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">
-        Your shelter has claimed this surplus meal. Share this 4-digit code with the kitchen manager upon physical pickup:
-      </p>
-
-      <div class="pin-display-box">
-        <div class="pin-code-text" id="modalPinValue">7419</div>
-        <div class="pin-note">Valid for 90 minutes · Do not share publicly</div>
-      </div>
-
-      <div style="font-size: 0.85rem; background: rgba(255,255,255,0.04); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.25rem;">
-        <div><strong>Donor Contact:</strong> Rajesh Sharma (+91 98765-43210)</div>
-        <div><strong>Pickup Point:</strong> Gate 2, Hotel Grand Palace, MG Road</div>
-      </div>
-
-      <button class="btn-primary" onclick="closeModal('modalClaimConfirm')">
-        ✓ Understood, Dispatching Volunteer
-      </button>
-    </div>
-  </div>
-
-  <!-- Modal: Donor Handover Verification (PIN Entry) -->
-  <div class="modal-overlay" id="modalDonorVerify">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 style="font-size: 1.25rem;">Verify Recipient Pickup</h3>
-        <button class="modal-close-btn" onclick="closeModal('modalDonorVerify')">&times;</button>
-      </div>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
-        Enter the 4-digit PIN presented by the shelter driver to confirm physical handover:
-      </p>
-
-      <input type="hidden" id="verifyListingId">
-      <div class="form-group">
-        <input type="text" id="inputVerifyPin" class="form-input" style="font-size: 1.6rem; text-align: center; letter-spacing: 0.4em; font-family: monospace;" maxlength="4" placeholder="••••">
-      </div>
-
-      <button class="btn-primary" onclick="confirmHandoverPin()">
-        Confirm Handoff & Complete
-      </button>
-    </div>
-  </div>
-
-  <!-- Modal: Email Verification Flow -->
-  <div class="modal-overlay" id="modalEmailVerify">
-    <div class="modal-content" style="max-width: 500px;">
-      <div class="modal-header">
-        <h3 style="font-size: 1.25rem;">✉️ Verify Your Email Address</h3>
-        <button class="modal-close-btn" onclick="closeModal('modalEmailVerify')">&times;</button>
-      </div>
-
-      <!-- Simulated Email Inbox Notification Banner -->
-      <div class="simulated-email-banner" id="verifySimulatedBanner">
-        <div class="simulated-email-header">
-          <span>📬 Simulated Mail Server</span>
-          <span>Delivered Just Now</span>
+  <!-- Modal 1: Claim Modal (Exact User Component with Cryptographic PIN) -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="claimModal">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-6 modal-spring">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-[28px]">verified_user</span>
+          <h3 class="text-2xl font-['Noto_Serif'] font-bold text-on-surface">Secure Pickup Claim</h3>
         </div>
-        <div class="simulated-email-body">
-          <div><strong>To:</strong> <span id="verifyTargetEmail">email@domain.com</span></div>
-          <div><strong>Subject:</strong> AnnaSetu Account Verification Code</div>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-            <span>Your 6-Digit OTP: <span class="simulated-otp-code" id="verifySimulatedOtp">489201</span></span>
-            <button type="button" class="btn-autofill-otp" onclick="autofillVerificationOtp()">⚡ Auto-Fill Code</button>
-          </div>
-        </div>
+        <button class="text-on-surface-variant hover:text-on-surface p-2 rounded-full hover:bg-surface-container-low transition-colors" onclick="closeClaimModal()">
+          <span class="material-symbols-outlined text-[24px]">close</span>
+        </button>
       </div>
-
-      <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">
-        Please enter the 6-digit cryptographic verification code sent to your email to activate your account clearance:
-      </p>
-
-      <div class="auth-error-alert" id="verifyModalError" style="margin-bottom: 1rem;">
-        <div class="error-title"><span>⚠️</span> <span>Verification Error</span></div>
-        <div id="verifyModalErrorMessage"></div>
-      </div>
-
-      <input type="hidden" id="verifyTargetUserId">
       
-      <div class="form-group">
-        <input type="text" id="inputVerifyOtp" class="otp-input-field" maxlength="6" placeholder="••••••" autocomplete="one-time-code">
+      <div class="flex flex-col gap-1.5">
+        <span class="text-xs font-bold text-primary uppercase font-['Public_Sans']">Selected Listing</span>
+        <h4 class="text-lg font-bold text-on-surface" id="modalItemTitle">--</h4>
+        <p class="text-sm text-on-surface-variant leading-relaxed">By confirming, you lock this donation for your organization and initiate the transit timer.</p>
       </div>
 
-      <button type="button" class="btn-primary" id="btnSubmitVerifyOtp" onclick="submitEmailVerification()" style="width: 100%; justify-content: center; margin-bottom: 0.75rem;">
-        ✓ Verify Email & Unlock Portal
+      <!-- Cryptographic PIN Verification Mock -->
+      <div class="bg-surface-container-low p-6 rounded-xl flex flex-col items-center justify-center gap-2 border border-primary/20 shadow-inner">
+        <span class="text-xs font-bold text-on-surface-variant uppercase font-['Public_Sans']">Generated Secure Receipt PIN</span>
+        <div class="text-4xl font-extrabold text-primary tracking-[0.3em] font-mono py-1 pin-reveal-anim" id="modalPinValue">4892</div>
+        <span class="text-xs text-on-surface-variant text-center">Show this PIN to the donor coordinator upon arrival for verification.</span>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-sm text-on-surface font-semibold">Assigned Transport / Vehicle</label>
+        <select class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="selectClaimVehicle">
+          <option>Volunteer Van #3 (Driver: Rajesh K.)</option>
+          <option>Cargo Bike Squad A</option>
+          <option>Walk-in Community Pickup</option>
+        </select>
+      </div>
+
+      <div class="flex items-center justify-end gap-4 pt-2">
+        <button class="px-6 py-3 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors text-sm font-semibold border border-outline-variant/20" onclick="closeClaimModal()">Cancel</button>
+        <button class="px-8 py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:bg-primary/90 transition-all shadow-md" onclick="confirmClaim()">Confirm &amp; Dispatch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Donor Verify Pickup PIN Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDonorVerify">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-6 modal-spring">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Verify Recipient Handover</h3>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full" onclick="closeModal('modalDonorVerify')">&times;</button>
+      </div>
+      <p class="text-xs text-on-surface-variant">Enter the 4-digit verification PIN presented by the shelter driver upon physical food handover:</p>
+      
+      <input id="verifyListingId" type="hidden"/>
+      <div class="flex justify-center">
+        <input class="w-48 text-center text-3xl font-mono tracking-[0.4em] py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:ring-2 focus:ring-primary focus:outline-none font-bold" id="inputVerifyPin" maxlength="4" placeholder="••••" type="text"/>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button class="px-4 py-2.5 rounded-xl bg-surface-container-low text-sm font-semibold" onclick="closeModal('modalDonorVerify')">Cancel</button>
+        <button class="px-6 py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="confirmHandoverPin()">Confirm &amp; Complete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Emergency Dispatch Hotline Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDispatchHotline">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-6 modal-spring">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[24px]">support_agent</span>
+          <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Logistics Command</h3>
+        </div>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full" onclick="closeModal('modalDispatchHotline')">&times;</button>
+      </div>
+      <p class="text-xs text-on-surface-variant">Request municipal multi-vehicle dispatch for surplus pickups exceeding 150 servings or emergency relocations.</p>
+      <div class="p-3 bg-surface-container-low rounded-xl text-xs space-y-1">
+        <div><strong>Sector Dispatcher:</strong> Officer R. Sharma</div>
+        <div><strong>Hotline Radio:</strong> +91 1800-ANNA-SETU</div>
+        <div><strong>Average Response:</strong> 12 - 18 minutes</div>
+      </div>
+      <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="confirmDispatchCall()">
+        🚨 Dispatch Volunteer Squad Now
       </button>
+    </div>
+  </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.825rem; color: var(--text-dim); flex-wrap: wrap; gap: 0.5rem;">
-        <span>Didn't receive the code?</span>
-        <button type="button" id="btnResendVerification" onclick="resendVerificationCode()" style="background: none; border: none; color: #93c5fd; text-decoration: underline; cursor: pointer; font-size: 0.825rem;">
-          Resend Verification Code
-        </button>
+  <!-- Modal 4: Radius Selection Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalRadius">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-surface-variant flex flex-col gap-4 modal-spring">
+      <div class="flex items-center justify-between">
+        <h3 class="font-['Noto_Serif'] font-bold text-lg text-on-surface">Select Search Radius</h3>
+        <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="closeModal('modalRadius')">&times;</button>
+      </div>
+      <p class="text-xs text-on-surface-variant">Filter active surplus listings by proximity distance from your hub:</p>
+      <div class="grid grid-cols-2 gap-2 pt-2">
+        <button class="p-3 rounded-xl border border-outline-variant/30 hover:border-primary text-sm font-semibold hover:bg-primary/5 transition-all" onclick="setRadius(2)">2 km (Immediate)</button>
+        <button class="p-3 rounded-xl border border-primary bg-primary/10 text-primary font-bold text-sm transition-all" onclick="setRadius(5)">5 km (Standard)</button>
+        <button class="p-3 rounded-xl border border-outline-variant/30 hover:border-primary text-sm font-semibold hover:bg-primary/5 transition-all" onclick="setRadius(10)">10 km (Expanded)</button>
+        <button class="p-3 rounded-xl border border-outline-variant/30 hover:border-primary text-sm font-semibold hover:bg-primary/5 transition-all" onclick="setRadius(25)">25 km (Citywide)</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Forgot Password Flow -->
-  <div class="modal-overlay" id="modalForgotPassword">
-    <div class="modal-content" style="max-width: 500px;">
-      <div class="modal-header">
-        <h3 style="font-size: 1.25rem;">🔑 Reset Account Password</h3>
-        <button class="modal-close-btn" onclick="closeModal('modalForgotPassword')">&times;</button>
+  <!-- Modal 5: Email Verification Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalEmailVerify">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">✉️ Email Verification</h3>
+        <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="closeModal('modalEmailVerify')">&times;</button>
+      </div>
+      
+      <!-- Simulated Email Inbox Banner -->
+      <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs flex flex-col gap-2">
+        <div class="flex items-center justify-between font-bold text-blue-900">
+          <span>📬 Simulated Mail Delivery</span>
+          <span class="text-[10px] bg-blue-200 px-2 py-0.5 rounded-full">Just Now</span>
+        </div>
+        <div><strong>To:</strong> <span id="verifyTargetEmail">bakery@freshbuns.org</span></div>
+        <div class="flex items-center justify-between pt-1">
+          <span>Your 6-Digit Code: <strong class="text-primary font-mono text-sm tracking-wider" id="verifySimulatedOtp">582914</strong></span>
+          <button class="px-2.5 py-1 bg-primary text-on-primary rounded-lg font-bold text-[11px] shadow-sm" onclick="autofillVerificationOtp()">⚡ Auto-Fill</button>
+        </div>
       </div>
 
-      <!-- Forgot Password Error Banner -->
-      <div class="auth-error-alert" id="forgotModalError" style="margin-bottom: 1rem;">
-        <div class="error-title"><span>⚠️</span> <span>Error</span></div>
-        <div id="forgotModalErrorMessage"></div>
+      <input class="w-full text-center text-2xl font-mono tracking-[0.4em] py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:ring-2 focus:ring-primary focus:outline-none" id="inputVerifyOtp" maxlength="6" placeholder="••••••" type="text"/>
+      <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="submitEmailVerification()">Verify &amp; Activate Account</button>
+    </div>
+  </div>
+
+  <!-- Modal 6: Forgot Password Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalForgotPassword">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">🔑 Reset Password</h3>
+        <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="closeModal('modalForgotPassword')">&times;</button>
       </div>
 
-      <!-- STEP 1: Enter User ID or Email -->
-      <div id="forgotStep1">
-        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">
-          Enter your registered User ID or Official Email address. We will generate and dispatch a 6-digit security reset code.
-        </p>
-
-        <div class="form-group">
-          <label class="form-label" for="forgotIdentifier">User ID or Registered Email</label>
-          <input type="text" id="forgotIdentifier" class="form-input" placeholder="e.g. donor_hotel or donor@grandpalace.com" required>
-        </div>
-
-        <button type="button" class="btn-primary" id="btnSendForgotOtp" onclick="requestForgotPasswordOtp()" style="width: 100%; justify-content: center;">
-          ⚡ Send 6-Digit Reset Code
-        </button>
+      <div class="flex flex-col gap-4" id="forgotStep1">
+        <p class="text-xs text-on-surface-variant">Enter your official account email or user ID to receive a 6-digit cryptographic security code:</p>
+        <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary" id="forgotIdentifier" placeholder="e.g. donor_hotel" required type="text"/>
+        <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="requestForgotPasswordOtp()">⚡ Send Reset Code</button>
       </div>
 
-      <!-- STEP 2: Enter OTP & New Password (Hidden initially) -->
-      <div id="forgotStep2" style="display: none;">
-        <!-- Simulated Reset Email Banner -->
-        <div class="simulated-email-banner" id="forgotSimulatedBanner">
-          <div class="simulated-email-header">
-            <span>📬 Simulated Mail Server</span>
-            <span>Reset Dispatch</span>
-          </div>
-          <div class="simulated-email-body">
-            <div><strong>To:</strong> <span id="forgotTargetEmail">email@domain.com</span></div>
-            <div><strong>Subject:</strong> Password Reset Code</div>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-              <span>Reset OTP: <span class="simulated-otp-code" id="forgotSimulatedOtp">938102</span></span>
-              <button type="button" class="btn-autofill-otp" onclick="autofillForgotOtp()">⚡ Auto-Fill Code</button>
-            </div>
-          </div>
+      <div class="flex flex-col gap-4 hidden" id="forgotStep2">
+        <div class="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs flex items-center justify-between">
+          <span>OTP: <strong class="text-primary font-mono" id="forgotSimulatedOtp">938102</strong></span>
+          <button class="text-primary font-bold underline" onclick="autofillForgotOtp()">Auto-Fill</button>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" for="forgotInputOtp">Enter 6-Digit Reset Code</label>
-          <input type="text" id="forgotInputOtp" class="otp-input-field" maxlength="6" placeholder="••••••">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="forgotNewPassword">New Password (Min 6 chars)</label>
-          <div class="password-field-group">
-            <input type="password" id="forgotNewPassword" class="form-input" placeholder="Enter new strong password" required minlength="6">
-            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('forgotNewPassword')">👁️</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="forgotConfirmPassword">Confirm New Password</label>
-          <div class="password-field-group">
-            <input type="password" id="forgotConfirmPassword" class="form-input" placeholder="Re-enter new password" required minlength="6">
-            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('forgotConfirmPassword')">👁️</button>
-          </div>
-        </div>
-
-        <button type="button" class="btn-primary" id="btnSubmitResetPassword" onclick="submitPasswordReset()" style="width: 100%; justify-content: center;">
-          ✓ Confirm & Update Password
-        </button>
-      </div>
-
-      <!-- Success State Confirmation -->
-      <div id="forgotStepSuccess" style="display: none; text-align: center; padding: 1.5rem 0;">
-        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
-        <h4 style="font-size: 1.2rem; color: #34d399; margin-bottom: 0.5rem;">Password Successfully Reset!</h4>
-        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">
-          Your account credentials have been updated securely. You can now log into your portal.
-        </p>
-        <button type="button" class="btn-primary" onclick="closeModal('modalForgotPassword'); switchPerspective('auth');" style="margin: 0 auto;">
-          Go to Sign In
-        </button>
+        <input class="w-full text-center text-xl font-mono tracking-widest py-2 rounded-xl bg-surface-container-low border border-outline-variant/30" id="forgotInputOtp" maxlength="6" placeholder="••••••" type="text"/>
+        <input class="w-full bg-surface-container-low text-sm px-4 py-3 rounded-xl border border-outline-variant/30" id="forgotNewPassword" placeholder="New Password (min 6 chars)" type="password"/>
+        <input class="w-full bg-surface-container-low text-sm px-4 py-3 rounded-xl border border-outline-variant/30" id="forgotConfirmPassword" placeholder="Confirm New Password" type="password"/>
+        <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="submitPasswordReset()">Confirm &amp; Update Password</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification Container -->
-  <div class="toast-container" id="toastContainer"></div>
-
-  <!-- Footer & Food Safety Disclaimer -->
-  <footer class="app-footer">
-    <div class="footer-safety-notice">
-      <strong>Food Safety & Logistical Boundary:</strong> AnnaSetu is a decision-support and dispatch coordination prototype. Safe food handling, potability compliance, and allergen management remain governed by local health authorities and donor certifications.
+  <!-- Success Notification Toast -->
+  <div class="fixed bottom-8 right-8 z-50 bg-surface-container-lowest border border-primary text-on-surface px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 translate-y-32 opacity-0 transition-all duration-300 pointer-events-none" id="toastNotification">
+    <div class="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+      <span class="material-symbols-outlined text-[24px]">check_circle</span>
     </div>
-    <div>Built for 24-Hour Hackathon · <strong>Srijan Setu 2026</strong></div>
+    <div>
+      <div class="text-sm font-bold text-on-surface" id="toastTitle">Donation Claimed Successfully!</div>
+      <div class="text-xs text-on-surface-variant mt-0.5" id="toastMessage">Pickup route and verification PIN sent to your active log.</div>
+    </div>
+  </div>
+
+  <!-- Old Toast Container Fallback for Legacy Toast Calls -->
+  <div class="fixed top-24 right-8 z-50 flex flex-col gap-2 pointer-events-none" id="toastContainer"></div>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="w-full bg-surface-container-low py-12 border-t border-surface-variant/40 mt-auto">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between text-on-surface-variant text-sm gap-4">
+      <div>&copy; 2026 AnnaSetu Civic Tech · Srijan Setu Hackathon Prototype</div>
+      <div class="flex gap-8 text-xs font-medium">
+        <a class="hover:text-on-surface transition-colors" href="javascript:void(0)">FSSAI Guidelines</a>
+        <a class="hover:text-on-surface transition-colors" href="javascript:void(0)">Chain of Custody Protocol</a>
+        <a class="hover:text-on-surface transition-colors" href="javascript:void(0)">Zero Hunger Standard</a>
+      </div>
+    </div>
   </footer>
 
   <script src="app.js"></script>
