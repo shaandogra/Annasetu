@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnnaSetu — Rapid Surplus Food Rescue & Verification Platform</title>
+  <meta name="description" content="Coordinate timely, safe redistribution of surplus food from commercial kitchens to verified community shelters with cryptographic chain-of-custody.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation & Role Switcher Bar -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="brand-wrapper">
+        <img src="assets/logo.jpg" alt="AnnaSetu Logo" class="brand-logo" id="appLogo">
+        <div class="brand-title">
+          AnnaSetu
+          <span class="brand-badge">24h Hackathon MVP</span>
+        </div>
+      </div>
+
+      <!-- Multi-Perspective Persona Switcher -->
+      <nav class="role-switcher-container" aria-label="Perspective Switcher">
+        <button class="role-tab-btn" id="tabAuth" onclick="switchPerspective('auth')">
+          🔐 Portal Login
+        </button>
+        <button class="role-tab-btn active" id="tabDonor" onclick="switchPerspective('donor')">
+          🏨 Donor View
+        </button>
+        <button class="role-tab-btn ngo-tab" id="tabNgo" onclick="switchPerspective('ngo')">
+          🤝 Recipient NGO View
+        </button>
+        <button class="role-tab-btn admin-tab" id="tabAdmin" onclick="switchPerspective('admin')">
+          🛡️ Coordinator & Map
+        </button>
+        <button class="role-tab-btn judge-tab" id="tabJudge" onclick="switchPerspective('judge')">
+          🏆 Pitch & Demo Guide
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div id="headerAuthBadge"></div>
+        <div class="live-indicator">
+          <span class="pulse-dot"></span>
+          <span>Live Sync Active</span>
+        </div>
+        <button class="btn-secondary-sm" id="btnResetData" onclick="resetDemoData()" title="Reload clean demo data">
+          ↺ Reset Demo
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- High-Impact Hero Banner & Global Metrics -->
+    <section class="hero-banner-card glass-panel" aria-label="Platform Overview">
+      <img src="assets/hero.jpg" alt="Surplus meals ready for community redistribution" class="hero-bg-img">
+      <div class="hero-overlay-gradient"></div>
+      <div class="hero-content">
+        <span class="hero-tag">Zero Hunger · Zero Food Waste</span>
+        <h1 class="hero-title">Bridging Surplus Food to Verified Shelters</h1>
+        <p class="hero-description">
+          A real-time logistics engine connecting restaurant surplus with community shelters before food expires. Features proximity scoring, atomic reservation locks, and secure PIN-verified handoffs.
+        </p>
+        <div class="hero-stats-row">
+          <div class="hero-stat-item">
+            <div class="hero-stat-num" id="statMealsRescued">365</div>
+            <div class="hero-stat-label">Meals Rescued Today</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-num" id="statActiveClaims">2</div>
+            <div class="hero-stat-label">Active Handoffs</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-num" id="statCo2Saved">146 kg</div>
+            <div class="hero-stat-label">CO₂ Emitted Prevented</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 0: UNIFIED AUTHENTICATION (NGO & DONORS)
+         ========================================== -->
+    <section id="viewAuth" class="portal-view">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h2>🔐 Unified Portal Access: Donors & Verified NGOs</h2>
+          <p class="view-subtitle">Single gateway for commercial food donors and verified community shelters with role-based cryptographic clearance.</p>
+        </div>
+      </div>
+
+      <div class="auth-wrapper">
+        <!-- Main Login & Registration Card -->
+        <div class="glass-panel auth-card role-donor-active" id="authMainCard">
+          
+          <!-- Unified Role Selector Pills (Food Donor vs Recipient NGO) -->
+          <div class="auth-role-tabs">
+            <button class="auth-role-btn active donor" id="btnRoleDonor" type="button" onclick="setAuthRole('donor')">
+              🏨 Food Donor (Kitchen/Hotel)
+            </button>
+            <button class="auth-role-btn ngo" id="btnRoleNgo" type="button" onclick="setAuthRole('ngo')">
+              🤝 Recipient NGO (Shelter/Home)
+            </button>
+          </div>
+
+          <!-- Mode Toggle: Sign In vs Create Account -->
+          <div class="auth-mode-switch">
+            <button class="auth-mode-tab active" id="tabModeSignIn" type="button" onclick="setAuthMode('signin')">
+              🔑 Sign In
+            </button>
+            <button class="auth-mode-tab" id="tabModeRegister" type="button" onclick="setAuthMode('register')">
+              📝 Register New Organization
+            </button>
+          </div>
+
+          <!-- Dynamic Error Alert Banner (with animated shake) -->
+          <div class="auth-error-alert" id="authErrorAlert">
+            <div class="error-title">
+              <span>⚠️</span>
+              <span id="authErrorTitle">Authentication Error</span>
+            </div>
+            <div id="authErrorMessage"></div>
+            <div id="authErrorAction"></div>
+          </div>
+
+          <!-- TAB 1: SIGN IN FORM -->
+          <form id="formSignIn" onsubmit="handleAuthLogin(event)">
+            <div class="form-group">
+              <label class="form-label" for="authUserId" id="labelAuthUserId">
+                Donor User ID or Official Email
+              </label>
+              <input type="text" id="authUserId" class="form-input" placeholder="e.g. donor_hotel or donor@grandpalace.com" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                <label class="form-label" for="authPassword" style="margin-bottom: 0;">Password</label>
+                <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.8rem; color: #93c5fd; text-decoration: underline;">
+                  Forgot Password?
+                </a>
+              </div>
+              <div class="password-field-group">
+                <input type="password" id="authPassword" class="form-input" placeholder="Enter account password" required autocomplete="current-password">
+                <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('authPassword')" title="Show / Hide Password">
+                  👁️
+                </button>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+              <label style="font-size: 0.825rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.45rem; cursor: pointer;">
+                <input type="checkbox" id="authRemember" checked style="accent-color: var(--primary);">
+                Remember this workstation
+              </label>
+              <span style="font-size: 0.775rem; color: var(--text-dim);" id="roleIndicatorHint">
+                Role: Food Donor
+              </span>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btnSubmitAuth" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.85rem;">
+              ⚡ Sign In as Food Donor
+            </button>
+          </form>
+
+          <!-- TAB 2: REGISTER ACCOUNT FORM (Hidden initially) -->
+          <form id="formRegister" onsubmit="handleAuthRegister(event)" style="display: none;">
+            
+            <div class="form-group">
+              <label class="form-label" for="regOrgName">Organization / Facility Name</label>
+              <input type="text" id="regOrgName" class="form-input" placeholder="e.g. Apex Luxury Banquets or Hope Shelter" required>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="regUserId">Desired User ID</label>
+                <input type="text" id="regUserId" class="form-input" placeholder="e.g. apex_kitchen" required pattern="[A-Za-z0-9_]{3,20}" title="Letters, numbers and underscores only (3-20 chars)">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regPhone">Helpline / Phone Number</label>
+                <input type="tel" id="regPhone" class="form-input" placeholder="+91 98765-XXXXX" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regEmail">Official Email Address</label>
+              <input type="email" id="regEmail" class="form-input" placeholder="contact@organization.org" required>
+              <span style="font-size: 0.725rem; color: var(--text-dim); margin-top: 0.2rem; display: block;">
+                ℹ️ A 6-digit cryptographic verification code will be dispatched to this email.
+              </span>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="regPassword">Password (Min 6 chars)</label>
+                <div class="password-field-group">
+                  <input type="password" id="regPassword" class="form-input" placeholder="••••••••" required minlength="6">
+                  <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('regPassword')">👁️</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regPasswordConfirm">Confirm Password</label>
+                <div class="password-field-group">
+                  <input type="password" id="regPasswordConfirm" class="form-input" placeholder="••••••••" required minlength="6">
+                  <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('regPasswordConfirm')">👁️</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regAddress">Physical Dispatch / Kitchen Address</label>
+              <input type="text" id="regAddress" class="form-input" placeholder="e.g. Industrial Area Gate 3, Sector 12" required>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btnSubmitRegister" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.85rem;">
+              ✉️ Create Account & Verify Email
+            </button>
+          </form>
+
+          <!-- Interactive Demo Accounts Panel (Judge & Rapid Testing Mode) -->
+          <div class="demo-accounts-panel">
+            <div class="demo-accounts-title">
+              <span>⚡</span>
+              <span>1-Click Test Credentials (Click to Auto-Fill)</span>
+            </div>
+            <div class="demo-chips-grid">
+              
+              <button type="button" class="demo-chip-btn" onclick="fillDemoCredentials('donor_hotel', 'GrandPalace@2026', 'donor')">
+                <div>
+                  <div class="demo-chip-name">🏨 Hotel Grand Palace (Donor)</div>
+                  <div class="demo-chip-desc">ID: <code>donor_hotel</code> · Pass: <code>GrandPalace@2026</code></div>
+                </div>
+                <span class="demo-chip-badge">Verified</span>
+              </button>
+
+              <button type="button" class="demo-chip-btn" onclick="fillDemoCredentials('ngo_asha', 'AshaShelter@2026', 'ngo')">
+                <div>
+                  <div class="demo-chip-name">🤝 Asha Community Shelter (NGO)</div>
+                  <div class="demo-chip-desc">ID: <code>ngo_asha</code> · Pass: <code>AshaShelter@2026</code></div>
+                </div>
+                <span class="demo-chip-badge">Verified</span>
+              </button>
+
+              <button type="button" class="demo-chip-btn" onclick="fillDemoCredentials('donor_bakery', 'Bakery@2026', 'donor')">
+                <div>
+                  <div class="demo-chip-name">⚠️ Artisan Bakery Hub (Unverified Test)</div>
+                  <div class="demo-chip-desc">ID: <code>donor_bakery</code> · Triggers Email Verification Error & Flow</div>
+                </div>
+                <span class="demo-chip-badge warn">Needs Email Verify</span>
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar Feature Highlights & Security Standards -->
+        <div class="glass-panel auth-info-card">
+          <h3 style="font-size: 1.25rem;">Why AnnaSetu Enforces Role Verification</h3>
+          
+          <div class="auth-feature-item">
+            <div class="auth-feature-icon">⏱️</div>
+            <div class="auth-feature-text">
+              <h4>Perishable Countdown Window</h4>
+              <p>Cooked kitchen surplus has a strict 2 to 4 hour shelf-life. Only verified accounts can issue atomic pickup locks to prevent delays.</p>
+            </div>
+          </div>
+
+          <div class="auth-feature-item">
+            <div class="auth-feature-icon">🛡️</div>
+            <div class="auth-feature-text">
+              <h4>Cryptographic Handover PINs</h4>
+              <p>Every claim generates an immutable 4-digit pickup token. Physical handovers are verified in-person at the kitchen loading dock.</p>
+            </div>
+          </div>
+
+          <div class="auth-feature-item">
+            <div class="auth-feature-icon">📋</div>
+            <div class="auth-feature-text">
+              <h4>FSSAI Chain-of-Custody</h4>
+              <p>Both donor and shelter identities are recorded in the municipality's real-time food recovery telemetry ledger.</p>
+            </div>
+          </div>
+
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-md); padding: 1rem;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: #34d399; margin-bottom: 0.35rem;">
+              🧪 Evaluation Instructions for Hackathon Judges
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
+              Use the 1-click test chips on the left to sign in as either role, test intentional wrong credentials to see error handling, or test the unverified account to experience live email verification!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 1: DONOR PORTAL (Hotel Grand Palace)
+         ========================================== -->
+    <section id="viewDonor" class="portal-view active-view">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h2>🏨 Donor Command: Hotel Grand Palace</h2>
+          <p class="view-subtitle">Post unconsumed kitchen surplus with strict expiry limits & verify secure recipient handoffs.</p>
+        </div>
+      </div>
+
+      <div class="donor-grid">
+        <!-- New Surplus Listing Form -->
+        <div class="glass-panel form-card">
+          <h3 style="margin-bottom: 1.25rem; font-size: 1.2rem;">Post Fresh Surplus Food</h3>
+          <form id="formNewListing" onsubmit="handlePostListing(event)">
+            
+            <div class="form-group">
+              <label class="form-label" for="foodTitle">Meal / Food Description</label>
+              <input type="text" id="foodTitle" class="form-input" placeholder="e.g. 40 Portions Paneer Rice & Dal" required>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="foodCategory">Food Category</label>
+                <select id="foodCategory" class="form-select" required>
+                  <option value="COOKED">Cooked Meal (Perishable)</option>
+                  <option value="BAKERY">Bakery & Breads</option>
+                  <option value="PRODUCE">Raw Fresh Produce</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="dietaryType">Dietary Classification</label>
+                <select id="dietaryType" class="form-select">
+                  <option value="VEG">Pure Vegetarian</option>
+                  <option value="NON_VEG">Non-Vegetarian</option>
+                  <option value="VEGAN">Vegan</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="servingsCount">Portion Count (Servings)</label>
+                <input type="number" id="servingsCount" class="form-input" min="1" max="1000" value="40" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pickupWindowHours">Pickup Window</label>
+                <select id="pickupWindowHours" class="form-select">
+                  <option value="2">Expires in 2 Hours</option>
+                  <option value="3" selected>Expires in 3 Hours</option>
+                  <option value="5">Expires in 5 Hours</option>
+                  <option value="8">Expires in 8 Hours</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="handlingNotes">Packaging & Handling Notes</label>
+              <textarea id="handlingNotes" class="form-textarea" rows="2" placeholder="e.g. Packed in 2 thermal insulated containers. Keep covered."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="pickupAddress">Kitchen Pickup Location</label>
+              <input type="text" id="pickupAddress" class="form-input" value="Grand Palace Central Kitchen Gate 2, MG Road" required>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btnSubmitListing">
+              ⚡ Publish Surplus Listing
+            </button>
+            <p style="font-size: 0.725rem; color: var(--text-dim); margin-top: 0.75rem; text-align: center;">
+              ✓ By submitting, donor affirms food was stored at safe temperature standards.
+            </p>
+          </form>
+        </div>
+
+        <!-- Donor Active & History Listings -->
+        <div class="glass-panel" style="padding: 1.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <h3 style="font-size: 1.2rem;">Your Active Listings & Handoffs</h3>
+            <span class="badge badge-available" id="badgeDonorActiveCount">2 Active</span>
+          </div>
+          <div class="listings-feed" id="donorListingsFeed">
+            <!-- Dynamically populated via app.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: RECIPIENT NGO VIEW (Asha Shelter)
+         ========================================== -->
+    <section id="viewNgo" class="portal-view">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h2>🤝 Recipient Portal: Asha Community Shelter</h2>
+          <p class="view-subtitle">Showing available surplus food sorted by proximity and expiry urgency. One-click reservation with atomic lock.</p>
+        </div>
+      </div>
+
+      <!-- Filters & Proximity Radar Bar -->
+      <div class="filters-bar">
+        <span style="font-size: 0.85rem; font-weight: 700; color: #fff;">Radar Radius:</span>
+        <button class="filter-pill active" onclick="setNgoFilter('all')">All Ranges (5 km)</button>
+        <button class="filter-pill" onclick="setNgoFilter('cooked')">Cooked Meals Only</button>
+        <button class="filter-pill" onclick="setNgoFilter('veg')">Vegetarian Only</button>
+        <button class="filter-pill" onclick="setNgoFilter('urgent')">Expiring &lt; 2 hrs</button>
+      </div>
+
+      <div class="listings-feed" id="ngoListingsFeed">
+        <!-- Dynamically populated via app.js -->
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: COORDINATOR & LIVE MAP VIEW
+         ========================================== -->
+    <section id="viewAdmin" class="portal-view">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h2>🛡️ Operations Command & Live Triage Map</h2>
+          <p class="view-subtitle">Real-time citywide food recovery grid, active courier dispatches, and immutable food-safety audit trail.</p>
+        </div>
+      </div>
+
+      <div class="coordinator-grid">
+        <!-- Live City GIS & Grid Simulator -->
+        <div class="glass-panel map-container-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.15rem;">Live Fleet & Node Activity Map</h3>
+            <span class="badge badge-completed">GPS Telemetry Online</span>
+          </div>
+
+          <div class="interactive-map-frame" id="mapFrame">
+            <!-- High-Tech SVG Map with Animated Routes and Nodes -->
+            <svg class="map-svg" viewBox="0 0 700 400" id="cityMapSvg">
+              <defs>
+                <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                </pattern>
+                <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.8"/>
+                </linearGradient>
+              </defs>
+
+              <rect width="100%" height="100%" fill="#0a0f1d"/>
+              <rect width="100%" height="100%" fill="url(#gridPattern)"/>
+
+              <!-- City road network representation -->
+              <path d="M 50 120 Q 250 80 450 150 T 650 180" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="none"/>
+              <path d="M 120 50 Q 180 200 240 350" stroke="rgba(255,255,255,0.08)" stroke-width="5" fill="none"/>
+              <path d="M 350 50 L 350 350" stroke="rgba(255,255,255,0.06)" stroke-width="4" fill="none"/>
+              <path d="M 80 280 Q 300 320 620 270" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="none"/>
+
+              <!-- Active In-Route Dispatch Vector -->
+              <path id="activeRoutePath" d="M 220 130 C 280 180, 320 220, 480 240" stroke="url(#routeGradient)" stroke-width="3" stroke-dasharray="6,6" fill="none"/>
+              
+              <!-- Nodes: Donors (Green) -->
+              <g class="map-node" transform="translate(220, 130)" onclick="inspectMapNode('Hotel Grand Palace')">
+                <circle r="14" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="2"/>
+                <circle r="6" fill="#10b981"/>
+                <text x="20" y="5" fill="#a7f3d0" font-size="11" font-weight="700">Hotel Grand Palace (Donor)</text>
+              </g>
+
+              <g class="map-node" transform="translate(140, 260)" onclick="inspectMapNode('TechPark Cafeteria')">
+                <circle r="12" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="2"/>
+                <circle r="5" fill="#10b981"/>
+                <text x="18" y="4" fill="#a7f3d0" font-size="10">TechPark Cafeteria</text>
+              </g>
+
+              <!-- Nodes: Recipients (Blue) -->
+              <g class="map-node" transform="translate(480, 240)" onclick="inspectMapNode('Asha Community Shelter')">
+                <circle r="14" fill="rgba(59, 130, 246, 0.2)" stroke="#3b82f6" stroke-width="2"/>
+                <circle r="6" fill="#3b82f6"/>
+                <text x="20" y="5" fill="#93c5fd" font-size="11" font-weight="700">Asha Shelter (NGO)</text>
+              </g>
+
+              <g class="map-node" transform="translate(560, 110)" onclick="inspectMapNode('Seva Children Home')">
+                <circle r="12" fill="rgba(59, 130, 246, 0.2)" stroke="#3b82f6" stroke-width="2"/>
+                <circle r="5" fill="#3b82f6"/>
+                <text x="18" y="4" fill="#93c5fd" font-size="10">Seva Home</text>
+              </g>
+
+              <!-- In-transit courier icon -->
+              <g id="courierIcon" transform="translate(350, 195)">
+                <circle r="8" fill="#f59e0b" filter="drop-shadow(0 0 6px #f59e0b)"/>
+                <text x="-4" y="3" fill="#000" font-size="8" font-weight="900">⚡</text>
+              </g>
+            </svg>
+
+            <div class="map-hud-legend">
+              <div class="legend-item"><span class="legend-dot" style="background: #10b981;"></span> Donors</div>
+              <div class="legend-item"><span class="legend-dot" style="background: #3b82f6;"></span> Verified NGOs</div>
+              <div class="legend-item"><span class="legend-dot" style="background: #f59e0b;"></span> In-Transit Rescue</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Audit Log & Expiry Shield -->
+        <div class="glass-panel" style="padding: 1.5rem; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.15rem;">Chain of Custody Audit</h3>
+            <span class="badge badge-available">FSSAI Protocol</span>
+          </div>
+
+          <div class="audit-timeline" id="auditLogTimeline">
+            <!-- Dynamically populated via app.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 4: HACKATHON PITCH & DEMO GUIDE
+         ========================================== -->
+    <section id="viewJudge" class="portal-view">
+      <div class="pitch-deck-container">
+        
+        <div class="glass-panel pitch-header-card">
+          <span class="hero-tag" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">
+            Judge Evaluation Deck · Srijan Setu 2026
+          </span>
+          <h2 style="font-size: 1.85rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+            Why AnnaSetu Is the Winning 24-Hour Prototype
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 850px;">
+            AnnaSetu bridges time-critical logistics with deterministic safety. Unlike unconstrained AI chatbots that risk hallucinating food safety claims, AnnaSetu enforces an atomic state-machine with 4-digit physical verification codes, auto-expiry calculation, and distance-weighted matching.
+          </p>
+        </div>
+
+        <div class="pitch-steps-grid">
+          
+          <div class="glass-panel step-card">
+            <div class="step-num">1</div>
+            <h3 class="step-title">The Kitchen Reality</h3>
+            <p class="step-desc">
+              Banquet halls discard surplus food at 11:30 PM because existing directories are static phonebooks without real-time expiry awareness.
+            </p>
+            <button class="step-btn" onclick="executeDemoStep(1)">
+              Run Step 1: Open Donor Portal
+            </button>
+          </div>
+
+          <div class="step-card glass-panel">
+            <div class="step-num">2</div>
+            <h3 class="step-title">Urgency-Ranked Match</h3>
+            <p class="step-desc">
+              Nearby Asha Shelter gets an immediate notification. The matching engine ranks by remaining shelf-life and proximity (1.8 km).
+            </p>
+            <button class="step-btn" onclick="executeDemoStep(2)">
+              Run Step 2: Open NGO Radar
+            </button>
+          </div>
+
+          <div class="step-card glass-panel">
+            <div class="step-num">3</div>
+            <h3 class="step-title">Atomic Claim & PIN</h3>
+            <p class="step-desc">
+              NGO reserves the food. The listing is instantly locked from other NGOs, and a secure 4-digit handover PIN (e.g., 7419) is issued.
+            </p>
+            <button class="step-btn" onclick="executeDemoStep(3)">
+              Run Step 3: Trigger Live Claim
+            </button>
+          </div>
+
+          <div class="step-card glass-panel">
+            <div class="step-num">4</div>
+            <h3 class="step-title">Physical Verification</h3>
+            <p class="step-desc">
+              Driver arrives at kitchen. Donor inputs PIN to mark status as "Completed". The transaction is permanently logged in the audit trail.
+            </p>
+            <button class="step-btn" onclick="executeDemoStep(4)">
+              Run Step 4: Verify Handover PIN
+            </button>
+          </div>
+
+          <div class="step-card glass-panel">
+            <div class="step-num">5</div>
+            <h3 class="step-title">Role Auth & Email Verification</h3>
+            <p class="step-desc">
+              Single-page portal for Donors & NGOs with backend user verification, error handling for wrong credentials, password recovery OTP, and live email verification.
+            </p>
+            <button class="step-btn" onclick="executeDemoStep(5)">
+              Run Step 5: Test Auth & Email Flow
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       MODALS
+       ========================================== -->
+
+  <!-- Modal: Claim Confirmation with Secure 4-Digit PIN -->
+  <div class="modal-overlay" id="modalClaimConfirm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem;">Reservation Confirmed!</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalClaimConfirm')">&times;</button>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">
+        Your shelter has claimed this surplus meal. Share this 4-digit code with the kitchen manager upon physical pickup:
+      </p>
+
+      <div class="pin-display-box">
+        <div class="pin-code-text" id="modalPinValue">7419</div>
+        <div class="pin-note">Valid for 90 minutes · Do not share publicly</div>
+      </div>
+
+      <div style="font-size: 0.85rem; background: rgba(255,255,255,0.04); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.25rem;">
+        <div><strong>Donor Contact:</strong> Rajesh Sharma (+91 98765-43210)</div>
+        <div><strong>Pickup Point:</strong> Gate 2, Hotel Grand Palace, MG Road</div>
+      </div>
+
+      <button class="btn-primary" onclick="closeModal('modalClaimConfirm')">
+        ✓ Understood, Dispatching Volunteer
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Donor Handover Verification (PIN Entry) -->
+  <div class="modal-overlay" id="modalDonorVerify">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem;">Verify Recipient Pickup</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalDonorVerify')">&times;</button>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+        Enter the 4-digit PIN presented by the shelter driver to confirm physical handover:
+      </p>
+
+      <input type="hidden" id="verifyListingId">
+      <div class="form-group">
+        <input type="text" id="inputVerifyPin" class="form-input" style="font-size: 1.6rem; text-align: center; letter-spacing: 0.4em; font-family: monospace;" maxlength="4" placeholder="••••">
+      </div>
+
+      <button class="btn-primary" onclick="confirmHandoverPin()">
+        Confirm Handoff & Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Email Verification Flow -->
+  <div class="modal-overlay" id="modalEmailVerify">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem;">✉️ Verify Your Email Address</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalEmailVerify')">&times;</button>
+      </div>
+
+      <!-- Simulated Email Inbox Notification Banner -->
+      <div class="simulated-email-banner" id="verifySimulatedBanner">
+        <div class="simulated-email-header">
+          <span>📬 Simulated Mail Server</span>
+          <span>Delivered Just Now</span>
+        </div>
+        <div class="simulated-email-body">
+          <div><strong>To:</strong> <span id="verifyTargetEmail">email@domain.com</span></div>
+          <div><strong>Subject:</strong> AnnaSetu Account Verification Code</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <span>Your 6-Digit OTP: <span class="simulated-otp-code" id="verifySimulatedOtp">489201</span></span>
+            <button type="button" class="btn-autofill-otp" onclick="autofillVerificationOtp()">⚡ Auto-Fill Code</button>
+          </div>
+        </div>
+      </div>
+
+      <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">
+        Please enter the 6-digit cryptographic verification code sent to your email to activate your account clearance:
+      </p>
+
+      <div class="auth-error-alert" id="verifyModalError" style="margin-bottom: 1rem;">
+        <div class="error-title"><span>⚠️</span> <span>Verification Error</span></div>
+        <div id="verifyModalErrorMessage"></div>
+      </div>
+
+      <input type="hidden" id="verifyTargetUserId">
+      
+      <div class="form-group">
+        <input type="text" id="inputVerifyOtp" class="otp-input-field" maxlength="6" placeholder="••••••" autocomplete="one-time-code">
+      </div>
+
+      <button type="button" class="btn-primary" id="btnSubmitVerifyOtp" onclick="submitEmailVerification()" style="width: 100%; justify-content: center; margin-bottom: 0.75rem;">
+        ✓ Verify Email & Unlock Portal
+      </button>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.825rem; color: var(--text-dim); flex-wrap: wrap; gap: 0.5rem;">
+        <span>Didn't receive the code?</span>
+        <button type="button" id="btnResendVerification" onclick="resendVerificationCode()" style="background: none; border: none; color: #93c5fd; text-decoration: underline; cursor: pointer; font-size: 0.825rem;">
+          Resend Verification Code
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Forgot Password Flow -->
+  <div class="modal-overlay" id="modalForgotPassword">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem;">🔑 Reset Account Password</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalForgotPassword')">&times;</button>
+      </div>
+
+      <!-- Forgot Password Error Banner -->
+      <div class="auth-error-alert" id="forgotModalError" style="margin-bottom: 1rem;">
+        <div class="error-title"><span>⚠️</span> <span>Error</span></div>
+        <div id="forgotModalErrorMessage"></div>
+      </div>
+
+      <!-- STEP 1: Enter User ID or Email -->
+      <div id="forgotStep1">
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">
+          Enter your registered User ID or Official Email address. We will generate and dispatch a 6-digit security reset code.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="forgotIdentifier">User ID or Registered Email</label>
+          <input type="text" id="forgotIdentifier" class="form-input" placeholder="e.g. donor_hotel or donor@grandpalace.com" required>
+        </div>
+
+        <button type="button" class="btn-primary" id="btnSendForgotOtp" onclick="requestForgotPasswordOtp()" style="width: 100%; justify-content: center;">
+          ⚡ Send 6-Digit Reset Code
+        </button>
+      </div>
+
+      <!-- STEP 2: Enter OTP & New Password (Hidden initially) -->
+      <div id="forgotStep2" style="display: none;">
+        <!-- Simulated Reset Email Banner -->
+        <div class="simulated-email-banner" id="forgotSimulatedBanner">
+          <div class="simulated-email-header">
+            <span>📬 Simulated Mail Server</span>
+            <span>Reset Dispatch</span>
+          </div>
+          <div class="simulated-email-body">
+            <div><strong>To:</strong> <span id="forgotTargetEmail">email@domain.com</span></div>
+            <div><strong>Subject:</strong> Password Reset Code</div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+              <span>Reset OTP: <span class="simulated-otp-code" id="forgotSimulatedOtp">938102</span></span>
+              <button type="button" class="btn-autofill-otp" onclick="autofillForgotOtp()">⚡ Auto-Fill Code</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="forgotInputOtp">Enter 6-Digit Reset Code</label>
+          <input type="text" id="forgotInputOtp" class="otp-input-field" maxlength="6" placeholder="••••••">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="forgotNewPassword">New Password (Min 6 chars)</label>
+          <div class="password-field-group">
+            <input type="password" id="forgotNewPassword" class="form-input" placeholder="Enter new strong password" required minlength="6">
+            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('forgotNewPassword')">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="forgotConfirmPassword">Confirm New Password</label>
+          <div class="password-field-group">
+            <input type="password" id="forgotConfirmPassword" class="form-input" placeholder="Re-enter new password" required minlength="6">
+            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('forgotConfirmPassword')">👁️</button>
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary" id="btnSubmitResetPassword" onclick="submitPasswordReset()" style="width: 100%; justify-content: center;">
+          ✓ Confirm & Update Password
+        </button>
+      </div>
+
+      <!-- Success State Confirmation -->
+      <div id="forgotStepSuccess" style="display: none; text-align: center; padding: 1.5rem 0;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+        <h4 style="font-size: 1.2rem; color: #34d399; margin-bottom: 0.5rem;">Password Successfully Reset!</h4>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">
+          Your account credentials have been updated securely. You can now log into your portal.
+        </p>
+        <button type="button" class="btn-primary" onclick="closeModal('modalForgotPassword'); switchPerspective('auth');" style="margin: 0 auto;">
+          Go to Sign In
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer & Food Safety Disclaimer -->
+  <footer class="app-footer">
+    <div class="footer-safety-notice">
+      <strong>Food Safety & Logistical Boundary:</strong> AnnaSetu is a decision-support and dispatch coordination prototype. Safe food handling, potability compliance, and allergen management remain governed by local health authorities and donor certifications.
+    </div>
+    <div>Built for 24-Hour Hackathon · <strong>Srijan Setu 2026</strong></div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

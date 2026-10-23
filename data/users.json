@@ -1,0 +1,42 @@
+[
+  {
+    "id": "donor_hotel",
+    "name": "Hotel Grand Palace Central Kitchen",
+    "email": "donor@grandpalace.com",
+    "password": "GrandPalace@2026",
+    "role": "donor",
+    "organization": "Hotel Grand Palace",
+    "phone": "+91 98765-43210",
+    "address": "Grand Palace Central Kitchen Gate 2, MG Road",
+    "verified": true,
+    "createdAt": "2026-10-23T10:00:00.000Z",
+    "resetOtp": "218202",
+    "resetOtpExpiry": 1792750809308
+  },
+  {
+    "id": "ngo_asha",
+    "name": "Asha Community Shelter",
+    "email": "contact@ashashelter.org",
+    "password": "AshaShelter@2026",
+    "role": "ngo",
+    "organization": "Asha Community Shelter",
+    "phone": "+91 98123-45678",
+    "address": "Asha Community Shelter, Sector 4",
+    "verified": true,
+    "createdAt": "2026-10-23T10:00:00.000Z"
+  },
+  {
+    "id": "donor_bakery",
+    "name": "City Artisan Bakery Hub",
+    "email": "bakery@freshbuns.org",
+    "password": "Bakery@2026",
+    "role": "donor",
+    "organization": "City Artisan Bakery",
+    "phone": "+91 98765-11223",
+    "address": "Connaught Lane Bakery Hub, Block C",
+    "verified": false,
+    "verifyOtp": "582914",
+    "otpExpiry": 1792750796697,
+    "createdAt": "2026-10-23T11:00:00.000Z"
+  }
+]
