@@ -408,57 +408,57 @@
           </div>
 
           <!-- Dynamic Filter Bar -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
             
             <!-- Search Input -->
-            <div class="relative flex items-center">
-              <span class="material-symbols-outlined absolute left-4 text-outline text-[20px]">search</span>
-              <input class="w-full bg-surface-container-lowest text-on-surface text-sm pl-11 pr-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm transition-all" id="searchInput" placeholder="Search food items, donors..." type="text" oninput="handleSearchInput(event)"/>
+            <div class="input-icon-group">
+              <span class="material-symbols-outlined leading-icon text-primary">search</span>
+              <input class="form-input-lux py-2.5 shadow-sm" id="searchInput" placeholder="Search food, kitchens, dishes..." type="text" oninput="handleSearchInput(event)"/>
             </div>
 
             <!-- Dietary Filter Dropdown -->
-            <div class="relative">
-              <select class="w-full bg-surface-container-lowest text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer shadow-sm transition-all" id="dietaryFilterSelect" onchange="handleDietaryFilter(event)">
+            <div class="input-icon-group">
+              <span class="material-symbols-outlined leading-icon text-emerald-600">nutrition</span>
+              <select class="form-select-lux py-2.5 shadow-sm" id="dietaryFilterSelect" onchange="handleDietaryFilter(event)">
                 <option value="all">All Dietary Tags</option>
                 <option value="veg">Vegetarian / Vegan</option>
                 <option value="halal">Halal Certified</option>
                 <option value="gluten-free">Gluten-Free</option>
                 <option value="non_veg">Non-Vegetarian</option>
               </select>
-              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
             </div>
 
             <!-- Urgency Filter Dropdown -->
-            <div class="relative">
-              <select class="w-full bg-surface-container-lowest text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer shadow-sm transition-all" id="urgencyFilterSelect" onchange="handleUrgencyFilter(event)">
+            <div class="input-icon-group">
+              <span class="material-symbols-outlined leading-icon text-amber-600">schedule</span>
+              <select class="form-select-lux py-2.5 shadow-sm" id="urgencyFilterSelect" onchange="handleUrgencyFilter(event)">
                 <option value="all">Urgency: All Windows</option>
                 <option value="critical">&lt; 2 Hours (Critical)</option>
                 <option value="moderate">&lt; 4 Hours</option>
                 <option value="today">Today (&lt; 8 Hours)</option>
               </select>
-              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
             </div>
 
             <!-- Quantity Filter Dropdown -->
-            <div class="relative">
-              <select class="w-full bg-surface-container-lowest text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer shadow-sm transition-all" id="quantityFilterSelect" onchange="handleQuantityFilter(event)">
+            <div class="input-icon-group">
+              <span class="material-symbols-outlined leading-icon text-primary">groups</span>
+              <select class="form-select-lux py-2.5 shadow-sm" id="quantityFilterSelect" onchange="handleQuantityFilter(event)">
                 <option value="all">Quantity: Any Size</option>
                 <option value="small">Small (&lt; 25 meals)</option>
                 <option value="medium">Medium (25-100 meals)</option>
                 <option value="large">Large (100+ meals)</option>
               </select>
-              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
             </div>
 
             <!-- Sort By Dropdown -->
-            <div class="relative">
-              <select class="w-full bg-surface-container-lowest text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer shadow-sm transition-all" id="sortBySelect" onchange="handleSortBy(event)">
+            <div class="input-icon-group">
+              <span class="material-symbols-outlined leading-icon text-primary">sort</span>
+              <select class="form-select-lux py-2.5 shadow-sm" id="sortBySelect" onchange="handleSortBy(event)">
                 <option value="urgency-proximity">Sort: Urgency &amp; Proximity</option>
                 <option value="nearest">Nearest First</option>
                 <option value="quantity">Largest Quantity</option>
                 <option value="expiring">Expiring Soonest</option>
               </select>
-              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
             </div>
 
           </div>
@@ -704,58 +704,117 @@
             </h3>
 
             <form id="formNewListing" onsubmit="handlePostListing(event)" class="flex flex-col gap-4">
+              <!-- Food Description -->
               <div>
-                <label class="block text-xs font-semibold text-on-surface mb-1.5" for="foodTitle">Meal / Food Description</label>
-                <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="foodTitle" placeholder="e.g. 50 Servings Dal Makhani & Jeera Rice" required type="text"/>
-              </div>
-
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-xs font-semibold text-on-surface mb-1.5" for="foodCategory">Category</label>
-                  <select class="w-full bg-surface-container-low text-on-surface text-sm px-3.5 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="foodCategory" required>
-                    <option value="COOKED">Cooked Meal</option>
-                    <option value="BAKERY">Bakery &amp; Breads</option>
-                    <option value="PRODUCE">Raw Fresh Produce</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-on-surface mb-1.5" for="dietaryType">Dietary Tag</label>
-                  <select class="w-full bg-surface-container-low text-on-surface text-sm px-3.5 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="dietaryType">
-                    <option value="VEG">Vegetarian</option>
-                    <option value="NON_VEG">Non-Veg</option>
-                    <option value="VEGAN">Vegan</option>
-                  </select>
+                <label class="form-label-lux" for="foodTitle">
+                  <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-primary">restaurant</span> Meal / Surplus Description *</span>
+                  <span class="text-[10px] text-on-surface-variant font-normal font-sans">Freshly prepared</span>
+                </label>
+                <div class="input-icon-group">
+                  <span class="material-symbols-outlined leading-icon">restaurant_menu</span>
+                  <input class="form-input-lux" id="foodTitle" placeholder="e.g. 50 Servings Dal Makhani &amp; Jeera Rice" required type="text"/>
                 </div>
               </div>
 
-              <div class="grid grid-cols-2 gap-4">
+              <!-- Category & Dietary Tag -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label class="block text-xs font-semibold text-on-surface mb-1.5" for="servingsCount">Servings (Portions)</label>
-                  <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="servingsCount" max="1000" min="1" required type="number" value="40"/>
+                  <label class="form-label-lux" for="foodCategory">
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-primary">category</span> Food Category *</span>
+                  </label>
+                  <div class="input-icon-group">
+                    <span class="material-symbols-outlined leading-icon">lunch_dining</span>
+                    <select class="form-select-lux" id="foodCategory" required>
+                      <option value="COOKED">Cooked Fresh Meal</option>
+                      <option value="BAKERY">Bakery &amp; Artisan Breads</option>
+                      <option value="PRODUCE">Raw Fresh Produce</option>
+                    </select>
+                  </div>
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-on-surface mb-1.5" for="pickupWindowHours">Pickup Window</label>
-                  <select class="w-full bg-surface-container-low text-on-surface text-sm px-3.5 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="pickupWindowHours">
-                    <option value="2">Expires in 2 Hours</option>
-                    <option selected value="3">Expires in 3 Hours</option>
-                    <option value="5">Expires in 5 Hours</option>
-                    <option value="8">Expires in 8 Hours</option>
-                  </select>
+                  <label class="form-label-lux" for="dietaryType">
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">eco</span> Dietary Tag *</span>
+                  </label>
+                  <div class="input-icon-group">
+                    <span class="material-symbols-outlined leading-icon text-emerald-600">nutrition</span>
+                    <select class="form-select-lux" id="dietaryType">
+                      <option value="VEG">🟢 Vegetarian (Pure Veg)</option>
+                      <option value="NON_VEG">🔴 Non-Vegetarian</option>
+                      <option value="VEGAN">🌱 100% Vegan</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
+              <!-- Servings Count with Quick Fill Presets & Pickup Window -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="form-label-lux m-0" for="servingsCount">
+                      <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-primary">groups</span> Portions (Servings) *</span>
+                    </label>
+                  </div>
+                  <div class="input-icon-group">
+                    <span class="material-symbols-outlined leading-icon">group</span>
+                    <input class="form-input-lux font-semibold" id="servingsCount" max="1000" min="1" required type="number" value="40"/>
+                  </div>
+                  <!-- Quick Portion Presets -->
+                  <div class="flex items-center gap-1.5 mt-1.5">
+                    <span class="text-[10px] text-on-surface-variant font-medium">Quick:</span>
+                    <button type="button" onclick="document.getElementById('servingsCount').value = '25'" class="px-2 py-0.5 rounded-md bg-surface-container-high hover:bg-surface-variant text-[10px] font-bold text-on-surface transition-colors">25</button>
+                    <button type="button" onclick="document.getElementById('servingsCount').value = '50'" class="px-2 py-0.5 rounded-md bg-surface-container-high hover:bg-surface-variant text-[10px] font-bold text-on-surface transition-colors">50</button>
+                    <button type="button" onclick="document.getElementById('servingsCount').value = '100'" class="px-2 py-0.5 rounded-md bg-surface-container-high hover:bg-surface-variant text-[10px] font-bold text-on-surface transition-colors">100</button>
+                    <button type="button" onclick="document.getElementById('servingsCount').value = '200'" class="px-2 py-0.5 rounded-md bg-surface-container-high hover:bg-surface-variant text-[10px] font-bold text-on-surface transition-colors">200</button>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label-lux" for="pickupWindowHours">
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-amber-600">timer</span> Pickup Window *</span>
+                  </label>
+                  <div class="input-icon-group">
+                    <span class="material-symbols-outlined leading-icon text-amber-600">schedule</span>
+                    <select class="form-select-lux" id="pickupWindowHours">
+                      <option value="2">⚡ Urgent: Expires in 2 Hours</option>
+                      <option selected value="3">Standard: Expires in 3 Hours</option>
+                      <option value="5">Extended: Expires in 5 Hours</option>
+                      <option value="8">Day Window: Expires in 8 Hours</option>
+                    </select>
+                  </div>
+                  <span class="text-[10px] text-amber-700 font-medium block mt-1.5">Triggers priority courier alerts when &lt; 2 hrs</span>
+                </div>
+              </div>
+
+              <!-- Packaging & Handling Notes -->
               <div>
-                <label class="block text-xs font-semibold text-on-surface mb-1.5" for="handlingNotes">Packaging &amp; Handling Notes</label>
-                <textarea class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="handlingNotes" placeholder="Thermal insulated containers. Keep covered." rows="2"></textarea>
+                <label class="form-label-lux" for="handlingNotes">
+                  <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-primary">inventory_2</span> Packaging &amp; Thermal Notes</span>
+                  <span class="text-[10px] text-on-surface-variant font-normal font-sans">FSSAI Guideline</span>
+                </label>
+                <div class="input-icon-group">
+                  <span class="material-symbols-outlined leading-icon self-start mt-2.5">takeout_dining</span>
+                  <textarea class="form-input-lux" id="handlingNotes" placeholder="e.g. Packed in clean food-grade thermal containers. Handover temperature &gt;60°C." rows="2"></textarea>
+                </div>
               </div>
 
+              <!-- Kitchen Pickup Address -->
               <div>
-                <label class="block text-xs font-semibold text-on-surface mb-1.5" for="pickupAddress">Kitchen Pickup Location</label>
-                <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="pickupAddress" required type="text" value="Grand Palace Central Kitchen Gate 2, MG Road"/>
+                <label class="form-label-lux" for="pickupAddress">
+                  <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-primary">location_on</span> Kitchen Dispatch Location *</span>
+                </label>
+                <div class="input-icon-group">
+                  <span class="material-symbols-outlined leading-icon">storefront</span>
+                  <input class="form-input-lux" id="pickupAddress" required type="text" value="Grand Palace Central Kitchen Gate 2, MG Road"/>
+                </div>
               </div>
 
-              <button class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2 mt-2" id="btnSubmitListing" type="submit">
-                <span class="material-symbols-outlined text-[18px]">publish</span> Publish Surplus Listing
+              <!-- FSSAI Guarantee Badge -->
+              <div class="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-950 font-medium">
+                <span class="material-symbols-outlined text-emerald-600 text-[18px]">shield</span>
+                <span>Certified FSSAI 2019 Recovery Guidelines: Safe thermal hold verified</span>
+              </div>
+
+              <button class="w-full py-4 rounded-xl bg-gradient-to-r from-primary via-blue-600 to-indigo-700 hover:from-primary/95 hover:to-indigo-800 text-on-primary font-bold text-sm transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 mt-1 cursor-pointer" id="btnSubmitListing" type="submit">
+                <span class="material-symbols-outlined text-[20px]">post_add</span> Publish to Recipient Radar Feed
               </button>
             </form>
           </div>
@@ -1701,28 +1760,62 @@
             <button class="py-2 text-xs font-bold rounded-lg text-on-surface-variant hover:text-on-surface transition-all" id="btnRoleVolunteer" onclick="setAuthRole('volunteer')">🚴 Volunteer</button>
           </div>
 
+          <!-- Quick Demo Account Credentials Fillers -->
+          <div class="p-2.5 rounded-xl bg-primary/5 border border-primary/20 flex flex-col gap-1.5">
+            <span class="text-[10px] font-bold text-primary uppercase font-['Public_Sans'] flex items-center gap-1">
+              <span class="material-symbols-outlined text-[13px]">bolt</span> Quick-Fill Demo Credentials
+            </span>
+            <div class="grid grid-cols-3 gap-1.5 text-center">
+              <button type="button" class="py-1 px-1.5 rounded-lg bg-surface-container-lowest hover:bg-primary/10 border border-outline-variant/30 text-[11px] font-medium text-on-surface hover:text-primary transition-all whitespace-nowrap" onclick="fillDemoCredentials('donor_hotel', 'donor123', 'donor')">🏨 Hotel Donor</button>
+              <button type="button" class="py-1 px-1.5 rounded-lg bg-surface-container-lowest hover:bg-primary/10 border border-outline-variant/30 text-[11px] font-medium text-on-surface hover:text-primary transition-all whitespace-nowrap" onclick="fillDemoCredentials('ngo_asha', 'ngo123', 'ngo')">🤝 Asha Shelter</button>
+              <button type="button" class="py-1 px-1.5 rounded-lg bg-surface-container-lowest hover:bg-primary/10 border border-outline-variant/30 text-[11px] font-medium text-on-surface hover:text-primary transition-all whitespace-nowrap" onclick="fillDemoCredentials('volunteer_rajesh', 'vol123', 'volunteer')">🚴 Rajesh (Vol)</button>
+            </div>
+          </div>
+
           <!-- Sign In Form -->
           <form class="flex flex-col gap-4" id="formSignIn" onsubmit="handleAuthLogin(event)">
             <div>
-              <label class="block text-xs font-semibold text-on-surface mb-1.5" for="authUserId">User ID or Official Email</label>
-              <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="authUserId" placeholder="e.g. donor_hotel or volunteer_rajesh" required type="text"/>
+              <label class="form-label-lux" for="authUserId">
+                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-primary">badge</span> User ID or Official Email</span>
+                <span class="text-[10px] text-on-surface-variant font-normal">Required</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">person</span>
+                <input class="form-input-lux" id="authUserId" placeholder="e.g. donor_hotel or volunteer_rajesh" required type="text"/>
+              </div>
             </div>
 
             <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label class="block text-xs font-semibold text-on-surface" for="authPassword">Password</label>
-                <a class="text-xs text-primary underline" href="javascript:void(0)" onclick="openForgotPasswordModal()">Forgot?</a>
+              <div class="flex items-center justify-between mb-1">
+                <label class="form-label-lux m-0" for="authPassword">
+                  <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-primary">key</span> Password</span>
+                </label>
+                <a class="text-xs text-primary font-semibold hover:underline flex items-center gap-0.5" href="javascript:void(0)" onclick="openForgotPasswordModal()">
+                  <span class="material-symbols-outlined text-[13px]">help</span> Forgot?
+                </a>
               </div>
-              <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="authPassword" placeholder="••••••••" required type="password"/>
+              <div class="input-icon-group has-trailing">
+                <span class="material-symbols-outlined leading-icon">lock</span>
+                <input class="form-input-lux" id="authPassword" placeholder="••••••••" required type="password"/>
+                <button type="button" class="trailing-btn" onclick="togglePasswordVisibility('authPassword', this)" title="Show/Hide Password">
+                  <span class="material-symbols-outlined text-[18px]">visibility</span>
+                </button>
+              </div>
             </div>
 
-            <button class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2 mt-2" id="btnSubmitAuth" type="submit">
+            <button class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-blue-700 hover:from-primary/95 hover:to-blue-800 text-on-primary font-bold text-sm transition-all shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-1" id="btnSubmitAuth" type="submit">
               <span class="material-symbols-outlined text-[18px]">login</span> Sign In to Portal
             </button>
 
-            <div class="text-center text-xs text-on-surface-variant pt-2 border-t border-surface-variant/40 flex items-center justify-center gap-1.5">
-              <span>New food donor?</span>
-              <button type="button" class="text-emerald-700 font-bold hover:underline" onclick="openDonorRegisterModal()">Register with FSSAI &amp; GST</button>
+            <div class="text-center text-xs text-on-surface-variant pt-3 border-t border-surface-variant/40 flex flex-col gap-1.5">
+              <div class="flex items-center justify-center gap-1">
+                <span>New commercial food donor?</span>
+                <button type="button" class="text-emerald-700 font-bold hover:underline" onclick="openDonorRegisterModal()">Register with FSSAI &amp; GST</button>
+              </div>
+              <div class="flex items-center justify-center gap-1">
+                <span>Want to deliver food?</span>
+                <button type="button" class="text-amber-600 font-bold hover:underline" onclick="openVolunteerRegisterModal()">Join Citizen Volunteer Fleet</button>
+              </div>
             </div>
           </form>
         </div>
@@ -1738,174 +1831,310 @@
 
   <!-- Modal 1: Claim Modal (Exact User Component with Cryptographic PIN) -->
   <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="claimModal">
-    <div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-6 modal-spring">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-primary text-[28px]">verified_user</span>
-          <h3 class="text-2xl font-['Noto_Serif'] font-bold text-on-surface">Secure Pickup Claim</h3>
+    <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[24px]">verified_user</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Secure Pickup Claim</h3>
+            <p class="text-xs text-on-surface-variant">Lock donation for shelter pickup &amp; generate cryptographic PIN</p>
+          </div>
         </div>
-        <button class="text-on-surface-variant hover:text-on-surface p-2 rounded-full hover:bg-surface-container-low transition-colors" onclick="closeClaimModal()">
-          <span class="material-symbols-outlined text-[24px]">close</span>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-container-low transition-colors" onclick="closeClaimModal()">
+          <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
       
-      <div class="flex flex-col gap-1.5">
-        <span class="text-xs font-bold text-primary uppercase font-['Public_Sans']">Selected Listing</span>
-        <h4 class="text-lg font-bold text-on-surface" id="modalItemTitle">--</h4>
-        <p class="text-sm text-on-surface-variant leading-relaxed">By confirming, you lock this donation for your organization and initiate the transit timer.</p>
+      <!-- Selected Listing Card -->
+      <div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1">
+        <span class="text-[10px] font-bold text-primary uppercase font-['Public_Sans'] flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">restaurant_menu</span> Selected Donation Batch
+        </span>
+        <h4 class="text-base font-bold text-on-surface" id="modalItemTitle">--</h4>
+        <p class="text-xs text-on-surface-variant leading-relaxed">Confirming reserves this surplus batch and triggers the transit countdown clock.</p>
       </div>
 
-      <!-- Cryptographic PIN Verification Mock -->
-      <div class="bg-surface-container-low p-6 rounded-xl flex flex-col items-center justify-center gap-2 border border-primary/20 shadow-inner">
-        <span class="text-xs font-bold text-on-surface-variant uppercase font-['Public_Sans']">Generated Secure Receipt PIN</span>
-        <div class="text-4xl font-extrabold text-primary tracking-[0.3em] font-mono py-1 pin-reveal-anim" id="modalPinValue">4892</div>
-        <span class="text-xs text-on-surface-variant text-center">Show this PIN to the donor coordinator upon arrival for verification.</span>
+      <!-- Cryptographic PIN Verification Box -->
+      <div class="bg-gradient-to-br from-primary/5 to-primary/15 p-5 rounded-2xl flex flex-col items-center justify-center gap-1.5 border border-primary/20 shadow-inner">
+        <span class="text-[10px] font-bold text-primary uppercase font-['Public_Sans'] tracking-wider flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">shield</span> Cryptographic Receipt PIN
+        </span>
+        <div class="text-4xl font-extrabold text-primary tracking-[0.35em] font-mono py-1.5 pin-reveal-anim select-all" id="modalPinValue">4892</div>
+        <span class="text-xs text-on-surface-variant text-center">Present this 4-digit code to the kitchen coordinator during physical collection.</span>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <label class="text-sm text-on-surface font-semibold">Assigned Transport / Vehicle</label>
-        <select class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="selectClaimVehicle">
-          <option>Volunteer Van #3 (Driver: Rajesh K.)</option>
-          <option>Cargo Bike Squad A</option>
-          <option>Walk-in Community Pickup</option>
-        </select>
+      <div class="flex flex-col gap-1">
+        <label class="form-label-lux" for="selectClaimVehicle">
+          <span>Assigned Transport / Courier Vehicle</span>
+          <span class="text-[10px] text-primary font-bold">Required</span>
+        </label>
+        <div class="input-icon-group">
+          <span class="material-symbols-outlined leading-icon">directions_car</span>
+          <select class="form-select-lux" id="selectClaimVehicle">
+            <option>Volunteer Van #3 (Driver: Rajesh K. · Cargo Capacity 120kg)</option>
+            <option>Cargo Bike Squad A (Eco Zero-Emission · 45kg)</option>
+            <option>Walk-in Hyperlocal Shelter Courier (&lt; 1.5 km)</option>
+          </select>
+        </div>
       </div>
 
-      <div class="flex items-center justify-end gap-4 pt-2">
-        <button class="px-6 py-3 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors text-sm font-semibold border border-outline-variant/20" onclick="closeClaimModal()">Cancel</button>
-        <button class="px-8 py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:bg-primary/90 transition-all shadow-md" onclick="confirmClaim()">Confirm &amp; Dispatch</button>
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button class="px-5 py-3 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors text-sm font-semibold border border-outline-variant/30" onclick="closeClaimModal()">Cancel</button>
+        <button class="px-7 py-3 rounded-xl bg-gradient-to-r from-primary to-blue-700 hover:from-primary/95 hover:to-blue-800 text-on-primary font-bold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-1.5" onclick="confirmClaim()">
+          <span class="material-symbols-outlined text-[18px]">local_shipping</span> Confirm &amp; Dispatch
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Modal 2: Donor Verify Pickup PIN Modal -->
   <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDonorVerify">
-    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-6 modal-spring">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Verify Recipient Handover</h3>
-        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full" onclick="closeModal('modalDonorVerify')">&times;</button>
+    <div class="bg-surface-container-lowest rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[24px]">verified</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Verify Handover</h3>
+            <p class="text-xs text-on-surface-variant">Validate shelter driver PIN &amp; thermal safety checklist</p>
+          </div>
+        </div>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/40 transition-colors" onclick="closeModal('modalDonorVerify')">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
       </div>
-      <p class="text-xs text-on-surface-variant">Enter the 4-digit verification PIN presented by the shelter driver upon physical food handover:</p>
+
+      <p class="text-xs text-on-surface-variant">Enter the 4-digit verification PIN presented by the authorized recipient driver upon physical meal loading:</p>
       
       <input id="verifyListingId" type="hidden"/>
-      <div class="flex justify-center">
-        <input class="w-48 text-center text-3xl font-mono tracking-[0.4em] py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:ring-2 focus:ring-primary focus:outline-none font-bold" id="inputVerifyPin" maxlength="4" placeholder="••••" type="text"/>
+      <div class="flex justify-center my-1">
+        <input class="w-56 text-center text-3xl font-mono tracking-[0.45em] py-3.5 rounded-2xl bg-surface-container-low border-2 border-primary/30 focus:border-primary focus:ring-4 focus:ring-primary/15 focus:outline-none font-bold text-on-surface shadow-inner" id="inputVerifyPin" maxlength="4" placeholder="••••" type="text"/>
       </div>
 
       <!-- FSSAI Cold-Chain & Packaging Integrity Mandatory Checklist -->
-      <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs flex flex-col gap-2">
+      <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs flex flex-col gap-2.5">
         <div class="flex items-center justify-between">
-          <span class="font-bold text-emerald-950 flex items-center gap-1.5">
+          <span class="font-bold text-emerald-950 flex items-center gap-1.5 font-['Public_Sans'] uppercase text-[11px]">
             <span class="material-symbols-outlined text-[16px] text-emerald-700">health_and_safety</span>
-            FSSAI Thermal & Safety Verification
+            FSSAI Thermal &amp; Safety Criteria
           </span>
-          <span class="text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full">Mandatory</span>
+          <span class="text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full shadow-xs">Mandatory Checklist</span>
         </div>
-        <label class="flex items-center gap-2 cursor-pointer text-emerald-900">
-          <input type="checkbox" id="checkHandoverTemp" checked class="rounded text-emerald-600 focus:ring-emerald-500">
+        <label class="flex items-center gap-2.5 cursor-pointer text-emerald-950 font-medium">
+          <input type="checkbox" id="checkHandoverTemp" checked class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 accent-emerald-600">
           <span>Safe Temperature Validated (&gt;60°C Hot / &lt;5°C Cold)</span>
         </label>
-        <label class="flex items-center gap-2 cursor-pointer text-emerald-900">
-          <input type="checkbox" id="checkHandoverSeal" checked class="rounded text-emerald-600 focus:ring-emerald-500">
+        <label class="flex items-center gap-2.5 cursor-pointer text-emerald-950 font-medium">
+          <input type="checkbox" id="checkHandoverSeal" checked class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 accent-emerald-600">
           <span>Food-Grade Packaging Seal Intact (No Contamination)</span>
         </label>
       </div>
 
-      <div class="flex items-center justify-end gap-3 pt-2">
-        <button class="px-4 py-2.5 rounded-xl bg-surface-container-low text-sm font-semibold" onclick="closeModal('modalDonorVerify')">Cancel</button>
-        <button class="px-6 py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="confirmHandoverPin()">Confirm &amp; Complete</button>
+      <div class="flex items-center justify-end gap-3 pt-1">
+        <button class="px-4 py-2.5 rounded-xl bg-surface-container-low text-sm font-semibold hover:bg-surface-container-high transition-colors border border-outline-variant/30" onclick="closeModal('modalDonorVerify')">Cancel</button>
+        <button class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-sm shadow-md transition-all flex items-center gap-1.5" onclick="confirmHandoverPin()">
+          <span class="material-symbols-outlined text-[17px]">task_alt</span> Confirm Handover
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Modal 3: Emergency Dispatch Hotline Modal -->
   <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDispatchHotline">
-    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-6 modal-spring">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary text-[24px]">support_agent</span>
-          <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Logistics Command</h3>
+    <div class="bg-surface-container-lowest rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[24px]">support_agent</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Logistics Command</h3>
+            <p class="text-xs text-on-surface-variant">Emergency surplus dispatch hotline</p>
+          </div>
         </div>
-        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full" onclick="closeModal('modalDispatchHotline')">&times;</button>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/40 transition-colors" onclick="closeModal('modalDispatchHotline')">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
       </div>
-      <p class="text-xs text-on-surface-variant">Request municipal multi-vehicle dispatch for surplus pickups exceeding 150 servings or emergency relocations.</p>
-      <div class="p-3 bg-surface-container-low rounded-xl text-xs space-y-1">
-        <div><strong>Sector Dispatcher:</strong> Officer R. Sharma</div>
-        <div><strong>Hotline Radio:</strong> +91 1800-ANNA-SETU</div>
-        <div><strong>Average Response:</strong> 12 - 18 minutes</div>
+      <p class="text-xs text-on-surface-variant leading-relaxed">Request municipal multi-vehicle dispatch for surplus pickups exceeding 150 servings or emergency banquet clearance.</p>
+      <div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30 text-xs flex flex-col gap-2">
+        <div class="flex justify-between">
+          <span class="text-on-surface-variant">Sector Dispatcher:</span>
+          <strong class="text-on-surface">Officer R. Sharma (HQ Command)</strong>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-on-surface-variant">Hotline Radio:</span>
+          <a href="tel:+9118002662738" class="text-primary font-bold hover:underline">+91 1800-ANNA-SETU</a>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-on-surface-variant">Average Response:</span>
+          <span class="text-emerald-700 font-bold">12 - 18 minutes (High Priority)</span>
+        </div>
       </div>
-      <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="confirmDispatchCall()">
-        🚨 Dispatch Volunteer Squad Now
+      <button class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-blue-700 hover:from-primary/95 hover:to-blue-800 text-on-primary font-bold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2" onclick="confirmDispatchCall()">
+        <span class="material-symbols-outlined text-[18px]">emergency_share</span> Dispatch Volunteer Squad Now
       </button>
     </div>
   </div>
 
   <!-- Modal 4: Radius Selection Modal -->
   <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalRadius">
-    <div class="bg-surface-container-lowest rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-surface-variant flex flex-col gap-4 modal-spring">
-      <div class="flex items-center justify-between">
-        <h3 class="font-['Noto_Serif'] font-bold text-lg text-on-surface">Select Search Radius</h3>
-        <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="closeModal('modalRadius')">&times;</button>
+    <div class="bg-surface-container-lowest rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-surface-variant flex flex-col gap-4 modal-spring">
+      <div class="flex items-center justify-between pb-2 border-b border-surface-variant/40">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[22px]">radar</span>
+          <h3 class="font-['Noto_Serif'] font-bold text-lg text-on-surface">Search Radius</h3>
+        </div>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/40" onclick="closeModal('modalRadius')">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
       </div>
       <p class="text-xs text-on-surface-variant">Filter active surplus listings by proximity distance from your hub:</p>
-      <div class="grid grid-cols-2 gap-2 pt-2">
-        <button class="p-3 rounded-xl border border-outline-variant/30 hover:border-primary text-sm font-semibold hover:bg-primary/5 transition-all" onclick="setRadius(2)">2 km (Immediate)</button>
-        <button class="p-3 rounded-xl border border-primary bg-primary/10 text-primary font-bold text-sm transition-all" onclick="setRadius(5)">5 km (Standard)</button>
-        <button class="p-3 rounded-xl border border-outline-variant/30 hover:border-primary text-sm font-semibold hover:bg-primary/5 transition-all" onclick="setRadius(10)">10 km (Expanded)</button>
-        <button class="p-3 rounded-xl border border-outline-variant/30 hover:border-primary text-sm font-semibold hover:bg-primary/5 transition-all" onclick="setRadius(25)">25 km (Citywide)</button>
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button class="p-3.5 rounded-2xl border border-outline-variant/30 hover:border-primary text-xs font-bold hover:bg-primary/5 transition-all flex flex-col items-center gap-1 text-on-surface" onclick="setRadius(2)">
+          <span class="material-symbols-outlined text-[20px] text-primary">near_me</span>
+          <span>2 km (Hyperlocal)</span>
+        </button>
+        <button class="p-3.5 rounded-2xl border-2 border-primary bg-primary/10 text-primary font-bold text-xs transition-all flex flex-col items-center gap-1 shadow-sm" onclick="setRadius(5)">
+          <span class="material-symbols-outlined text-[20px] text-primary">radar</span>
+          <span>5 km (Standard)</span>
+        </button>
+        <button class="p-3.5 rounded-2xl border border-outline-variant/30 hover:border-primary text-xs font-bold hover:bg-primary/5 transition-all flex flex-col items-center gap-1 text-on-surface" onclick="setRadius(10)">
+          <span class="material-symbols-outlined text-[20px] text-primary">explore</span>
+          <span>10 km (Expanded)</span>
+        </button>
+        <button class="p-3.5 rounded-2xl border border-outline-variant/30 hover:border-primary text-xs font-bold hover:bg-primary/5 transition-all flex flex-col items-center gap-1 text-on-surface" onclick="setRadius(25)">
+          <span class="material-symbols-outlined text-[20px] text-primary">location_city</span>
+          <span>25 km (Citywide)</span>
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Modal 5: Email Verification Modal -->
   <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalEmailVerify">
-    <div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">✉️ Email Verification</h3>
-        <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="closeModal('modalEmailVerify')">&times;</button>
+    <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[24px]">mark_email_read</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Email Verification</h3>
+            <p class="text-xs text-on-surface-variant">Enter the 6-digit cryptographic verification code</p>
+          </div>
+        </div>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/40 transition-colors" onclick="closeModal('modalEmailVerify')">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
       </div>
       
       <!-- Simulated Email Inbox Banner -->
-      <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs flex flex-col gap-2">
+      <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-xs flex flex-col gap-2 shadow-sm">
         <div class="flex items-center justify-between font-bold text-blue-900">
-          <span>📬 Simulated Mail Delivery</span>
-          <span class="text-[10px] bg-blue-200 px-2 py-0.5 rounded-full">Just Now</span>
+          <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">forward_to_inbox</span> Simulated Secure Dispatch</span>
+          <span class="text-[10px] bg-blue-200 px-2 py-0.5 rounded-full font-bold">Just Now</span>
         </div>
-        <div><strong>To:</strong> <span id="verifyTargetEmail">bakery@freshbuns.org</span></div>
-        <div class="flex items-center justify-between pt-1">
-          <span>Your 6-Digit Code: <strong class="text-primary font-mono text-sm tracking-wider" id="verifySimulatedOtp">582914</strong></span>
-          <button class="px-2.5 py-1 bg-primary text-on-primary rounded-lg font-bold text-[11px] shadow-sm" onclick="autofillVerificationOtp()">⚡ Auto-Fill</button>
+        <div class="text-blue-950"><strong>To:</strong> <span id="verifyTargetEmail" class="font-mono">bakery@freshbuns.org</span></div>
+        <div class="flex items-center justify-between pt-1 border-t border-blue-100">
+          <span class="text-blue-950">6-Digit Verification Code: <strong class="text-primary font-mono text-sm tracking-wider font-extrabold" id="verifySimulatedOtp">582914</strong></span>
+          <button class="px-3 py-1 bg-primary hover:bg-primary/90 text-on-primary rounded-xl font-bold text-xs shadow-xs transition-all" onclick="autofillVerificationOtp()">⚡ Auto-Fill</button>
         </div>
       </div>
 
-      <input class="w-full text-center text-2xl font-mono tracking-[0.4em] py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:ring-2 focus:ring-primary focus:outline-none" id="inputVerifyOtp" maxlength="6" placeholder="••••••" type="text"/>
-      <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="submitEmailVerification()">Verify &amp; Activate Account</button>
+      <div class="flex flex-col gap-1.5">
+        <label class="form-label-lux text-center justify-center" for="inputVerifyOtp">
+          <span>Enter 6-Digit Verification Code</span>
+        </label>
+        <input class="w-full text-center text-3xl pin-input-lux py-3.5 rounded-2xl border-2 border-primary/30 focus:border-primary focus:ring-4 focus:ring-primary/15" id="inputVerifyOtp" maxlength="6" placeholder="••••••" type="text"/>
+      </div>
+
+      <button class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-blue-700 hover:from-primary/95 hover:to-blue-800 text-on-primary font-bold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2" onclick="submitEmailVerification()">
+        <span class="material-symbols-outlined text-[18px]">verified</span> Verify &amp; Activate Account
+      </button>
     </div>
   </div>
 
   <!-- Modal 6: Forgot Password Modal -->
   <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalForgotPassword">
-    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">🔑 Reset Password</h3>
-        <button class="text-on-surface-variant hover:text-on-surface p-1" onclick="closeModal('modalForgotPassword')">&times;</button>
-      </div>
-
-      <div class="flex flex-col gap-4" id="forgotStep1">
-        <p class="text-xs text-on-surface-variant">Enter your official account email or user ID to receive a 6-digit cryptographic security code:</p>
-        <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary" id="forgotIdentifier" placeholder="e.g. donor_hotel" required type="text"/>
-        <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="requestForgotPasswordOtp()">⚡ Send Reset Code</button>
-      </div>
-
-      <div class="flex flex-col gap-4 hidden" id="forgotStep2">
-        <div class="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs flex items-center justify-between">
-          <span>OTP: <strong class="text-primary font-mono" id="forgotSimulatedOtp">938102</strong></span>
-          <button class="text-primary font-bold underline" onclick="autofillForgotOtp()">Auto-Fill</button>
+    <div class="bg-surface-container-lowest rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[24px]">lock_reset</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Reset Password</h3>
+            <p class="text-xs text-on-surface-variant">Recover portal account access</p>
+          </div>
         </div>
-        <input class="w-full text-center text-xl font-mono tracking-widest py-2 rounded-xl bg-surface-container-low border border-outline-variant/30" id="forgotInputOtp" maxlength="6" placeholder="••••••" type="text"/>
-        <input class="w-full bg-surface-container-low text-sm px-4 py-3 rounded-xl border border-outline-variant/30" id="forgotNewPassword" placeholder="New Password (min 6 chars)" type="password"/>
-        <input class="w-full bg-surface-container-low text-sm px-4 py-3 rounded-xl border border-outline-variant/30" id="forgotConfirmPassword" placeholder="Confirm New Password" type="password"/>
-        <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="submitPasswordReset()">Confirm &amp; Update Password</button>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/40 transition-colors" onclick="closeModal('modalForgotPassword')">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Step 1: Identifier Entry -->
+      <div class="flex flex-col gap-4" id="forgotStep1">
+        <p class="text-xs text-on-surface-variant leading-relaxed">Enter your registered User ID or official account email to receive a 6-digit cryptographic security code:</p>
+        <div>
+          <label class="form-label-lux" for="forgotIdentifier">
+            <span>User ID or Email</span>
+            <span class="text-[10px] text-primary font-bold">Required</span>
+          </label>
+          <div class="input-icon-group">
+            <span class="material-symbols-outlined leading-icon">badge</span>
+            <input class="form-input-lux" id="forgotIdentifier" placeholder="e.g. donor_hotel or volunteer_rajesh" required type="text"/>
+          </div>
+        </div>
+        <button class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-blue-700 hover:from-primary/95 hover:to-blue-800 text-on-primary font-bold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2" onclick="requestForgotPasswordOtp()">
+          <span class="material-symbols-outlined text-[18px]">send</span> Send 6-Digit Reset Code
+        </button>
+      </div>
+
+      <!-- Step 2: Verification & New Password -->
+      <div class="flex flex-col gap-4 hidden" id="forgotStep2">
+        <div class="p-3.5 rounded-2xl bg-blue-50 border border-blue-200 text-xs flex items-center justify-between shadow-sm">
+          <span>OTP: <strong class="text-primary font-mono text-sm tracking-wider font-extrabold" id="forgotSimulatedOtp">938102</strong></span>
+          <button class="px-3 py-1 bg-primary text-on-primary rounded-xl font-bold text-xs shadow-xs" onclick="autofillForgotOtp()">⚡ Auto-Fill</button>
+        </div>
+        <div>
+          <label class="form-label-lux text-center justify-center" for="forgotInputOtp">
+            <span>6-Digit Security Code</span>
+          </label>
+          <input class="w-full text-center text-2xl pin-input-lux py-2.5 rounded-2xl border-2 border-primary/30 focus:border-primary focus:ring-4 focus:ring-primary/15" id="forgotInputOtp" maxlength="6" placeholder="••••••" type="text"/>
+        </div>
+        <div>
+          <label class="form-label-lux" for="forgotNewPassword">
+            <span>New Password</span>
+            <span class="text-[10px] text-primary font-bold">Min 6 chars</span>
+          </label>
+          <div class="input-icon-group has-trailing">
+            <span class="material-symbols-outlined leading-icon">key</span>
+            <input class="form-input-lux" id="forgotNewPassword" placeholder="New Password (min 6 chars)" type="password"/>
+            <button type="button" class="trailing-btn" onclick="togglePasswordVisibility('forgotNewPassword', this)" title="Show/Hide Password">
+              <span class="material-symbols-outlined text-[18px]">visibility</span>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="form-label-lux" for="forgotConfirmPassword">
+            <span>Confirm New Password</span>
+            <span class="text-[10px] text-primary font-bold">Required</span>
+          </label>
+          <div class="input-icon-group has-trailing">
+            <span class="material-symbols-outlined leading-icon">lock</span>
+            <input class="form-input-lux" id="forgotConfirmPassword" placeholder="Confirm New Password" type="password"/>
+            <button type="button" class="trailing-btn" onclick="togglePasswordVisibility('forgotConfirmPassword', this)" title="Show/Hide Password">
+              <span class="material-symbols-outlined text-[18px]">visibility</span>
+            </button>
+          </div>
+        </div>
+        <button class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-blue-700 hover:from-primary/95 hover:to-blue-800 text-on-primary font-bold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-1" onclick="submitPasswordReset()">
+          <span class="material-symbols-outlined text-[18px]">task_alt</span> Confirm &amp; Update Password
+        </button>
       </div>
     </div>
   </div>
@@ -1932,79 +2161,116 @@
 
       <form id="formDonorRegister" onsubmit="handleDonorRegister(event)" class="flex flex-col gap-5">
         
-        <!-- Section 1: Business Identity -->
-        <div class="flex flex-col gap-3">
-          <span class="text-xs font-bold text-primary uppercase font-['Public_Sans'] flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[16px]">domain</span> 1. Commercial Food Establishment Profile
-          </span>
+        <!-- Section 1: Business Identity Card -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <span class="material-symbols-outlined text-[18px]">storefront</span> 1. Commercial Food Establishment Profile
+          </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Establishment / Kitchen Legal Name *</label>
-              <input type="text" id="dRegName" required placeholder="e.g. Hotel Grand Palace Central Kitchen" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="dRegName">
+                <span>Legal Establishment Name</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">domain</span>
+                <input type="text" id="dRegName" required placeholder="e.g. Hotel Grand Palace Central Kitchen" class="form-input-lux">
+              </div>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Establishment Category *</label>
-              <select id="dRegCategory" required class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
-                <option value="5-Star Hotel / Luxury Dining">5-Star Hotel / Luxury Dining</option>
-                <option value="Commercial Catering / Banquet Service">Commercial Catering / Banquet Service</option>
-                <option value="Corporate Cafeteria Hub / Tech Park Canteen">Corporate Cafeteria Hub / Tech Park Canteen</option>
-                <option value="Artisan Bakery & Confectionery Unit">Artisan Bakery &amp; Confectionery Unit</option>
-                <option value="QSR / Restaurant Chain Hub">QSR / Restaurant Chain Hub</option>
-                <option value="Institutional Food Facility">Institutional Food Facility</option>
-              </select>
+            <div>
+              <label class="form-label-lux" for="dRegCategory">
+                <span>Establishment Category</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">category</span>
+                <select id="dRegCategory" required class="form-select-lux">
+                  <option value="5-Star Hotel / Luxury Dining">5-Star Hotel / Luxury Dining</option>
+                  <option value="Commercial Catering / Banquet Service">Commercial Catering / Banquet Service</option>
+                  <option value="Corporate Cafeteria Hub / Tech Park Canteen">Corporate Cafeteria Hub / Tech Park Canteen</option>
+                  <option value="Artisan Bakery & Confectionery Unit">Artisan Bakery &amp; Confectionery Unit</option>
+                  <option value="QSR / Restaurant Chain Hub">QSR / Restaurant Chain Hub</option>
+                  <option value="Institutional Food Facility">Institutional Food Facility</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Kitchen Address &amp; Gate *</label>
-              <input type="text" id="dRegAddress" required placeholder="e.g. Gate 2, Commercial Kitchen Yard, Sector 18" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="dRegAddress">
+                <span>Kitchen Address &amp; Gate</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">pin_drop</span>
+                <input type="text" id="dRegAddress" required placeholder="e.g. Gate 2, Commercial Kitchen Yard, Sector 18" class="form-input-lux">
+              </div>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Operating Sector / City *</label>
-              <select id="dRegSector" required class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
-                <option value="Sector 18 Commercial Hub">Sector 18 Commercial Hub</option>
-                <option value="Sector 62 IT & Institutional Area">Sector 62 IT &amp; Institutional Area</option>
-                <option value="Indirapuram / Vasundhara">Indirapuram / Vasundhara</option>
-                <option value="Connaught Place & Central Zone">Connaught Place &amp; Central Zone</option>
-                <option value="Sector 50 Hospitality Belt">Sector 50 Hospitality Belt</option>
-              </select>
+            <div>
+              <label class="form-label-lux" for="dRegSector">
+                <span>Operating Sector / City</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">location_city</span>
+                <select id="dRegSector" required class="form-select-lux">
+                  <option value="Sector 18 Commercial Hub">Sector 18 Commercial Hub</option>
+                  <option value="Sector 62 IT & Institutional Area">Sector 62 IT &amp; Institutional Area</option>
+                  <option value="Indirapuram / Vasundhara">Indirapuram / Vasundhara</option>
+                  <option value="Connaught Place & Central Zone">Connaught Place &amp; Central Zone</option>
+                  <option value="Sector 50 Hospitality Belt">Sector 50 Hospitality Belt</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Food Safety Officer / Executive Chef *</label>
-              <input type="text" id="dRegChef" required placeholder="e.g. Chef Sanjay Kapoor" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="dRegChef">
+                <span>Executive Chef / Safety Officer</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">badge</span>
+                <input type="text" id="dRegChef" required placeholder="e.g. Chef Sanjay Kapoor" class="form-input-lux">
+              </div>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Kitchen Dispatch Phone *</label>
-              <input type="tel" id="dRegPhone" required placeholder="+91 98765 43210" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+            <div>
+              <label class="form-label-lux" for="dRegPhone">
+                <span>Kitchen Dispatch Phone</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">call</span>
+                <input type="tel" id="dRegPhone" required placeholder="+91 98765 43210" class="form-input-lux">
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Section 2: FSSAI License e-KYC Verification Box -->
-        <div class="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/30 flex flex-col gap-3">
+        <div class="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/30 flex flex-col gap-3 shadow-sm">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-emerald-600 text-[20px]">shield</span>
-              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">FSSAI FoSCoS License e-KYC (14 Digits) *</span>
+              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">2. FSSAI FoSCoS License e-KYC (14 Digits)</span>
             </div>
             <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/10 text-emerald-800 border border-emerald-500/20" id="badgeFssaiStatus">Required e-KYC</span>
           </div>
 
           <p class="text-[11px] text-on-surface-variant leading-relaxed">
-            Every donor must hold an active FSSAI Central/State license under the Food Safety and Standards Act to guarantee zero contamination and legal safety clearance.
+            Every donor must hold an active FSSAI Central/State license under the Food Safety and Standards Act to guarantee zero contamination and statutory food rescue indemnification.
           </p>
 
           <div class="flex flex-col sm:flex-row gap-2">
-            <div class="relative flex-1">
-              <input type="text" id="dRegFssai" maxlength="14" placeholder="14-Digit FSSAI License No." oninput="formatFssaiInput(this)" class="w-full bg-surface-container-low text-on-surface font-mono tracking-wider text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-              <span class="absolute right-3 top-2.5 text-xs text-on-surface-variant font-mono" id="fssaiDigitCounter">0/14</span>
+            <div class="relative flex-1 input-icon-group">
+              <span class="material-symbols-outlined leading-icon text-emerald-600">health_and_safety</span>
+              <input type="text" id="dRegFssai" maxlength="14" placeholder="14-Digit FSSAI License No." oninput="formatFssaiInput(this)" class="form-input-lux font-mono tracking-wider text-sm pr-14 focus:border-emerald-500 focus:ring-emerald-500/20">
+              <span class="absolute right-3 text-xs text-on-surface-variant font-mono" id="fssaiDigitCounter">0/14</span>
             </div>
-            <button type="button" id="btnVerifyFssai" onclick="verifyFssaiKyc()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
+            <button type="button" id="btnVerifyFssai" onclick="verifyFssaiKyc()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
               <span class="material-symbols-outlined text-[16px]">verified</span> Verify with FoSCoS
             </button>
             <button type="button" onclick="quickFillDemoFssai()" class="px-3 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-semibold border border-outline-variant/30 transition-all whitespace-nowrap" title="Auto-fill sample FSSAI License">
@@ -2028,25 +2294,26 @@
         </div>
 
         <!-- Section 3: GSTIN Entity Verification Box -->
-        <div class="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/30 flex flex-col gap-3">
+        <div class="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/30 flex flex-col gap-3 shadow-sm">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-primary text-[20px]">account_balance</span>
-              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">GSTIN Business Taxpayer Verification (15 Characters) *</span>
+              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">3. GSTIN Business Taxpayer Verification (15 Chars)</span>
             </div>
             <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-primary/10 text-primary border border-primary/20" id="badgeGstinStatus">Required e-KYC</span>
           </div>
 
           <p class="text-[11px] text-on-surface-variant leading-relaxed">
-            Verifying your GSTIN validates business registration for CSR compliance and zero-liability municipal food rescue indemnification.
+            Verifying your GSTIN validates legal corporate registration for automated Section 80G tax deductions and MCA CSR Form 1 compliance filings.
           </p>
 
           <div class="flex flex-col sm:flex-row gap-2">
-            <div class="relative flex-1">
-              <input type="text" id="dRegGstin" maxlength="15" placeholder="e.g. 07AABCH1234F1Z9" oninput="formatGstinInput(this)" class="w-full bg-surface-container-low text-on-surface font-mono uppercase tracking-wider text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
-              <span class="absolute right-3 top-2.5 text-xs text-on-surface-variant font-mono" id="gstinDigitCounter">0/15</span>
+            <div class="relative flex-1 input-icon-group">
+              <span class="material-symbols-outlined leading-icon text-primary">receipt_long</span>
+              <input type="text" id="dRegGstin" maxlength="15" placeholder="e.g. 07AABCH1234F1Z9" oninput="formatGstinInput(this)" class="form-input-lux font-mono uppercase tracking-wider text-sm pr-14 focus:border-primary focus:ring-primary/20">
+              <span class="absolute right-3 text-xs text-on-surface-variant font-mono" id="gstinDigitCounter">0/15</span>
             </div>
-            <button type="button" id="btnVerifyGstin" onclick="verifyGstinKyc()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-on-primary font-bold text-xs shadow-sm transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
+            <button type="button" id="btnVerifyGstin" onclick="verifyGstinKyc()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-on-primary font-bold text-xs shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
               <span class="material-symbols-outlined text-[16px]">task_alt</span> Verify GSTIN
             </button>
             <button type="button" onclick="quickFillDemoGstin()" class="px-3 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-semibold border border-outline-variant/30 transition-all whitespace-nowrap" title="Auto-fill sample GSTIN">
@@ -2069,38 +2336,75 @@
           <input type="hidden" id="dRegGstinVerified" value="false">
         </div>
 
-        <!-- Section 4: Account Credentials -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Official Business Email *</label>
-            <input type="email" id="dRegEmail" required placeholder="contact@grandpalace.com" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+        <!-- Section 4: Account Credentials Card -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <span class="material-symbols-outlined text-[18px]">lock</span> 4. Portal Security &amp; Login Credentials
           </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">User ID / Handle *</label>
-            <input type="text" id="dRegUsername" required placeholder="donor_hotel" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
-          </div>
-        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Account Password *</label>
-            <input type="password" id="dRegPassword" required placeholder="Min 6 characters" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="dRegEmail">
+                <span>Official Business Email</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">mail</span>
+                <input type="email" id="dRegEmail" required placeholder="contact@grandpalace.com" class="form-input-lux">
+              </div>
+            </div>
+            <div>
+              <label class="form-label-lux" for="dRegUsername">
+                <span>User ID / Handle</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">person</span>
+                <input type="text" id="dRegUsername" required placeholder="donor_hotel" class="form-input-lux">
+              </div>
+            </div>
           </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Confirm Password *</label>
-            <input type="password" id="dRegConfirmPassword" required placeholder="Confirm password" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="dRegPassword">
+                <span>Account Password</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Min 6 chars *</span>
+              </label>
+              <div class="input-icon-group has-trailing">
+                <span class="material-symbols-outlined leading-icon">key</span>
+                <input type="password" id="dRegPassword" required placeholder="••••••••" class="form-input-lux">
+                <button type="button" class="trailing-btn" onclick="togglePasswordVisibility('dRegPassword', this)" title="Show/Hide Password">
+                  <span class="material-symbols-outlined text-[18px]">visibility</span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label class="form-label-lux" for="dRegConfirmPassword">
+                <span>Confirm Password</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group has-trailing">
+                <span class="material-symbols-outlined leading-icon">lock</span>
+                <input type="password" id="dRegConfirmPassword" required placeholder="••••••••" class="form-input-lux">
+                <button type="button" class="trailing-btn" onclick="togglePasswordVisibility('dRegConfirmPassword', this)" title="Show/Hide Password">
+                  <span class="material-symbols-outlined text-[18px]">visibility</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- FSSAI Food Safe Donation Pledge -->
-        <label class="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-on-surface cursor-pointer">
-          <input type="checkbox" id="dRegPledge" required class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
-          <span>
-            <strong>FSSAI Surplus Food Recovery Pledge (2019 Regulations):</strong> We certify that all surplus meals posted will adhere to food safety criteria, packed in clean food-grade containers within safe thermal holding limits (&gt;60°C hot / &lt;5°C cold).
+        <label class="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-on-surface cursor-pointer hover:bg-emerald-500/15 transition-colors">
+          <input type="checkbox" id="dRegPledge" required class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 accent-emerald-600">
+          <span class="leading-relaxed">
+            <strong class="text-emerald-950 font-bold block mb-0.5">FSSAI Surplus Food Recovery Pledge (2019 Regulations):</strong>
+            We certify that all surplus meals posted will adhere strictly to hygiene criteria, packed in clean food-grade thermal containers within safe holding limits (&gt;60°C hot / &lt;5°C cold).
           </span>
         </label>
 
-        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition-all">
+        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-sm shadow-xl shadow-emerald-700/20 hover:shadow-emerald-700/30 flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5">
           <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
           Register Certified Donor &amp; Activate Kitchen Command
         </button>
@@ -2128,79 +2432,137 @@
       </div>
 
       <form id="formVolunteerRegister" onsubmit="handleVolunteerRegister(event)" class="flex flex-col gap-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Full Name *</label>
-            <input type="text" id="vRegName" required placeholder="e.g. Rajesh Kumar" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+        
+        <!-- Section 1: Courier Identity Card -->
+        <div class="form-section-card">
+          <div class="form-section-title text-amber-700">
+            <span class="material-symbols-outlined text-[18px]">person</span> 1. Courier Identity &amp; Contact
           </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Phone Number *</label>
-            <input type="tel" id="vRegPhone" required placeholder="+91 98765 43210" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="vRegName">
+                <span>Full Legal Name</span>
+                <span class="text-[10px] text-amber-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">person</span>
+                <input type="text" id="vRegName" required placeholder="e.g. Rajesh Kumar" class="form-input-lux focus:border-amber-500 focus:ring-amber-500/20">
+              </div>
+            </div>
+            <div>
+              <label class="form-label-lux" for="vRegPhone">
+                <span>Phone Number</span>
+                <span class="text-[10px] text-amber-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">call</span>
+                <input type="tel" id="vRegPhone" required placeholder="+91 98765 43210" class="form-input-lux focus:border-amber-500 focus:ring-amber-500/20">
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="vRegEmail">
+                <span>Email Address</span>
+                <span class="text-[10px] text-amber-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">mail</span>
+                <input type="email" id="vRegEmail" required placeholder="rajesh.volunteer@city.org" class="form-input-lux focus:border-amber-500 focus:ring-amber-500/20">
+              </div>
+            </div>
+            <div>
+              <label class="form-label-lux" for="vRegUsername">
+                <span>Courier Handle / User ID</span>
+                <span class="text-[10px] text-amber-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">badge</span>
+                <input type="text" id="vRegUsername" required placeholder="volunteer_rajesh" class="form-input-lux focus:border-amber-500 focus:ring-amber-500/20">
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Email Address *</label>
-            <input type="email" id="vRegEmail" required placeholder="rajesh.volunteer@city.org" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+        <!-- Section 2: Transit Logistics Card -->
+        <div class="form-section-card">
+          <div class="form-section-title text-amber-700">
+            <span class="material-symbols-outlined text-[18px]">electric_scooter</span> 2. Vehicle &amp; Transit Logistics
           </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">User ID / Handle *</label>
-            <input type="text" id="vRegUsername" required placeholder="volunteer_rajesh" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+
+          <div>
+            <label class="form-label-lux" for="vRegVehicle">
+              <span>Vehicle / Transit Mode</span>
+              <span class="text-[10px] text-amber-700 font-bold">Required *</span>
+            </label>
+            <div class="input-icon-group">
+              <span class="material-symbols-outlined leading-icon">two_wheeler</span>
+              <select id="vRegVehicle" required class="form-select-lux focus:border-amber-500 focus:ring-amber-500/20">
+                <option value="Electric Two-Wheeler / Scooter">🛵 Electric Two-Wheeler / Scooter (High Speed)</option>
+                <option value="Bicycle + Thermal Backpack">🚲 Bicycle with Thermal Cargo Bag (Eco Zero-Emission)</option>
+                <option value="Four-Wheeler / Car / Van">🚗 Four-Wheeler / Car / Cargo Van (Bulk Transit)</option>
+                <option value="Pedestrian Walk-in Courier">🚶 Walk-in Courier (&lt; 1.5 km Hyperlocal)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="vRegSector">
+                <span>Primary Operational Hub</span>
+                <span class="text-[10px] text-amber-700 font-bold">Required *</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">location_city</span>
+                <select id="vRegSector" required class="form-select-lux focus:border-amber-500 focus:ring-amber-500/20">
+                  <option value="Sector 18 Commercial Hub">Sector 18 Commercial Hub</option>
+                  <option value="Sector 62 IT & Institutional Area">Sector 62 IT &amp; Institutional Area</option>
+                  <option value="Indirapuram / Vasundhara">Indirapuram / Vasundhara</option>
+                  <option value="Old City & Railway Bazaar">Old City &amp; Railway Bazaar</option>
+                  <option value="Sector 50 Residential Colony">Sector 50 Residential Colony</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="form-label-lux" for="vRegShift">
+                <span>Availability Window</span>
+                <span class="text-[10px] text-on-surface-variant font-normal">Preferred</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">schedule</span>
+                <select id="vRegShift" class="form-select-lux focus:border-amber-500 focus:ring-amber-500/20">
+                  <option value="Evening Dinner Shifts (8:30 PM - 11:30 PM)">Evening Dinner Shifts (8:30 - 11:30 PM)</option>
+                  <option value="Afternoon Lunch Shifts (2:00 PM - 4:30 PM)">Afternoon Lunch Shifts (2:00 - 4:30 PM)</option>
+                  <option value="Weekend Rapid Response On-Call">Weekend Rapid Response On-Call</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="flex flex-col gap-1.5">
-          <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Vehicle / Transit Mode *</label>
-          <select id="vRegVehicle" required class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
-            <option value="Electric Two-Wheeler / Scooter">🛵 Electric Two-Wheeler / Scooter (High Speed)</option>
-            <option value="Bicycle + Thermal Backpack">🚲 Bicycle with Thermal Cargo Bag (Eco Zero-Emission)</option>
-            <option value="Four-Wheeler / Car / Van">🚗 Four-Wheeler / Car / Cargo Van (Bulk Transit)</option>
-            <option value="Pedestrian Walk-in Courier">🚶 Walk-in Courier (&lt; 1.5 km Hyperlocal)</option>
-          </select>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Primary Sector *</label>
-            <select id="vRegSector" required class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
-              <option value="Sector 18 Commercial Hub">Sector 18 Commercial Hub</option>
-              <option value="Sector 62 IT & Institutional Area">Sector 62 IT &amp; Institutional Area</option>
-              <option value="Indirapuram / Vasundhara">Indirapuram / Vasundhara</option>
-              <option value="Old City & Railway Bazaar">Old City &amp; Railway Bazaar</option>
-              <option value="Sector 50 Residential Colony">Sector 50 Residential Colony</option>
-            </select>
-          </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Availability Window</label>
-            <select id="vRegShift" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
-              <option value="Evening Dinner Shifts (8:30 PM - 11:30 PM)">Evening Dinner Shifts (8:30 - 11:30 PM)</option>
-              <option value="Afternoon Lunch Shifts (2:00 PM - 4:30 PM)">Afternoon Lunch Shifts (2:00 - 4:30 PM)</option>
-              <option value="Weekend Rapid Response On-Call">Weekend Rapid Response On-Call</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Aadhaar Identity & UIDAI e-KYC Verification Box -->
-        <div class="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/30 flex flex-col gap-3">
+        <!-- Section 3: Aadhaar Identity & UIDAI e-KYC Verification Box -->
+        <div class="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/30 flex flex-col gap-3 shadow-sm">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-amber-600 text-[20px]">fingerprint</span>
-              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">UIDAI Aadhaar Verification *</span>
+              <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">3. UIDAI Aadhaar Verification</span>
             </div>
             <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-amber-500/10 text-amber-800 border border-amber-500/20" id="badgeAadhaarStatus">Mandatory e-KYC</span>
           </div>
 
           <p class="text-[11px] text-on-surface-variant leading-relaxed">
-            Volunteers hold physical custody of surplus food containers. UIDAI e-KYC establishes legal identity to prevent theft and protect community health.
+            Volunteers hold physical custody of surplus food containers during transit runs. UIDAI e-KYC secures trusted chain-of-custody and prevents diversion.
           </p>
 
           <div class="flex flex-col sm:flex-row gap-2">
-            <div class="relative flex-1">
-              <input type="text" id="vRegAadhaar" maxlength="14" placeholder="•••• •••• •••• (12 Digits)" oninput="formatAadhaarInput(this)" class="w-full bg-surface-container-low text-on-surface font-mono tracking-widest text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
-              <span class="absolute right-3 top-2.5 text-xs text-on-surface-variant font-mono" id="aadhaarDigitCounter">0/12</span>
+            <div class="relative flex-1 input-icon-group">
+              <span class="material-symbols-outlined leading-icon text-amber-600">badge</span>
+              <input type="text" id="vRegAadhaar" maxlength="14" placeholder="•••• •••• •••• (12 Digits)" oninput="formatAadhaarInput(this)" class="form-input-lux font-mono tracking-widest text-sm pr-14 focus:border-amber-500 focus:ring-amber-500/20">
+              <span class="absolute right-3 text-xs text-on-surface-variant font-mono" id="aadhaarDigitCounter">0/12</span>
             </div>
-            <button type="button" id="btnRequestAadhaarOtp" onclick="initiateAadhaarVerification()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-sm transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
+            <button type="button" id="btnRequestAadhaarOtp" onclick="initiateAadhaarVerification()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
               <span class="material-symbols-outlined text-[16px]">verified_user</span> Verify via OTP
             </button>
             <button type="button" onclick="quickFillDemoAadhaar()" class="px-3 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-semibold border border-outline-variant/30 transition-all whitespace-nowrap" title="Auto-fill sample Aadhaar for rapid test">
@@ -2209,21 +2571,21 @@
           </div>
 
           <!-- Step 2: Simulated UIDAI OTP Input Box (initially hidden) -->
-          <div id="aadhaarOtpSection" class="hidden flex-col gap-2.5 p-3 rounded-xl bg-surface-container-lowest border border-amber-500/30">
+          <div id="aadhaarOtpSection" class="hidden flex-col gap-2.5 p-3.5 rounded-xl bg-surface-container-lowest border border-amber-500/30 shadow-sm">
             <div class="flex items-center justify-between text-xs">
-              <span class="text-on-surface-variant">UIDAI e-KYC OTP: <strong class="font-mono text-primary font-bold text-sm tracking-wider" id="simulatedAadhaarOtp">748921</strong></span>
+              <span class="text-on-surface-variant">UIDAI Secure OTP: <strong class="font-mono text-primary font-bold text-sm tracking-wider" id="simulatedAadhaarOtp">748921</strong></span>
               <button type="button" onclick="autofillAadhaarOtp()" class="px-2.5 py-1 bg-primary/10 hover:bg-primary hover:text-on-primary text-primary font-bold rounded-lg text-[11px] transition-all">⚡ Auto-Fill Code</button>
             </div>
             <div class="flex gap-2">
-              <input type="text" id="vRegAadhaarOtp" maxlength="6" placeholder="Enter 6-digit UIDAI OTP" class="flex-1 bg-surface-container-low text-on-surface font-mono text-center tracking-widest text-sm px-3 py-2 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary">
-              <button type="button" onclick="confirmAadhaarVerification()" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-md transition-all whitespace-nowrap">Confirm e-KYC</button>
+              <input type="text" id="vRegAadhaarOtp" maxlength="6" placeholder="Enter 6-digit OTP" class="flex-1 pin-input-lux py-2 text-base tracking-widest focus:ring-2 focus:ring-primary">
+              <button type="button" onclick="confirmAadhaarVerification()" class="px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-on-primary font-bold text-xs shadow-md transition-all whitespace-nowrap">Confirm e-KYC</button>
             </div>
           </div>
 
           <!-- Verified State Banner (initially hidden) -->
-          <div id="aadhaarVerifiedBanner" class="hidden items-center justify-between p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-900">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-emerald-600 text-[18px]">verified</span>
+          <div id="aadhaarVerifiedBanner" class="hidden items-center justify-between p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-900">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-emerald-600 text-[20px]">verified</span>
               <div>
                 <strong class="font-bold block">Aadhaar e-KYC Authenticated</strong>
                 <span class="text-[11px] font-mono text-emerald-800" id="verifiedAadhaarText">Masked UID: XXXX-XXXX-8821 · UIDAI Vault Verified</span>
@@ -2235,25 +2597,49 @@
           <input type="hidden" id="vRegAadhaarVerified" value="false">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Create Password *</label>
-            <input type="password" id="vRegPassword" required placeholder="Min 6 characters" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+        <!-- Section 4: Credentials & Emergency Card -->
+        <div class="form-section-card">
+          <div class="form-section-title text-amber-700">
+            <span class="material-symbols-outlined text-[18px]">lock</span> 4. Password &amp; Safety Protocol
           </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Emergency Contact Phone</label>
-            <input type="tel" id="vRegEmergency" placeholder="+91 99999 00000" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="form-label-lux" for="vRegPassword">
+                <span>Create Password</span>
+                <span class="text-[10px] text-amber-700 font-bold">Min 6 chars *</span>
+              </label>
+              <div class="input-icon-group has-trailing">
+                <span class="material-symbols-outlined leading-icon">key</span>
+                <input type="password" id="vRegPassword" required placeholder="••••••••" class="form-input-lux focus:border-amber-500 focus:ring-amber-500/20">
+                <button type="button" class="trailing-btn" onclick="togglePasswordVisibility('vRegPassword', this)" title="Show/Hide Password">
+                  <span class="material-symbols-outlined text-[18px]">visibility</span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label class="form-label-lux" for="vRegEmergency">
+                <span>Emergency Contact Phone</span>
+                <span class="text-[10px] text-on-surface-variant font-normal">Optional</span>
+              </label>
+              <div class="input-icon-group">
+                <span class="material-symbols-outlined leading-icon">contact_phone</span>
+                <input type="tel" id="vRegEmergency" placeholder="+91 99999 00000" class="form-input-lux focus:border-amber-500 focus:ring-amber-500/20">
+              </div>
+            </div>
           </div>
         </div>
 
-        <label class="flex items-start gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-on-surface cursor-pointer mt-1">
-          <input type="checkbox" id="vRegPledge" required class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
-          <span>
-            <strong>AnnaSetu Citizen Courier Pledge:</strong> I commit to transporting food in clean, insulated/covered containers and executing swift, safe delivery within 60 minutes of kitchen collection.
+        <!-- Volunteer Pledge -->
+        <label class="flex items-start gap-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-on-surface cursor-pointer hover:bg-amber-500/15 transition-colors">
+          <input type="checkbox" id="vRegPledge" required class="mt-0.5 rounded text-amber-600 focus:ring-amber-500 w-4 h-4 accent-amber-600">
+          <span class="leading-relaxed">
+            <strong class="text-amber-950 font-bold block mb-0.5">AnnaSetu Citizen Courier Pledge:</strong>
+            I commit to transporting food in clean, insulated containers and executing swift, safe delivery within 60 minutes of kitchen collection.
           </span>
         </label>
 
-        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-sm shadow-lg flex items-center justify-center gap-2 mt-2 transition-all">
+        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-sm shadow-xl shadow-amber-500/20 hover:shadow-amber-500/30 flex items-center justify-center gap-2 mt-1 transition-all hover:-translate-y-0.5">
           <span class="material-symbols-outlined text-[20px]">verified</span>
           Complete Volunteer Registration &amp; Activate Dispatch Pass
         </button>

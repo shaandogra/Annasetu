@@ -2091,6 +2091,16 @@ function fillDemoCredentials(userId, pwd, role) {
   setAuthRole(role);
 }
 
+function togglePasswordVisibility(inputId, btn) {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  const isPass = el.type === 'password';
+  el.type = isPass ? 'text' : 'password';
+  const icon = btn.querySelector('.material-symbols-outlined');
+  if (icon) icon.innerText = isPass ? 'visibility_off' : 'visibility';
+}
+
+
 async function handleAuthLogin(e) {
   e.preventDefault();
   const userId = document.getElementById('authUserId').value.trim();
