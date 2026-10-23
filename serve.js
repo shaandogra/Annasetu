@@ -66,6 +66,19 @@ function ensureDataStore() {
         verifyOtp: "582914",
         otpExpiry: Date.now() + 24 * 3600 * 1000,
         createdAt: new Date().toISOString()
+      },
+      {
+        id: "volunteer_rajesh",
+        name: "Rajesh Kumar (Volunteer Courier)",
+        email: "rajesh.courier@annasetu.org",
+        password: "Volunteer@2026",
+        role: "volunteer",
+        organization: "Citizen Cargo Squad #4",
+        phone: "+91 98450-12345",
+        address: "Sector 4 Civic Dispatch Point",
+        vehicle: "Electric Two-Wheeler / Thermal Backpack",
+        verified: true,
+        createdAt: new Date().toISOString()
       }
     ];
     fs.writeFileSync(USERS_FILE, JSON.stringify(defaultUsers, null, 2), 'utf-8');
@@ -130,6 +143,7 @@ function sanitizeUser(u) {
     organization: u.organization || u.name,
     phone: u.phone || '',
     address: u.address || '',
+    vehicle: u.vehicle || '',
     verified: !!u.verified
   };
 }
@@ -287,10 +301,11 @@ const server = http.createServer(async (req, res) => {
         name: String(name).trim(),
         email: cleanEmail,
         password: String(password),
-        role: role === 'ngo' ? 'ngo' : 'donor',
+        role: role === 'volunteer' ? 'volunteer' : (role === 'ngo' ? 'ngo' : 'donor'),
         organization: String(organization || name).trim(),
         phone: String(phone || '').trim(),
         address: String(address || '').trim(),
+        vehicle: String(body.vehicle || '').trim(),
         verified: false,
         verifyOtp,
         otpExpiry: Date.now() + 15 * 60 * 1000,

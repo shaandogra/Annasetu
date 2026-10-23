@@ -119,9 +119,75 @@ const DEFAULT_AUDIT_LOGS = [
   { time: '09:00 AM', type: 'info', text: 'System initialized with active municipal FSSAI food recovery parameters.' }
 ];
 
+// Seed Missions Connecting Donors to Destination Shelters (Awaiting Citizen Couriers)
+const DEFAULT_MISSIONS = [
+  {
+    id: 'MSN-2026-881',
+    title: 'Grand Banquet Rice & Dal Rescue',
+    donorName: 'Grand Banquet & Catering',
+    donorAddress: 'Central Gate, Sector 18 Commercial Hub',
+    donorContact: 'Chef Rakesh (+91 98112 34567)',
+    pickupPin: '4892',
+    ngoName: 'Asha Children’s Shelter',
+    ngoAddress: 'Plot 45, Railway Colony Marg',
+    ngoContact: 'Sunita Devi (+91 98110 44552)',
+    quantity: '85 servings (4 sealed thermal pots)',
+    dietary: 'Pure Veg',
+    tempProfile: 'Hot (>60°C insulated)',
+    distanceKm: 2.8,
+    transitEstMin: 12,
+    urgencyMinRemaining: 38,
+    status: 'READY_FOR_PICKUP', // 'READY_FOR_PICKUP' | 'IN_TRANSIT' | 'DELIVERED'
+    courierName: null,
+    courierVehicle: null
+  },
+  {
+    id: 'MSN-2026-882',
+    title: 'Daily Bread Artisanal Surplus Dispatch',
+    donorName: 'Daily Bread Artisan Bakery',
+    donorAddress: 'Connaught Lane Bakery Hub, Block C',
+    donorContact: 'Master Baker Anita (+91 98711 22334)',
+    pickupPin: '3892',
+    ngoName: 'Udaan Youth Care Shelter',
+    ngoAddress: 'Sector 62 Community Hall',
+    ngoContact: 'Vikas Sharma (+91 98223 99881)',
+    quantity: '40 bakery crates & loaves',
+    dietary: 'Bakery & Grain',
+    tempProfile: 'Ambient Clean Sealed',
+    distanceKm: 3.4,
+    transitEstMin: 16,
+    urgencyMinRemaining: 95,
+    status: 'READY_FOR_PICKUP',
+    courierName: null,
+    courierVehicle: null
+  },
+  {
+    id: 'MSN-2026-883',
+    title: 'TechCorp Cafeteria Protein Meal Boxes',
+    donorName: 'TechCorp Tower B Central Kitchen',
+    donorAddress: 'TechCorp Tower B Gate 1, Sector 62',
+    donorContact: 'Cafeteria Lead Arjun (+91 99100 88219)',
+    pickupPin: '7541',
+    ngoName: 'Seva Rasoi Community Kitchen',
+    ngoAddress: 'Sector 55 Rain Basera',
+    ngoContact: 'Mohan Lal (+91 97118 66442)',
+    quantity: '120 sealed meal packs',
+    dietary: 'Halal & Gluten-Free',
+    tempProfile: 'Chilled Packaged',
+    distanceKm: 4.1,
+    transitEstMin: 19,
+    urgencyMinRemaining: 140,
+    status: 'READY_FOR_PICKUP',
+    courierName: null,
+    courierVehicle: null
+  }
+];
+
 // App State
 let listings = [];
 let auditLogs = [];
+let volunteerMissions = [];
+let activeVolunteerMission = null;
 let currentUrgentToggle = 'all'; // 'all' or 'urgent'
 let currentRadiusKm = 5;
 let searchQuery = '';
@@ -248,11 +314,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function loadState() {
   const savedListings = localStorage.getItem('annasetu_listings_v3');
   const savedLogs = localStorage.getItem('annasetu_audit_v3');
+  const savedMissions = localStorage.getItem('annasetu_missions_v1');
 
   if (savedListings && savedLogs) {
     try {
       listings = JSON.parse(savedListings);
       auditLogs = JSON.parse(savedLogs);
+      volunteerMissions = savedMissions ? JSON.parse(savedMissions) : JSON.parse(JSON.stringify(DEFAULT_MISSIONS));
     } catch (e) {
       resetDemoData();
     }
@@ -264,11 +332,13 @@ function loadState() {
 function saveState() {
   localStorage.setItem('annasetu_listings_v3', JSON.stringify(listings));
   localStorage.setItem('annasetu_audit_v3', JSON.stringify(auditLogs));
+  localStorage.setItem('annasetu_missions_v1', JSON.stringify(volunteerMissions));
 }
 
 function resetDemoData() {
   listings = JSON.parse(JSON.stringify(DEFAULT_LISTINGS));
   auditLogs = JSON.parse(JSON.stringify(DEFAULT_AUDIT_LOGS));
+  volunteerMissions = JSON.parse(JSON.stringify(DEFAULT_MISSIONS));
   saveState();
   renderAllViews();
   showToast('Demo data reset to clean initial state', 'info');
@@ -279,6 +349,7 @@ function resetDemoData() {
 function renderAllViews() {
   renderAvailableFoodFeed();
   renderDonorView();
+  renderVolunteerMissions();
   renderAdminView();
   updateHeroStats();
 }
@@ -292,6 +363,7 @@ function switchPerspective(role) {
   if (role === 'donor') role = 'donor';
   if (role === 'admin') role = 'admin';
   if (role === 'judge') role = 'judge';
+  if (role === 'volunteer') role = 'volunteer';
 
   document.querySelectorAll('.portal-view').forEach(el => el.classList.remove('active-view'));
   document.querySelectorAll('.nav-link').forEach(el => {
@@ -312,6 +384,9 @@ function switchPerspective(role) {
   } else if (role === 'donor') {
     targetViewId = 'viewDonor';
     targetPath = 'donate-food';
+  } else if (role === 'volunteer') {
+    targetViewId = 'viewVolunteer';
+    targetPath = 'volunteer';
   } else if (role === 'admin') {
     targetViewId = 'viewAdmin';
     targetPath = 'impact-and-analytics';
@@ -972,6 +1047,317 @@ function confirmDispatchCall() {
 }
 
 // ==========================================================================
+// VIEW 6: VOLUNTEER COURIER SQUAD (EXTERNAL BRIDGING DONOR & NGO)
+// ==========================================================================
+function renderVolunteerMissions() {
+  const feed = document.getElementById('volunteerMissionsFeed');
+  if (!feed) return;
+
+  const activeCount = volunteerMissions.filter(m => m.status !== 'DELIVERED').length;
+  const completedCount = volunteerMissions.filter(m => m.status === 'DELIVERED').length;
+
+  // Update nav badge
+  const navBadge = document.getElementById('navVolunteerCountBadge');
+  if (navBadge) navBadge.innerText = `${activeCount} Active`;
+
+  // Update impact stats in View 6 header
+  const statMissions = document.getElementById('statVolunteerMissions');
+  const statMeals = document.getElementById('statVolunteerMeals');
+  const statCo2 = document.getElementById('statVolunteerCo2');
+
+  const totalDeliveredMeals = 580 + (completedCount * 85);
+  if (statMissions) statMissions.innerText = 14 + completedCount;
+  if (statMeals) statMeals.innerText = totalDeliveredMeals;
+  if (statCo2) statCo2.innerText = `${Math.round(totalDeliveredMeals * 0.4)} kg`;
+
+  if (volunteerMissions.length === 0) {
+    feed.innerHTML = `
+      <div class="col-span-full bg-surface-container-lowest rounded-2xl p-10 text-center border border-surface-variant/60 shadow-sm flex flex-col items-center gap-3">
+        <span class="material-symbols-outlined text-[48px] text-amber-500">task_alt</span>
+        <h4 class="text-lg font-bold text-on-surface">All Surplus Deliveries Dispatched</h4>
+        <p class="text-xs text-on-surface-variant">No pending transit runs right now. New missions pop up dynamically when commercial kitchens post surplus.</p>
+      </div>
+    `;
+    return;
+  }
+
+  feed.innerHTML = volunteerMissions.map((mission) => {
+    let statusPill = '';
+    let actionBtn = '';
+    let borderAccent = 'border-amber-500/20';
+
+    if (mission.status === 'READY_FOR_PICKUP') {
+      statusPill = `<span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-800 text-[11px] font-bold border border-amber-500/30 flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Ready for Pickup
+      </span>`;
+      actionBtn = `
+        <button class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5" onclick="openVolunteerMission('${mission.id}')">
+          <span class="material-symbols-outlined text-[16px]">electric_moped</span> Accept Mission &amp; Route
+        </button>
+      `;
+    } else if (mission.status === 'IN_TRANSIT') {
+      borderAccent = 'border-blue-500/40 bg-blue-50/20';
+      statusPill = `<span class="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-700 text-[11px] font-bold border border-blue-500/30 flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span> In Transit
+      </span>`;
+      actionBtn = `
+        <button class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5" onclick="openVolunteerMission('${mission.id}')">
+          <span class="material-symbols-outlined text-[16px]">navigation</span> In Transit • Open Cockpit
+        </button>
+      `;
+    } else {
+      borderAccent = 'border-emerald-500/30 bg-emerald-50/10 opacity-90';
+      statusPill = `<span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-800 text-[11px] font-bold border border-emerald-500/30 flex items-center gap-1">
+        <span class="material-symbols-outlined text-[13px] text-emerald-600">check_circle</span> Delivered &amp; Verified
+      </span>`;
+      actionBtn = `
+        <button class="w-full py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-semibold text-xs border border-outline-variant/30 transition-all flex items-center justify-center gap-1.5" onclick="openVolunteerMission('${mission.id}')">
+          <span class="material-symbols-outlined text-[16px]">verified</span> View Chain-of-Custody Proof
+        </button>
+      `;
+    }
+
+    return `
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border ${borderAccent} shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4">
+        <div class="flex flex-col gap-3">
+          <!-- Top bar -->
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold font-mono tracking-wider text-on-surface-variant uppercase">${mission.id}</span>
+            ${statusPill}
+          </div>
+
+          <!-- Mission Title -->
+          <h4 class="text-base font-['Noto_Serif'] font-bold text-on-surface leading-snug">${escapeHtml(mission.title)}</h4>
+
+          <!-- Origin to Destination Route Leg -->
+          <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col gap-2.5 text-xs">
+            <div class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-primary text-[16px] mt-0.5">storefront</span>
+              <div class="flex flex-col">
+                <span class="text-[10px] uppercase font-bold text-on-surface-variant">Donor Pickup</span>
+                <strong class="text-on-surface">${escapeHtml(mission.donorName)}</strong>
+                <span class="text-[11px] text-on-surface-variant truncate">${escapeHtml(mission.donorAddress)}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 pl-2 text-[10px] font-bold text-amber-700">
+              <span class="w-3 border-t border-dashed border-amber-600"></span>
+              <span>${mission.distanceKm} km · ${mission.transitEstMin} min transit</span>
+            </div>
+
+            <div class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-amber-600 text-[16px] mt-0.5">home_health</span>
+              <div class="flex flex-col">
+                <span class="text-[10px] uppercase font-bold text-on-surface-variant">Shelter Drop-off</span>
+                <strong class="text-on-surface">${escapeHtml(mission.ngoName)}</strong>
+                <span class="text-[11px] text-on-surface-variant truncate">${escapeHtml(mission.ngoAddress)}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payload Specs -->
+          <div class="flex items-center justify-between text-xs text-on-surface-variant pt-1 border-t border-surface-variant/40">
+            <span class="font-semibold text-on-surface flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px] text-emerald-600">restaurant</span> ${escapeHtml(mission.quantity)}
+            </span>
+            <span class="text-[11px] font-mono font-bold text-amber-800 bg-amber-500/10 px-2 py-0.5 rounded-full">
+              ⏱ ${mission.urgencyMinRemaining}m window
+            </span>
+          </div>
+        </div>
+
+        <div>
+          ${actionBtn}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openVolunteerMission(missionId) {
+  const mission = volunteerMissions.find(m => m.id === missionId);
+  if (!mission) return;
+
+  activeVolunteerMission = mission;
+
+  const badgeEl = document.getElementById('vModalMissionBadge');
+  const timeEl = document.getElementById('vModalTimeRemaining');
+  const titleEl = document.getElementById('vModalTitle');
+  const distEl = document.getElementById('vModalDistance');
+  const donorNameEl = document.getElementById('vModalDonorName');
+  const donorAddrEl = document.getElementById('vModalDonorAddress');
+  const donorPinEl = document.getElementById('vModalPickupPin');
+  const ngoNameEl = document.getElementById('vModalNgoName');
+  const ngoAddrEl = document.getElementById('vModalNgoAddress');
+  const ngoContactEl = document.getElementById('vModalNgoContact');
+  const qtyEl = document.getElementById('vModalQuantity');
+  const dietEl = document.getElementById('vModalDiet');
+  const tempEl = document.getElementById('vModalTemp');
+  const btnPickup = document.getElementById('btnVolunteerPickup');
+  const btnDeliver = document.getElementById('btnVolunteerDeliver');
+
+  if (badgeEl) badgeEl.innerText = `MISSION #${mission.id}`;
+  if (timeEl) timeEl.innerText = `⏱ ${mission.urgencyMinRemaining} min window`;
+  if (titleEl) titleEl.innerText = mission.title;
+  if (distEl) distEl.innerHTML = `<span class="material-symbols-outlined text-[15px]">route</span> ${mission.distanceKm} km • ${mission.transitEstMin} min transit`;
+  if (donorNameEl) donorNameEl.innerText = mission.donorName;
+  if (donorAddrEl) donorAddrEl.innerText = mission.donorAddress;
+  if (donorPinEl) donorPinEl.innerText = mission.pickupPin;
+  if (ngoNameEl) ngoNameEl.innerText = mission.ngoName;
+  if (ngoAddrEl) ngoAddrEl.innerText = mission.ngoAddress;
+  if (ngoContactEl) ngoContactEl.innerText = mission.ngoContact;
+  if (qtyEl) qtyEl.innerText = mission.quantity;
+  if (dietEl) dietEl.innerText = mission.dietary;
+  if (tempEl) tempEl.innerText = mission.tempProfile;
+
+  if (btnPickup && btnDeliver) {
+    if (mission.status === 'READY_FOR_PICKUP') {
+      btnPickup.disabled = false;
+      btnPickup.className = 'flex-1 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer';
+      btnPickup.innerHTML = '<span class="material-symbols-outlined text-[18px]">inventory_2</span> 1. Confirm Pickup at Kitchen (PIN Verified)';
+
+      btnDeliver.disabled = true;
+      btnDeliver.className = 'flex-1 py-3.5 rounded-xl bg-surface-container-high text-outline font-semibold text-sm border border-outline-variant/30 flex items-center justify-center gap-2 opacity-60 cursor-not-allowed';
+      btnDeliver.innerHTML = '<span class="material-symbols-outlined text-[18px]">lock</span> 2. Complete Delivery (Pickup First)';
+    } else if (mission.status === 'IN_TRANSIT') {
+      btnPickup.disabled = true;
+      btnPickup.className = 'flex-1 py-3.5 rounded-xl bg-emerald-500/10 text-emerald-800 font-bold text-sm border border-emerald-500/30 flex items-center justify-center gap-2';
+      btnPickup.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span> ✓ Food Picked Up (In-Transit)';
+
+      btnDeliver.disabled = false;
+      btnDeliver.className = 'flex-1 py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-on-primary font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer';
+      btnDeliver.innerHTML = '<span class="material-symbols-outlined text-[18px]">task_alt</span> 2. Complete Drop-off at Shelter';
+    } else {
+      btnPickup.disabled = true;
+      btnPickup.className = 'flex-1 py-3.5 rounded-xl bg-surface-container-high text-on-surface-variant font-semibold text-sm border border-outline-variant/30 flex items-center justify-center gap-2';
+      btnPickup.innerHTML = '<span class="material-symbols-outlined text-[18px]">verified</span> Picked Up';
+
+      btnDeliver.disabled = true;
+      btnDeliver.className = 'flex-1 py-3.5 rounded-xl bg-emerald-600 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2';
+      btnDeliver.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span> Delivery Completed &amp; Verified';
+    }
+  }
+
+  openModal('modalVolunteerMission');
+}
+
+function confirmVolunteerPickup() {
+  if (!activeVolunteerMission) return;
+  activeVolunteerMission.status = 'IN_TRANSIT';
+  activeVolunteerMission.courierName = (currentUser && currentUser.name) ? currentUser.name : 'Rajesh Kumar (Citizen Courier)';
+  saveState();
+
+  logAudit(`Mission ${activeVolunteerMission.id}: Courier ${activeVolunteerMission.courierName} picked up ${activeVolunteerMission.quantity} from ${activeVolunteerMission.donorName} with PIN #${activeVolunteerMission.pickupPin}. In transit to ${activeVolunteerMission.ngoName}.`, 'info');
+
+  playTone('success');
+  showToastNotification('Pickup Confirmed!', `Transit leg active. Food is now safely en-route to ${activeVolunteerMission.ngoName}.`);
+
+  renderVolunteerMissions();
+  openVolunteerMission(activeVolunteerMission.id);
+}
+
+function confirmVolunteerDelivery() {
+  if (!activeVolunteerMission) return;
+  activeVolunteerMission.status = 'DELIVERED';
+  saveState();
+
+  logAudit(`Mission ${activeVolunteerMission.id}: Delivery completed. ${activeVolunteerMission.quantity} received safely at ${activeVolunteerMission.ngoName}. +50 Courier Karma points awarded.`, 'success');
+
+  triggerConfetti();
+  playTone('claim');
+  closeModal('modalVolunteerMission');
+
+  showToastNotification('Mission Accomplished!', `Delivered to shelter! +50 Courier Karma XP added to your volunteer profile.`);
+
+  renderVolunteerMissions();
+  updateHeroStats();
+}
+
+// Volunteer Registration Dialog Handlers
+function openVolunteerRegisterModal() {
+  openModal('modalVolunteerRegister');
+}
+
+function closeVolunteerRegisterModal() {
+  closeModal('modalVolunteerRegister');
+}
+
+async function handleVolunteerRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('vRegName').value.trim();
+  const phone = document.getElementById('vRegPhone').value.trim();
+  const email = document.getElementById('vRegEmail').value.trim();
+  const userId = document.getElementById('vRegUsername').value.trim();
+  const vehicle = document.getElementById('vRegVehicle').value;
+  const sector = document.getElementById('vRegSector').value;
+  const shift = document.getElementById('vRegShift').value;
+  const password = document.getElementById('vRegPassword').value;
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId,
+        name,
+        email,
+        phone,
+        password,
+        role: 'volunteer',
+        organization: `${name} (Citizen Courier)`,
+        sector,
+        vehicle,
+        shift
+      })
+    });
+    const data = await res.json();
+
+    if (data.success && data.user) {
+      currentUser = data.user;
+      authToken = data.token;
+      localStorage.setItem('annasetu_auth_user', JSON.stringify(currentUser));
+      localStorage.setItem('annasetu_auth_token', authToken);
+    } else {
+      currentUser = {
+        id: userId,
+        name,
+        email,
+        phone,
+        role: 'volunteer',
+        organization: `${name} (Citizen Courier)`,
+        sector,
+        vehicle,
+        verified: true
+      };
+      localStorage.setItem('annasetu_auth_user', JSON.stringify(currentUser));
+    }
+  } catch (err) {
+    currentUser = {
+      id: userId,
+      name,
+      email,
+      phone,
+      role: 'volunteer',
+      organization: `${name} (Citizen Courier)`,
+      sector,
+      vehicle,
+      verified: true
+    };
+    localStorage.setItem('annasetu_auth_user', JSON.stringify(currentUser));
+  }
+
+  logAudit(`Citizen Courier Registered: ${name} (${vehicle}, ${sector}). Food safe transport pass issued.`, 'success');
+  updateAuthUI();
+  closeModal('modalVolunteerRegister');
+
+  triggerConfetti();
+  playTone('claim');
+  showToastNotification(`Welcome to AnnaSetu Fleet, ${name}!`, `Citizen Courier dispatch pass activated. Operating mode: ${vehicle}.`);
+
+  switchPerspective('volunteer');
+}
+
+// ==========================================================================
 // DEMO JUDGE STEPS WALKTHROUGH
 // ==========================================================================
 function executeDemoStep(step) {
@@ -1033,12 +1419,19 @@ function updateAuthUI() {
 
   if (currentUser) {
     const displayName = currentUser.organization || currentUser.name;
-    const isDonor = currentUser.role === 'donor';
     if (avatarText) avatarText.innerText = currentUser.name.charAt(0).toUpperCase();
     if (userName) userName.innerText = displayName;
-    if (userRole) userRole.innerText = `${currentUser.role.toUpperCase()} • Verified`;
     if (headerName) headerName.innerText = displayName;
-    if (headerRole) headerRole.innerText = `${isDonor ? 'Food Donor' : 'Recipient NGO'} • Verified`;
+
+    if (currentUser.role === 'volunteer') {
+      const vText = currentUser.vehicle ? `Citizen Courier (${currentUser.vehicle})` : 'Citizen Courier';
+      if (userRole) userRole.innerText = `VOLUNTEER • Verified`;
+      if (headerRole) headerRole.innerText = `${vText} • Verified`;
+    } else {
+      const isDonor = currentUser.role === 'donor';
+      if (userRole) userRole.innerText = `${currentUser.role.toUpperCase()} • Verified`;
+      if (headerRole) headerRole.innerText = `${isDonor ? 'Food Donor' : 'Recipient NGO'} • Verified`;
+    }
   } else {
     if (avatarText) avatarText.innerText = 'A';
     if (userName) userName.innerText = 'Asha Community Shelter';
@@ -1052,16 +1445,20 @@ function setAuthRole(role) {
   currentAuthRole = role;
   const btnDonor = document.getElementById('btnRoleDonor');
   const btnNgo = document.getElementById('btnRoleNgo');
+  const btnVolunteer = document.getElementById('btnRoleVolunteer');
   const subtitle = document.getElementById('authSubtitleRole');
 
-  if (role === 'donor') {
-    if (btnDonor) btnDonor.className = 'py-2 text-xs font-bold rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all';
-    if (btnNgo) btnNgo.className = 'py-2 text-xs font-bold rounded-lg text-on-surface-variant hover:text-on-surface transition-all';
-    if (subtitle) subtitle.innerText = 'Donor Gateway';
-  } else {
-    if (btnNgo) btnNgo.className = 'py-2 text-xs font-bold rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all';
-    if (btnDonor) btnDonor.className = 'py-2 text-xs font-bold rounded-lg text-on-surface-variant hover:text-on-surface transition-all';
-    if (subtitle) subtitle.innerText = 'Recipient NGO Gateway';
+  const inactive = 'py-2 text-xs font-bold rounded-lg text-on-surface-variant hover:text-on-surface transition-all';
+  const active = 'py-2 text-xs font-bold rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all';
+
+  if (btnDonor) btnDonor.className = (role === 'donor') ? active : inactive;
+  if (btnNgo) btnNgo.className = (role === 'ngo') ? active : inactive;
+  if (btnVolunteer) btnVolunteer.className = (role === 'volunteer') ? active : inactive;
+
+  if (subtitle) {
+    if (role === 'donor') subtitle.innerText = 'Donor Gateway';
+    else if (role === 'ngo') subtitle.innerText = 'Recipient NGO Gateway';
+    else if (role === 'volunteer') subtitle.innerText = 'Volunteer Courier Gateway';
   }
 }
 
@@ -1117,6 +1514,8 @@ async function handleAuthLogin(e) {
 
     if (currentUser.role === 'donor') {
       switchPerspective('donor');
+    } else if (currentUser.role === 'volunteer') {
+      switchPerspective('volunteer');
     } else {
       switchPerspective('available-food');
     }
@@ -1124,7 +1523,13 @@ async function handleAuthLogin(e) {
     showToastNotification('Auth Offline', 'Using client-side session credentials.');
     currentUser = { name: userId, role: currentAuthRole, organization: userId };
     updateAuthUI();
-    switchPerspective('available-food');
+    if (currentAuthRole === 'volunteer') {
+      switchPerspective('volunteer');
+    } else if (currentAuthRole === 'donor') {
+      switchPerspective('donor');
+    } else {
+      switchPerspective('available-food');
+    }
   }
 }
 

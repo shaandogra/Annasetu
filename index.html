@@ -226,6 +226,10 @@
                 <span class="material-symbols-outlined text-[16px] text-primary">volunteer_activism</span>
                 <span>Switch to Shelter Radar View</span>
               </button>
+              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2" onclick="switchPerspective('volunteer'); toggleUserDropdown();">
+                <span class="material-symbols-outlined text-[16px] text-amber-600">electric_moped</span>
+                <span>Switch to Volunteer Courier Hub</span>
+              </button>
               <div class="border-t border-surface-variant/40 my-1"></div>
               <button class="w-full text-left px-3 py-2 text-xs font-semibold text-error hover:bg-error-container/30 rounded-lg transition-colors flex items-center gap-2" onclick="handleLogout(); toggleUserDropdown();">
                 <span class="material-symbols-outlined text-[16px]">logout</span>
@@ -253,6 +257,12 @@
             <span class="material-symbols-outlined text-[17px]">radar</span>
             <span>Available Surplus Food</span>
             <span class="px-1.5 py-0.2 rounded-md bg-white/25 text-white text-[10px] font-bold" id="navAvailableCountBadge">5</span>
+          </a>
+
+          <a class="nav-link flex items-center gap-2 text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high px-4 py-2 rounded-xl transition-all whitespace-nowrap" data-path="volunteer" href="javascript:void(0)" onclick="switchPerspective('volunteer')">
+            <span class="material-symbols-outlined text-[17px] text-amber-600">electric_moped</span>
+            <span>Volunteer Courier Squad</span>
+            <span class="px-1.5 py-0.2 rounded-md bg-amber-500/20 text-amber-800 text-[10px] font-bold" id="navVolunteerCountBadge">3 Active</span>
           </a>
 
           <a class="nav-link flex items-center gap-2 text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high px-4 py-2 rounded-xl transition-all whitespace-nowrap" data-path="donate-food" href="javascript:void(0)" onclick="switchPerspective('donor')">
@@ -316,6 +326,9 @@
       <nav class="flex flex-col gap-2 pt-6">
         <button class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm bg-primary text-on-primary flex items-center gap-3" onclick="switchPerspective('available-food'); closeMobileNav();">
           <span class="material-symbols-outlined">radar</span> Available Food
+        </button>
+        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('volunteer'); closeMobileNav();">
+          <span class="material-symbols-outlined text-amber-600">electric_moped</span> Volunteer Courier Squad
         </button>
         <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('donor'); closeMobileNav();">
           <span class="material-symbols-outlined text-primary">restaurant</span> Donate Food
@@ -880,7 +893,92 @@
     </section>
 
     <!-- ========================================================================
-         VIEW 6: PORTAL AUTHENTICATION & REGISTRATION
+         VIEW 6: VOLUNTEER COURIER SQUAD (EXTERNAL BRIDGING DONOR & NGO)
+         ======================================================================== -->
+    <section id="viewVolunteer" class="portal-view w-full">
+      <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-12 flex flex-col gap-10">
+        
+        <!-- Volunteer Hero Banner with Dynamic Registration Trigger -->
+        <div class="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-8 md:p-12 overflow-hidden shadow-2xl border border-white/10">
+          <div class="relative z-10 max-w-3xl flex flex-col gap-4">
+            <span class="text-xs font-bold tracking-widest text-amber-400 uppercase font-['Public_Sans'] flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">electric_moped</span>
+              Citizen Courier Force · Last-Mile Surplus Delivery
+            </span>
+            <h1 class="text-3xl md:text-5xl font-['Noto_Serif'] font-bold tracking-tight">The Bridge Between Surplus Kitchens &amp; Shelters</h1>
+            <p class="text-sm md:text-base text-slate-200 font-normal leading-relaxed">
+              Commercial kitchens discard hot meals late at night while nearby shelters lack transit vehicles. As an external citizen volunteer, you pick up packed surplus containers and deliver them directly to community centers before expiry windows close.
+            </p>
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <button class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/25 transition-all flex items-center gap-2" onclick="openVolunteerRegisterModal()">
+                <span class="material-symbols-outlined text-[20px]">person_add</span> Register as Volunteer Hero (60s)
+              </button>
+              <div class="text-xs text-amber-200/90 font-medium flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px] text-emerald-400">verified</span>
+                <span>Open to all citizens: Bicycles, Scooters, Cars &amp; Walkers</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Courier Impact Stats -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 mt-8 border-t border-white/10 relative z-10">
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
+              <div class="text-2xl md:text-3xl font-extrabold text-amber-400" id="statVolunteerMissions">14</div>
+              <div class="text-[11px] text-slate-300 uppercase font-semibold mt-0.5">Rescue Missions Run</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
+              <div class="text-2xl md:text-3xl font-extrabold text-white" id="statVolunteerMeals">580</div>
+              <div class="text-[11px] text-slate-300 uppercase font-semibold mt-0.5">Meals Transported</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
+              <div class="text-2xl md:text-3xl font-extrabold text-emerald-400" id="statVolunteerCo2">232 kg</div>
+              <div class="text-[11px] text-slate-300 uppercase font-semibold mt-0.5">CO₂ Offset</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
+              <div class="text-lg md:text-xl font-bold text-yellow-300 flex items-center gap-1">5.0★ Gold</div>
+              <div class="text-[11px] text-slate-300 uppercase font-semibold mt-0.5">Courier Karma Tier</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Missions Section: Active Deliveries Needing Volunteers -->
+        <div class="flex flex-col gap-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-surface-variant/40">
+            <div>
+              <h2 class="text-2xl md:text-3xl font-['Noto_Serif'] font-bold text-on-surface">Surplus Missions Awaiting Couriers</h2>
+              <p class="text-xs md:text-sm text-on-surface-variant mt-1">Accept a route to deliver surplus food from the donor's kitchen to the destination shelter.</p>
+            </div>
+            <span class="px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-800 font-bold text-xs border border-amber-500/30 self-start sm:self-auto flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+              Live Dispatch Radar Active
+            </span>
+          </div>
+
+          <!-- Missions Feed Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="volunteerMissionsFeed">
+            <!-- Dynamically populated via app.js -->
+          </div>
+        </div>
+
+        <!-- Inline Registration Card for Random Person / Citizen Hero -->
+        <div class="bg-surface-container-lowest rounded-3xl p-8 md:p-10 border border-surface-variant/60 shadow-md flex flex-col md:flex-row gap-8 items-center justify-between">
+          <div class="max-w-xl flex flex-col gap-2">
+            <span class="text-xs font-bold text-amber-600 uppercase font-['Public_Sans']">Community Transit Initiative</span>
+            <h3 class="text-2xl font-['Noto_Serif'] font-bold text-on-surface">Not Registered Yet? Become a Citizen Courier Hero</h3>
+            <p class="text-sm text-on-surface-variant leading-relaxed">
+              Anyone with 30 minutes in the evening can help redistribute dozens of meals. Register your vehicle or bike to receive nearby surplus transit notifications.
+            </p>
+          </div>
+          <button class="px-8 py-4 rounded-2xl bg-primary text-on-primary font-bold text-sm shadow-lg hover:bg-primary/90 transition-all flex items-center gap-2 whitespace-nowrap" onclick="openVolunteerRegisterModal()">
+            <span class="material-symbols-outlined text-[20px]">how_to_reg</span> Register as Courier in 60s
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         VIEW 7: PORTAL AUTHENTICATION & REGISTRATION
          ======================================================================== -->
     <section id="viewAuth" class="portal-view w-full">
       <div class="max-w-[1000px] mx-auto px-6 md:px-12 py-12 flex flex-col md:flex-row gap-8 items-start">
@@ -888,9 +986,9 @@
         <!-- Left: Briefing -->
         <div class="flex-1 flex flex-col gap-4">
           <span class="text-xs font-bold tracking-widest text-primary uppercase font-['Public_Sans']">Verified Portal Access</span>
-          <h2 class="text-3xl font-['Noto_Serif'] font-bold text-on-surface">Secure Donor &amp; NGO Sign In</h2>
+          <h2 class="text-3xl font-['Noto_Serif'] font-bold text-on-surface">Secure Donor, NGO &amp; Volunteer Portal</h2>
           <p class="text-sm text-on-surface-variant leading-relaxed">
-            Access certified municipal surplus distribution. Accounts require verified business email or NGO shelter registration to prevent food theft and ensure traceability.
+            Access certified municipal surplus distribution. Accounts require verified identity or organization credentials to guarantee chain-of-custody food safety.
           </p>
 
           <!-- 1-Click Demo Accounts -->
@@ -903,10 +1001,24 @@
               <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-xs font-semibold hover:border-primary border border-outline-variant/30 text-on-surface shadow-sm transition-all" onclick="fillDemoCredentials('ngo_asha', 'AshaShelter@2026', 'ngo')">
                 🤝 Asha Shelter (NGO)
               </button>
+              <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-xs font-semibold hover:border-amber-500 border border-outline-variant/30 text-amber-800 shadow-sm transition-all" onclick="fillDemoCredentials('volunteer_rajesh', 'Volunteer@2026', 'volunteer')">
+                🚴 Rajesh Kumar (Volunteer Courier)
+              </button>
               <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-xs font-semibold hover:border-amber-500 border border-outline-variant/30 text-amber-800 shadow-sm transition-all" onclick="fillDemoCredentials('donor_bakery', 'Bakery@2026', 'donor')">
                 ⚠️ Test Email OTP Flow
               </button>
             </div>
+          </div>
+
+          <!-- Citizen Volunteer Quick Signup Link -->
+          <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-4">
+            <div>
+              <strong class="text-xs text-amber-900 block font-semibold">Are you an individual citizen?</strong>
+              <span class="text-[11px] text-amber-800">Sign up in 60s with a bike, scooter, or car to deliver meals.</span>
+            </div>
+            <button class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-sm transition-all whitespace-nowrap" onclick="openVolunteerRegisterModal()">
+              Join Fleet
+            </button>
           </div>
         </div>
 
@@ -920,17 +1032,18 @@
             <span class="text-xs font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase" id="authSubtitleRole">Donor Gateway</span>
           </div>
 
-          <!-- Role Toggle -->
-          <div class="grid grid-cols-2 gap-2 p-1 bg-surface-container-low rounded-xl">
-            <button class="py-2 text-xs font-bold rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all" id="btnRoleDonor" onclick="setAuthRole('donor')">🏨 Food Donor</button>
-            <button class="py-2 text-xs font-bold rounded-lg text-on-surface-variant hover:text-on-surface transition-all" id="btnRoleNgo" onclick="setAuthRole('ngo')">🤝 Recipient NGO</button>
+          <!-- 3-Way Role Toggle: Donor, NGO, Volunteer -->
+          <div class="grid grid-cols-3 gap-1.5 p-1 bg-surface-container-low rounded-xl">
+            <button class="py-2 text-xs font-bold rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all" id="btnRoleDonor" onclick="setAuthRole('donor')">🏨 Donor</button>
+            <button class="py-2 text-xs font-bold rounded-lg text-on-surface-variant hover:text-on-surface transition-all" id="btnRoleNgo" onclick="setAuthRole('ngo')">🤝 Shelter NGO</button>
+            <button class="py-2 text-xs font-bold rounded-lg text-on-surface-variant hover:text-on-surface transition-all" id="btnRoleVolunteer" onclick="setAuthRole('volunteer')">🚴 Volunteer</button>
           </div>
 
           <!-- Sign In Form -->
           <form class="flex flex-col gap-4" id="formSignIn" onsubmit="handleAuthLogin(event)">
             <div>
               <label class="block text-xs font-semibold text-on-surface mb-1.5" for="authUserId">User ID or Official Email</label>
-              <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="authUserId" placeholder="e.g. donor_hotel or donor@grandpalace.com" required type="text"/>
+              <input class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-3 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" id="authUserId" placeholder="e.g. donor_hotel or volunteer_rajesh" required type="text"/>
             </div>
 
             <div>
@@ -1107,6 +1220,197 @@
         <input class="w-full bg-surface-container-low text-sm px-4 py-3 rounded-xl border border-outline-variant/30" id="forgotNewPassword" placeholder="New Password (min 6 chars)" type="password"/>
         <input class="w-full bg-surface-container-low text-sm px-4 py-3 rounded-xl border border-outline-variant/30" id="forgotConfirmPassword" placeholder="Confirm New Password" type="password"/>
         <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md" onclick="submitPasswordReset()">Confirm &amp; Update Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 7: Citizen Volunteer Courier Registration Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalVolunteerRegister">
+    <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-amber-500/30 flex flex-col gap-6 modal-spring max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[24px]">electric_scooter</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-['Noto_Serif'] font-bold text-on-surface">Volunteer Courier Sign-up</h3>
+            <p class="text-xs text-on-surface-variant">Bridge commercial kitchens &amp; shelters with 30-min food transit runs</p>
+          </div>
+        </div>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/40 transition-colors" onclick="closeModal('modalVolunteerRegister')">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <form id="formVolunteerRegister" onsubmit="handleVolunteerRegister(event)" class="flex flex-col gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Full Name *</label>
+            <input type="text" id="vRegName" required placeholder="e.g. Rajesh Kumar" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Phone Number *</label>
+            <input type="tel" id="vRegPhone" required placeholder="+91 98765 43210" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Email Address *</label>
+            <input type="email" id="vRegEmail" required placeholder="rajesh.volunteer@city.org" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">User ID / Handle *</label>
+            <input type="text" id="vRegUsername" required placeholder="volunteer_rajesh" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Vehicle / Transit Mode *</label>
+          <select id="vRegVehicle" required class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <option value="Electric Two-Wheeler / Scooter">🛵 Electric Two-Wheeler / Scooter (High Speed)</option>
+            <option value="Bicycle + Thermal Backpack">🚲 Bicycle with Thermal Cargo Bag (Eco Zero-Emission)</option>
+            <option value="Four-Wheeler / Car / Van">🚗 Four-Wheeler / Car / Cargo Van (Bulk Transit)</option>
+            <option value="Pedestrian Walk-in Courier">🚶 Walk-in Courier (&lt; 1.5 km Hyperlocal)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Primary Sector *</label>
+            <select id="vRegSector" required class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+              <option value="Sector 18 Commercial Hub">Sector 18 Commercial Hub</option>
+              <option value="Sector 62 IT & Institutional Area">Sector 62 IT &amp; Institutional Area</option>
+              <option value="Indirapuram / Vasundhara">Indirapuram / Vasundhara</option>
+              <option value="Old City & Railway Bazaar">Old City &amp; Railway Bazaar</option>
+              <option value="Sector 50 Residential Colony">Sector 50 Residential Colony</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Availability Window</label>
+            <select id="vRegShift" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+              <option value="Evening Dinner Shifts (8:30 PM - 11:30 PM)">Evening Dinner Shifts (8:30 - 11:30 PM)</option>
+              <option value="Afternoon Lunch Shifts (2:00 PM - 4:30 PM)">Afternoon Lunch Shifts (2:00 - 4:30 PM)</option>
+              <option value="Weekend Rapid Response On-Call">Weekend Rapid Response On-Call</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Create Password *</label>
+            <input type="password" id="vRegPassword" required placeholder="Min 6 characters" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Emergency Contact Phone</label>
+            <input type="tel" id="vRegEmergency" placeholder="+91 99999 00000" class="w-full bg-surface-container-low text-on-surface text-sm px-4 py-2.5 rounded-xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+        </div>
+
+        <label class="flex items-start gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-on-surface cursor-pointer mt-1">
+          <input type="checkbox" id="vRegPledge" required class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
+          <span>
+            <strong>AnnaSetu Citizen Courier Pledge:</strong> I commit to transporting food in clean, insulated/covered containers and executing swift, safe delivery within 60 minutes of kitchen collection.
+          </span>
+        </label>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-sm shadow-lg flex items-center justify-center gap-2 mt-2 transition-all">
+          <span class="material-symbols-outlined text-[20px]">verified</span>
+          Complete Volunteer Registration &amp; Activate Dispatch Pass
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 8: Volunteer Mission Dispatch Cockpit Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalVolunteerMission">
+    <div class="bg-surface-container-lowest rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-amber-500/30 flex flex-col gap-6 modal-spring max-h-[92vh] overflow-y-auto">
+      
+      <!-- Header -->
+      <div class="flex items-start justify-between pb-3 border-b border-surface-variant/40">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-800 text-[11px] font-bold border border-amber-500/20" id="vModalMissionBadge">MISSION #MSN-2026-881</span>
+            <span class="text-xs text-on-surface-variant font-mono" id="vModalTimeRemaining">⏱ 1 hr 45 min remaining</span>
+          </div>
+          <h3 class="text-xl md:text-2xl font-['Noto_Serif'] font-bold text-on-surface mt-1" id="vModalTitle">Grand Banquet Rice &amp; Curry Route</h3>
+        </div>
+        <button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/40 transition-colors" onclick="closeModal('modalVolunteerMission')">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Route Visual Timeline -->
+      <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/30 flex flex-col gap-4">
+        <div class="flex items-center justify-between text-xs font-bold text-on-surface-variant">
+          <span>CHAIN-OF-CUSTODY ROUTE</span>
+          <span class="text-amber-600 flex items-center gap-1 font-mono" id="vModalDistance"><span class="material-symbols-outlined text-[15px]">route</span> 3.4 km • 14 min transit</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Donor Leg -->
+          <div class="p-4 rounded-xl bg-surface-container-lowest border border-surface-variant/60 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">storefront</span> 1. PICKUP POINT (DONOR)
+              </span>
+              <span class="text-[10px] bg-emerald-500/10 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Ready</span>
+            </div>
+            <strong class="text-sm text-on-surface" id="vModalDonorName">Hotel Grand Palace</strong>
+            <p class="text-xs text-on-surface-variant" id="vModalDonorAddress">12 Rajendra Place, Sector 18</p>
+            <div class="mt-1 p-2 rounded-lg bg-surface-container-low border border-dashed border-outline-variant/40 flex items-center justify-between text-xs">
+              <span>Pickup PIN: <strong class="font-mono text-primary font-bold tracking-widest text-sm" id="vModalPickupPin">7412</strong></span>
+              <span class="text-[10px] text-on-surface-variant">Show at kitchen</span>
+            </div>
+          </div>
+
+          <!-- NGO Leg -->
+          <div class="p-4 rounded-xl bg-surface-container-lowest border border-surface-variant/60 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-amber-600 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">domain</span> 2. DROP-OFF POINT (SHELTER)
+              </span>
+              <span class="text-[10px] bg-amber-500/10 text-amber-800 font-bold px-2 py-0.5 rounded-full">Recipient Ready</span>
+            </div>
+            <strong class="text-sm text-on-surface" id="vModalNgoName">Asha Children's Shelter</strong>
+            <p class="text-xs text-on-surface-variant" id="vModalNgoAddress">Plot 45, Near Railway Colony</p>
+            <div class="mt-1 p-2 rounded-lg bg-surface-container-low border border-dashed border-outline-variant/40 flex items-center justify-between text-xs">
+              <span>Contact: <strong class="text-on-surface font-semibold" id="vModalNgoContact">Sunita Devi (+91 98110 44552)</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meal Payload Details -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+        <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/20">
+          <div class="text-xs text-on-surface-variant">Servings</div>
+          <div class="text-base font-bold text-on-surface mt-0.5" id="vModalQuantity">85 meals</div>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/20">
+          <div class="text-xs text-on-surface-variant">Diet Type</div>
+          <div class="text-base font-bold text-emerald-600 mt-0.5" id="vModalDiet">Pure Veg</div>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/20">
+          <div class="text-xs text-on-surface-variant">Temp Profile</div>
+          <div class="text-base font-bold text-amber-600 mt-0.5" id="vModalTemp">Hot (&gt;60°C)</div>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/20">
+          <div class="text-xs text-on-surface-variant">Karma Reward</div>
+          <div class="text-base font-bold text-primary mt-0.5">+50 XP</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-2">
+        <button id="btnVolunteerPickup" class="flex-1 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-bold text-sm border border-outline-variant/30 flex items-center justify-center gap-2 transition-all" onclick="confirmVolunteerPickup()">
+          <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+          1. Mark Picked Up from Donor
+        </button>
+        <button id="btnVolunteerDeliver" class="flex-1 py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-on-primary font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all" onclick="confirmVolunteerDelivery()">
+          <span class="material-symbols-outlined text-[18px]">task_alt</span>
+          2. Complete Delivery at Shelter
+        </button>
       </div>
     </div>
   </div>

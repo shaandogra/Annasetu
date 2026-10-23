@@ -38,5 +38,33 @@
     "verifyOtp": "582914",
     "otpExpiry": 1792750796697,
     "createdAt": "2026-10-23T11:00:00.000Z"
+  },
+  {
+    "id": "volunteer_rajesh",
+    "name": "Rajesh Kumar (Volunteer Courier)",
+    "email": "rajesh.courier@annasetu.org",
+    "password": "Volunteer@2026",
+    "role": "volunteer",
+    "organization": "Citizen Cargo Squad #4",
+    "phone": "+91 98450-12345",
+    "address": "Sector 4 Civic Dispatch Point",
+    "vehicle": "Electric Two-Wheeler / Thermal Backpack",
+    "verified": true,
+    "createdAt": "2026-10-23T12:00:00.000Z"
+  },
+  {
+    "id": "volunteer_priya",
+    "name": "Priya Sharma",
+    "email": "priya.sharma@city.org",
+    "password": "PriyaPassword@2026",
+    "role": "volunteer",
+    "organization": "Priya Sharma (Citizen Courier)",
+    "phone": "+91 9876543210",
+    "address": "",
+    "vehicle": "Bicycle + Thermal Backpack",
+    "verified": false,
+    "verifyOtp": "852445",
+    "otpExpiry": 1792781391271,
+    "createdAt": "2026-10-23T18:34:51.271Z"
   }
 ]
