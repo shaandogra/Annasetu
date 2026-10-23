@@ -19,12 +19,12 @@
         <img src="assets/logo.jpg" alt="AnnaSetu Logo" class="brand-logo" id="appLogo">
         <div class="brand-title">
           AnnaSetu
-          <span class="brand-badge">24h Hackathon MVP</span>
+          <span class="brand-badge">24h MVP</span>
         </div>
       </div>
 
-      <!-- Multi-Perspective Persona Switcher -->
-      <nav class="role-switcher-container" aria-label="Perspective Switcher">
+      <!-- Desktop Perspective Persona Switcher -->
+      <nav class="role-switcher-container desktop-nav" aria-label="Perspective Switcher">
         <button class="role-tab-btn" id="tabAuth" onclick="switchPerspective('auth')">
           🔐 Portal Login
         </button>
@@ -44,16 +44,120 @@
 
       <div class="header-actions">
         <div id="headerAuthBadge"></div>
-        <div class="live-indicator">
+        <div class="live-indicator desktop-only">
           <span class="pulse-dot"></span>
-          <span>Live Sync Active</span>
+          <span>Live Sync</span>
         </div>
-        <button class="btn-secondary-sm" id="btnResetData" onclick="resetDemoData()" title="Reload clean demo data">
+        <button class="btn-secondary-sm desktop-only" id="btnResetData" onclick="resetDemoData()" title="Reload clean demo data">
           ↺ Reset Demo
+        </button>
+        <!-- Mobile Hamburger Menu Button -->
+        <button class="hamburger-btn" id="btnHamburger" aria-label="Toggle Navigation Menu" onclick="toggleMobileNav()">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+          <span class="bar bar-3"></span>
         </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Slide-Out Navigation Drawer & Backdrop -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="closeMobileNav()"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobile Navigation">
+    <div class="mobile-nav-header">
+      <div class="brand-wrapper">
+        <img src="assets/logo.jpg" alt="AnnaSetu" class="brand-logo" style="width:36px;height:36px;">
+        <span class="brand-title" style="font-size:1.25rem;">AnnaSetu</span>
+      </div>
+      <button class="mobile-nav-close" id="btnCloseMobileNav" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
+    </div>
+
+    <!-- Mobile User Profile & Auth Status -->
+    <div class="mobile-nav-auth" id="mobileAuthCard">
+      <!-- Dynamically populated via app.js -->
+    </div>
+
+    <div class="mobile-nav-links">
+      <div class="mobile-nav-heading">Platform Perspectives</div>
+      
+      <button class="mobile-nav-item" id="mobTabAuth" onclick="switchPerspective('auth'); closeMobileNav();">
+        <span class="mobile-nav-icon">🔐</span>
+        <div class="mobile-nav-text">
+          <span class="mobile-nav-title">Portal Access / Login</span>
+          <span class="mobile-nav-sub">Single page for Donors & NGOs</span>
+        </div>
+      </button>
+
+      <button class="mobile-nav-item active" id="mobTabDonor" onclick="switchPerspective('donor'); closeMobileNav();">
+        <span class="mobile-nav-icon">🏨</span>
+        <div class="mobile-nav-text">
+          <span class="mobile-nav-title">Food Donor Command</span>
+          <span class="mobile-nav-sub">Post surplus meals & verify PIN</span>
+        </div>
+      </button>
+
+      <button class="mobile-nav-item" id="mobTabNgo" onclick="switchPerspective('ngo'); closeMobileNav();">
+        <span class="mobile-nav-icon">🤝</span>
+        <div class="mobile-nav-text">
+          <span class="mobile-nav-title">Recipient NGO Radar</span>
+          <span class="mobile-nav-sub">Urgency match & atomic claim</span>
+        </div>
+      </button>
+
+      <button class="mobile-nav-item" id="mobTabAdmin" onclick="switchPerspective('admin'); closeMobileNav();">
+        <span class="mobile-nav-icon">🛡️</span>
+        <div class="mobile-nav-text">
+          <span class="mobile-nav-title">GIS Fleet & Operations</span>
+          <span class="mobile-nav-sub">City telemetry & audit trail</span>
+        </div>
+      </button>
+
+      <button class="mobile-nav-item" id="mobTabJudge" onclick="switchPerspective('judge'); closeMobileNav();">
+        <span class="mobile-nav-icon">🏆</span>
+        <div class="mobile-nav-text">
+          <span class="mobile-nav-title">Pitch & Demo Guide</span>
+          <span class="mobile-nav-sub">Step-by-step judge walkthrough</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="mobile-nav-footer">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+        <div class="live-indicator">
+          <span class="pulse-dot"></span>
+          <span>Live Sync Online</span>
+        </div>
+        <span style="font-size: 0.75rem; color: #10b981; font-weight: 700;">v2.0 Mobile</span>
+      </div>
+      <button class="btn-secondary-sm" onclick="resetDemoData(); closeMobileNav();" style="width: 100%; justify-content: center; padding: 0.65rem;">
+        ↺ Reset Demo Dataset
+      </button>
+    </div>
+  </aside>
+
+  <!-- Mobile Bottom Quick Navigation Bar (Thumb Friendly) -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Bottom Quick Navigation">
+    <button class="bottom-nav-item active" id="bNavDonor" onclick="switchPerspective('donor')">
+      <span class="bnav-icon">🏨</span>
+      <span class="bnav-label">Donor</span>
+    </button>
+    <button class="bottom-nav-item" id="bNavNgo" onclick="switchPerspective('ngo')">
+      <span class="bnav-icon">🤝</span>
+      <span class="bnav-label">Shelter</span>
+    </button>
+    <button class="bottom-nav-item" id="bNavAdmin" onclick="switchPerspective('admin')">
+      <span class="bnav-icon">🛡️</span>
+      <span class="bnav-label">Map</span>
+    </button>
+    <button class="bottom-nav-item" id="bNavAuth" onclick="switchPerspective('auth')">
+      <span class="bnav-icon">🔐</span>
+      <span class="bnav-label">Login</span>
+    </button>
+    <button class="bottom-nav-item" id="bNavMenu" onclick="toggleMobileNav()">
+      <span class="bnav-icon">☰</span>
+      <span class="bnav-label">Menu</span>
+    </button>
+  </nav>
 
   <main class="app-main">
 

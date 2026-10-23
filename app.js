@@ -191,24 +191,52 @@ function resetDemoData() {
 function switchPerspective(role) {
   document.querySelectorAll('.portal-view').forEach(el => el.classList.remove('active-view'));
   document.querySelectorAll('.role-tab-btn').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
 
   if (role === 'auth') {
     const v = document.getElementById('viewAuth');
     const t = document.getElementById('tabAuth');
+    const mobT = document.getElementById('mobTabAuth');
+    const bNav = document.getElementById('bNavAuth');
     if (v) v.classList.add('active-view');
     if (t) t.classList.add('active');
+    if (mobT) mobT.classList.add('active');
+    if (bNav) bNav.classList.add('active');
   } else if (role === 'donor') {
-    document.getElementById('viewDonor').classList.add('active-view');
-    document.getElementById('tabDonor').classList.add('active');
+    const v = document.getElementById('viewDonor');
+    const t = document.getElementById('tabDonor');
+    const mobT = document.getElementById('mobTabDonor');
+    const bNav = document.getElementById('bNavDonor');
+    if (v) v.classList.add('active-view');
+    if (t) t.classList.add('active');
+    if (mobT) mobT.classList.add('active');
+    if (bNav) bNav.classList.add('active');
   } else if (role === 'ngo') {
-    document.getElementById('viewNgo').classList.add('active-view');
-    document.getElementById('tabNgo').classList.add('active');
+    const v = document.getElementById('viewNgo');
+    const t = document.getElementById('tabNgo');
+    const mobT = document.getElementById('mobTabNgo');
+    const bNav = document.getElementById('bNavNgo');
+    if (v) v.classList.add('active-view');
+    if (t) t.classList.add('active');
+    if (mobT) mobT.classList.add('active');
+    if (bNav) bNav.classList.add('active');
   } else if (role === 'admin') {
-    document.getElementById('viewAdmin').classList.add('active-view');
-    document.getElementById('tabAdmin').classList.add('active');
+    const v = document.getElementById('viewAdmin');
+    const t = document.getElementById('tabAdmin');
+    const mobT = document.getElementById('mobTabAdmin');
+    const bNav = document.getElementById('bNavAdmin');
+    if (v) v.classList.add('active-view');
+    if (t) t.classList.add('active');
+    if (mobT) mobT.classList.add('active');
+    if (bNav) bNav.classList.add('active');
   } else if (role === 'judge') {
-    document.getElementById('viewJudge').classList.add('active-view');
-    document.getElementById('tabJudge').classList.add('active');
+    const v = document.getElementById('viewJudge');
+    const t = document.getElementById('tabJudge');
+    const mobT = document.getElementById('mobTabJudge');
+    if (v) v.classList.add('active-view');
+    if (t) t.classList.add('active');
+    if (mobT) mobT.classList.add('active');
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -712,7 +740,7 @@ function initAuth() {
 
 function renderHeaderAuth() {
   const container = document.getElementById('headerAuthBadge');
-  if (!container) return;
+  const mobileContainer = document.getElementById('mobileAuthCard');
 
   if (currentUser) {
     const isDonor = currentUser.role === 'donor';
@@ -720,22 +748,83 @@ function renderHeaderAuth() {
     const roleName = isDonor ? 'Donor' : 'NGO';
     const pillClass = isDonor ? 'donor-pill' : 'ngo-pill';
 
-    container.innerHTML = `
-      <div class="user-auth-pill ${pillClass}">
-        <span class="user-status-dot"></span>
-        <span>${roleIcon} ${escapeHtml(currentUser.organization || currentUser.name)} (${roleName})</span>
-        <button type="button" class="btn-logout-sm" onclick="handleLogout()" title="Log out of current session">
-          ⎋ Sign Out
-        </button>
-      </div>
-    `;
+    if (container) {
+      container.innerHTML = `
+        <div class="user-auth-pill ${pillClass}">
+          <span class="user-status-dot"></span>
+          <span>${roleIcon} ${escapeHtml(currentUser.organization || currentUser.name)} (${roleName})</span>
+          <button type="button" class="btn-logout-sm" onclick="handleLogout()" title="Log out of current session">
+            ⎋ Sign Out
+          </button>
+        </div>
+      `;
+    }
+
+    if (mobileContainer) {
+      mobileContainer.innerHTML = `
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0.85rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: ${isDonor ? '#34d399' : '#93c5fd'};">${roleIcon} Verified ${roleName}</span>
+            <span class="badge ${isDonor ? 'badge-available' : 'badge-completed'}" style="font-size: 0.65rem;">Active</span>
+          </div>
+          <div style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;">${escapeHtml(currentUser.organization || currentUser.name)}</div>
+          <button type="button" class="btn-logout-sm" onclick="handleLogout(); closeMobileNav();" style="width: 100%; text-align: center; padding: 0.45rem;">
+            ⎋ Sign Out of Session
+          </button>
+        </div>
+      `;
+    }
   } else {
-    container.innerHTML = `
-      <button type="button" class="btn-auth-header" onclick="switchPerspective('auth')">
-        🔐 Sign In / Register
-      </button>
-    `;
+    if (container) {
+      container.innerHTML = `
+        <button type="button" class="btn-auth-header" onclick="switchPerspective('auth')">
+          🔐 Sign In / Register
+        </button>
+      `;
+    }
+
+    if (mobileContainer) {
+      mobileContainer.innerHTML = `
+        <button type="button" class="btn-primary" onclick="switchPerspective('auth'); closeMobileNav();" style="width: 100%; justify-content: center; padding: 0.65rem; font-size: 0.85rem;">
+          🔐 Sign In / Register Portal
+        </button>
+      `;
+    }
   }
+}
+
+// Mobile Slide-Out Drawer Controls
+function toggleMobileNav() {
+  const drawer = document.getElementById('mobileNavDrawer');
+  if (!drawer) return;
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    closeMobileNav();
+  } else {
+    openMobileNav();
+  }
+}
+
+function openMobileNav() {
+  const drawer = document.getElementById('mobileNavDrawer');
+  const backdrop = document.getElementById('mobileNavBackdrop');
+  const btn = document.getElementById('btnHamburger');
+
+  if (drawer) drawer.classList.add('open');
+  if (backdrop) backdrop.classList.add('open');
+  if (btn) btn.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileNav() {
+  const drawer = document.getElementById('mobileNavDrawer');
+  const backdrop = document.getElementById('mobileNavBackdrop');
+  const btn = document.getElementById('btnHamburger');
+
+  if (drawer) drawer.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('open');
+  if (btn) btn.classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 function setAuthRole(role) {
