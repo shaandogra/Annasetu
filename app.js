@@ -372,6 +372,17 @@ function switchPerspective(role) {
     el.classList.add('text-on-surface-variant');
   });
 
+  // Update mobile drawer active buttons
+  document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+    btn.classList.remove('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+    btn.classList.add('text-on-surface', 'font-medium');
+  });
+  const activeMobileBtn = document.querySelector(`.mobile-nav-btn[data-role="${role}"]`);
+  if (activeMobileBtn) {
+    activeMobileBtn.classList.remove('text-on-surface', 'font-medium');
+    activeMobileBtn.classList.add('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+  }
+
   let targetViewId = 'viewAvailableFood';
   let targetPath = 'available-food';
 
@@ -2101,22 +2112,32 @@ function updateAuthUI() {
   const headerName = document.getElementById('headerProfileName');
   const headerRole = document.getElementById('headerProfileRole');
 
+  // Mobile drawer profile elements
+  const mobileAvatar = document.getElementById('mobileAvatarText');
+  const mobileName = document.getElementById('mobileProfileName');
+  const mobileRole = document.getElementById('mobileProfileRole');
+
   if (currentUser) {
     const displayName = currentUser.organization || currentUser.name;
-    if (avatarText) avatarText.innerText = currentUser.name.charAt(0).toUpperCase();
+    const initial = (currentUser.name || displayName || 'U').charAt(0).toUpperCase();
+    if (avatarText) avatarText.innerText = initial;
     if (userName) userName.innerText = displayName;
     if (headerName) headerName.innerText = displayName;
+    if (mobileAvatar) mobileAvatar.innerText = initial;
+    if (mobileName) mobileName.innerText = displayName;
 
     if (currentUser.role === 'volunteer') {
       const vText = currentUser.vehicle ? `Citizen Courier (${currentUser.vehicle})` : 'Citizen Courier';
       const aText = (currentUser.aadhaar || currentUser.aadhaarVerified) ? ' • 🛡️ Aadhaar Verified' : '';
       if (userRole) userRole.innerText = `VOLUNTEER • Verified${aText}`;
       if (headerRole) headerRole.innerText = `${vText}${aText}`;
+      if (mobileRole) mobileRole.innerText = `Volunteer Courier Squad${aText}`;
     } else {
       const isDonor = currentUser.role === 'donor';
       const kycBadge = (isDonor && (currentUser.fssaiVerified || currentUser.fssaiNumber)) ? ' • 🛡️ FSSAI & GSTIN Verified' : ' • Verified';
       if (userRole) userRole.innerText = `${currentUser.role.toUpperCase()}${kycBadge}`;
       if (headerRole) headerRole.innerText = `${isDonor ? 'Food Donor' : 'Recipient NGO'}${kycBadge}`;
+      if (mobileRole) mobileRole.innerText = `${isDonor ? 'Food Donor • FSSAI Certified' : 'Recipient NGO • Sector 4'}`;
     }
   } else {
     if (avatarText) avatarText.innerText = 'A';
@@ -2124,6 +2145,9 @@ function updateAuthUI() {
     if (userRole) userRole.innerText = 'Recipient NGO • Sector 4';
     if (headerName) headerName.innerText = 'Asha Community Shelter';
     if (headerRole) headerRole.innerText = 'Recipient NGO • Sector 4';
+    if (mobileAvatar) mobileAvatar.innerText = 'A';
+    if (mobileName) mobileName.innerText = 'Asha Community Shelter';
+    if (mobileRole) mobileRole.innerText = 'Recipient NGO • Sector 4';
   }
 }
 
@@ -2320,35 +2344,77 @@ function handleLogout() {
 }
 
 // ==========================================================================
-// UI & DROPDOWN CONTROLLERS
+// UI & DROPDOWN CONTROLLERS (MUTUALLY EXCLUSIVE & ROBUST)
 // ==========================================================================
 function toggleNotificationDropdown() {
   const d = document.getElementById('notificationDropdown');
+  const userMenu = document.getElementById('userMenuDropdown');
+  if (userMenu) userMenu.classList.add('hidden');
+  closeMobileNav();
   if (d) d.classList.toggle('hidden');
 }
 
 function toggleUserDropdown() {
   const d = document.getElementById('userMenuDropdown');
+  const notif = document.getElementById('notificationDropdown');
+  if (notif) notif.classList.add('hidden');
+  closeMobileNav();
   if (d) d.classList.toggle('hidden');
 }
 
 function toggleMobileNav() {
   const drawer = document.getElementById('mobileNavDrawer');
   const backdrop = document.getElementById('mobileNavBackdrop');
-  if (drawer && backdrop) {
+  const icon = document.getElementById('mobileNavToggleIcon');
+  if (!drawer || !backdrop) return;
+
+  // Close any open popups first
+  const userMenu = document.getElementById('userMenuDropdown');
+  if (userMenu) userMenu.classList.add('hidden');
+  const notif = document.getElementById('notificationDropdown');
+  if (notif) notif.classList.add('hidden');
+
+  const isClosed = drawer.classList.contains('translate-x-full');
+  if (isClosed) {
     drawer.classList.remove('translate-x-full');
     backdrop.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+    if (icon) icon.innerText = 'close';
+  } else {
+    closeMobileNav();
   }
 }
 
 function closeMobileNav() {
   const drawer = document.getElementById('mobileNavDrawer');
   const backdrop = document.getElementById('mobileNavBackdrop');
+  const icon = document.getElementById('mobileNavToggleIcon');
   if (drawer && backdrop) {
     drawer.classList.add('translate-x-full');
     backdrop.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+    if (icon) icon.innerText = 'menu';
   }
 }
+
+// Global outside-click dismiss for dropdowns
+document.addEventListener('click', (e) => {
+  const userBtn = document.getElementById('btnUserMenu');
+  const userDropdown = document.getElementById('userMenuDropdown');
+  if (userDropdown && !userDropdown.classList.contains('hidden')) {
+    if (userBtn && !userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+      userDropdown.classList.add('hidden');
+    }
+  }
+
+  const notifBtn = document.getElementById('btnNotification');
+  const notifDropdown = document.getElementById('notificationDropdown');
+  if (notifDropdown && !notifDropdown.classList.contains('hidden')) {
+    if (notifBtn && !notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
+      notifDropdown.classList.add('hidden');
+    }
+  }
+});
 
 function openModal(id) {
   const modal = document.getElementById(id);

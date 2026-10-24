@@ -99,24 +99,24 @@
   <!-- ==========================================================================
        TWO-TIER ELEVATED COMMAND HEADER (LOGO & PROFILE TAG ABOVE FUNCTIONS)
        ========================================================================== -->
-  <header class="fixed top-0 w-full z-50 transition-all shadow-sm">
+  <header class="fixed top-0 w-full z-40 transition-all shadow-sm">
     
     <!-- TIER 1: EXECUTIVE IDENTITY & PROFILE COMMAND BAR (ABOVE FUNCTIONS) -->
     <div class="brand-header-tier border-b border-surface-variant/40">
-      <div class="min-h-[84px] py-2.5 max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
+      <div class="min-h-[72px] sm:min-h-[84px] py-2 px-4 sm:px-6 md:px-12 max-w-[1400px] mx-auto flex items-center justify-between gap-2 sm:gap-4">
         
         <!-- Left: AnnaSetu Brand & Magnified Authority Emblem -->
-        <div class="flex items-center gap-4 cursor-pointer group" onclick="switchPerspective('available-food')">
+        <div class="flex items-center gap-2.5 sm:gap-4 cursor-pointer group flex-shrink min-w-0" onclick="switchPerspective('available-food')">
           
           <!-- Magnified Glowing Logo Badge -->
           <div class="relative flex-shrink-0">
             <!-- Ambient Colored Aura Glow -->
-            <div class="absolute -inset-1.5 rounded-2xl bg-gradient-to-tr from-emerald-500/35 via-teal-500/25 to-amber-500/35 blur-md opacity-75 logo-aura-glow"></div>
+            <div class="absolute -inset-1 sm:-inset-1.5 rounded-2xl bg-gradient-to-tr from-emerald-500/35 via-teal-500/25 to-amber-500/35 blur-md opacity-75 logo-aura-glow"></div>
             
             <!-- Outer Jewelry Gradient Rim Container -->
-            <div class="brand-logo-gem relative w-16 h-16 md:w-[72px] md:h-[72px] rounded-2xl p-[2.5px] bg-gradient-to-br from-emerald-400 via-teal-400 to-amber-400 shadow-xl overflow-hidden">
+            <div class="brand-logo-gem relative w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] rounded-2xl p-[2px] sm:p-[2.5px] bg-gradient-to-br from-emerald-400 via-teal-400 to-amber-400 shadow-xl overflow-hidden flex-shrink-0">
               <!-- Inner Deep Slate Canvas -->
-              <div class="w-full h-full rounded-[13px] bg-[#0c121e] overflow-hidden flex items-center justify-center relative">
+              <div class="w-full h-full rounded-[10px] sm:rounded-[13px] bg-[#0c121e] overflow-hidden flex items-center justify-center relative">
                 <!-- Magnified Crisp Emblem Artwork (Focused on Glowing Hands, Bowl & Leaves) -->
                 <img src="assets/logo.jpg" alt="AnnaSetu Emblem" class="w-full h-full object-cover scale-[1.38] object-[50%_36%] group-hover:scale-[1.46] transition-transform duration-500 filter contrast-[1.12] saturate-[1.2] drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
                 <!-- Subtle Glossy Light Sheen -->
@@ -125,21 +125,21 @@
             </div>
 
             <!-- Live Active FSSAI Pulse Dot -->
-            <span class="absolute -bottom-1 -right-1 flex h-4 w-4">
+            <span class="absolute -bottom-1 -right-1 flex h-3.5 w-3.5 sm:h-4 sm:w-4">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-surface shadow-xs"></span>
+              <span class="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 bg-emerald-500 border-2 border-surface shadow-xs"></span>
             </span>
           </div>
 
           <!-- Brand Typography & Authority Hierarchy -->
-          <div class="flex flex-col justify-center">
-            <div class="flex items-center gap-2.5 flex-wrap">
-              <span class="font-['Noto_Serif'] text-2xl md:text-3xl font-extrabold tracking-tight text-on-surface leading-none">AnnaSetu</span>
-              <span class="text-[10px] md:text-[11px] font-extrabold font-['Public_Sans'] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-xs tracking-wider uppercase flex items-center gap-1">
+          <div class="flex flex-col justify-center min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-['Noto_Serif'] text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-on-surface leading-none">AnnaSetu</span>
+              <span class="hidden sm:inline-flex text-[10px] md:text-[11px] font-extrabold font-['Public_Sans'] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-xs tracking-wider uppercase items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> FSSAI PROTOCOL · CIVIC TECH
               </span>
             </div>
-            <span class="text-xs md:text-sm text-on-surface-variant font-medium mt-1 tracking-tight flex items-center gap-2">
+            <span class="hidden md:flex text-xs md:text-sm text-on-surface-variant font-medium mt-1 tracking-tight items-center gap-2 truncate">
               <span>Surplus Food Rescue &amp; Cold-Chain Verification</span>
               <span class="hidden lg:inline-block text-outline">•</span>
               <span class="hidden lg:inline-block text-primary font-semibold">Civic Logistics Engine</span>
@@ -149,7 +149,7 @@
         </div>
 
         <!-- Right: Prominent Separated Profile Tag & System Controls -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           
           <!-- Live Fleet Telemetry Pill -->
           <div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200/80 shadow-xs">
@@ -170,14 +170,14 @@
           </button>
 
           <!-- Notifications Button & Live Alert Stream -->
-          <div class="relative">
-            <button class="relative p-2 rounded-xl hover:bg-surface-container-high text-on-surface-variant transition-colors border border-transparent hover:border-outline-variant/30" onclick="toggleNotificationDropdown()" id="btnNotification" aria-label="Notifications">
+          <div class="relative flex-shrink-0">
+            <button class="relative p-2 rounded-xl hover:bg-surface-container-high text-on-surface-variant transition-colors border border-transparent hover:border-outline-variant/30 flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 cursor-pointer" onclick="toggleNotificationDropdown()" id="btnNotification" aria-label="Notifications">
               <span class="material-symbols-outlined text-[20px]">notifications</span>
               <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary ring-2 ring-surface"></span>
             </button>
             
             <!-- Dropdown Popup -->
-            <div class="absolute right-0 mt-2 w-80 bg-surface-container-lowest border border-outline-variant/40 rounded-2xl shadow-xl p-4 hidden z-50 animate-in fade-in zoom-in-95 duration-150" id="notificationDropdown">
+            <div class="absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-surface-container-lowest border border-outline-variant/40 rounded-2xl shadow-xl p-4 hidden z-50 animate-in fade-in zoom-in-95 duration-150" id="notificationDropdown">
               <div class="flex items-center justify-between pb-2 mb-2 border-b border-surface-variant/50">
                 <span class="text-xs font-bold text-on-surface uppercase font-['Public_Sans']">Live Dispatch Stream</span>
                 <span class="text-[11px] text-primary font-bold">2 New</span>
@@ -202,51 +202,51 @@
           </div>
 
           <!-- PROMINENT SEPARATED PROFILE TAG PILL -->
-          <div class="relative">
-            <button class="flex items-center gap-2.5 pl-2 pr-3.5 py-1.5 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-low border border-outline-variant/40 hover:border-primary/50 transition-all shadow-sm group" onclick="toggleUserDropdown()" id="btnUserMenu">
-              <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary to-blue-500 text-on-primary flex items-center justify-center font-bold text-sm shadow-xs" id="userAvatarText">
+          <div class="relative flex-shrink-0">
+            <button class="flex items-center gap-2 pl-1.5 pr-2 sm:pl-2 sm:pr-3.5 py-1.5 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-low border border-outline-variant/40 hover:border-primary/50 transition-all shadow-sm group cursor-pointer" onclick="toggleUserDropdown()" id="btnUserMenu" aria-label="User Profile Menu">
+              <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary to-blue-500 text-on-primary flex items-center justify-center font-bold text-sm shadow-xs flex-shrink-0" id="userAvatarText">
                 A
               </div>
-              <div class="text-left hidden sm:flex flex-col">
-                <span class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors leading-tight" id="headerProfileName">Asha Community Shelter</span>
-                <span class="text-[10px] text-on-surface-variant font-medium leading-tight" id="headerProfileRole">Recipient NGO • Sector 4</span>
+              <div class="text-left hidden lg:flex flex-col">
+                <span class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors leading-tight truncate max-w-[150px]" id="headerProfileName">Asha Community Shelter</span>
+                <span class="text-[10px] text-on-surface-variant font-medium leading-tight truncate max-w-[150px]" id="headerProfileRole">Recipient NGO • Sector 4</span>
               </div>
               <span class="material-symbols-outlined text-[18px] text-outline group-hover:text-on-surface transition-colors ml-0.5">expand_more</span>
             </button>
 
             <!-- User Profile Dropdown Menu -->
-            <div class="absolute right-0 mt-2 w-64 bg-surface-container-lowest border border-outline-variant/40 rounded-2xl shadow-xl p-3 hidden z-50 animate-in fade-in zoom-in-95 duration-150" id="userMenuDropdown">
+            <div class="absolute right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-surface-container-lowest border border-outline-variant/40 rounded-2xl shadow-xl p-3 hidden z-50 animate-in fade-in zoom-in-95 duration-150" id="userMenuDropdown">
               <div class="p-2 border-b border-surface-variant/40 mb-1">
                 <div class="text-sm font-bold text-on-surface" id="dropdownUserName">Asha Community Shelter</div>
                 <div class="text-xs text-on-surface-variant" id="dropdownUserRole">Recipient NGO • Sector 4</div>
               </div>
-              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2" onclick="switchPerspective('auth'); toggleUserDropdown();">
+              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2 cursor-pointer" onclick="switchPerspective('auth'); toggleUserDropdown();">
                 <span class="material-symbols-outlined text-[16px] text-primary">key</span>
                 <span>Portal Authentication / Switch</span>
               </button>
-              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2" onclick="switchPerspective('donor'); toggleUserDropdown();">
+              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2 cursor-pointer" onclick="switchPerspective('donor'); toggleUserDropdown();">
                 <span class="material-symbols-outlined text-[16px] text-primary">hotel</span>
                 <span>Switch to Food Donor View</span>
               </button>
-              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2" onclick="switchPerspective('available-food'); toggleUserDropdown();">
+              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2 cursor-pointer" onclick="switchPerspective('available-food'); toggleUserDropdown();">
                 <span class="material-symbols-outlined text-[16px] text-primary">volunteer_activism</span>
                 <span>Switch to Shelter Radar View</span>
               </button>
-              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2" onclick="switchPerspective('volunteer'); toggleUserDropdown();">
+              <button class="w-full text-left px-3 py-2 text-xs font-medium text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2 cursor-pointer" onclick="switchPerspective('volunteer'); toggleUserDropdown();">
                 <span class="material-symbols-outlined text-[16px] text-amber-600">electric_moped</span>
                 <span>Switch to Volunteer Courier Hub</span>
               </button>
               <div class="border-t border-surface-variant/40 my-1"></div>
-              <button class="w-full text-left px-3 py-2 text-xs font-semibold text-error hover:bg-error-container/30 rounded-lg transition-colors flex items-center gap-2" onclick="handleLogout(); toggleUserDropdown();">
+              <button class="w-full text-left px-3 py-2 text-xs font-semibold text-error hover:bg-error-container/30 rounded-lg transition-colors flex items-center gap-2 cursor-pointer" onclick="handleLogout(); toggleUserDropdown();">
                 <span class="material-symbols-outlined text-[16px]">logout</span>
                 <span>Sign Out</span>
               </button>
             </div>
           </div>
 
-          <!-- Mobile Hamburger Toggle -->
-          <button class="lg:hidden p-2 rounded-xl hover:bg-surface-container-high text-on-surface-variant" onclick="toggleMobileNav()" aria-label="Toggle Menu">
-            <span class="material-symbols-outlined text-[24px]">menu</span>
+          <!-- Mobile Hamburger Toggle Button (ALWAYS PROTECTED, NEVER OVERLAPPED) -->
+          <button class="lg:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant/40 hover:border-primary/40 flex-shrink-0 transition-all shadow-xs cursor-pointer active:scale-95 ml-0.5" onclick="toggleMobileNav()" id="btnMobileNavToggle" aria-label="Toggle Navigation Menu">
+            <span class="material-symbols-outlined text-[22px] sm:text-[24px]" id="mobileNavToggleIcon">menu</span>
           </button>
 
         </div>
@@ -255,7 +255,7 @@
 
     <!-- TIER 2: DEDICATED FUNCTIONS & PERSPECTIVES NAVIGATION STRIP (BELOW LOGO & PROFILE) -->
     <div class="nav-functions-tier border-b border-surface-variant/40">
-      <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between h-13 py-1.5">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between h-13 py-1.5">
         
         <!-- Functional Perspective Tabs -->
         <nav class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1" aria-label="Platform Functions Navigation">
@@ -298,7 +298,7 @@
         </nav>
 
         <!-- Right Side Quick Status / Sector Pill -->
-        <div class="hidden lg:flex items-center gap-2 text-xs text-on-surface-variant pl-4 border-l border-surface-variant/40">
+        <div class="hidden lg:flex items-center gap-2 text-xs text-on-surface-variant pl-4 border-l border-surface-variant/40 flex-shrink-0">
           <span class="material-symbols-outlined text-primary text-[16px]">location_on</span>
           <span>Sector 4 Hub • Active Radius: <strong class="text-primary font-semibold" id="quickRadiusIndicator">5 km</strong></span>
         </div>
@@ -308,11 +308,11 @@
 
   </header>
 
-  <!-- Mobile Navigation Drawer & Backdrop -->
-  <div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden transition-opacity" id="mobileNavBackdrop" onclick="closeMobileNav()"></div>
-  <aside class="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-surface-container-lowest shadow-2xl z-50 p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300" id="mobileNavDrawer">
+  <!-- Mobile Navigation Drawer & Backdrop (Z-[60] & Z-[70] To NEVER Be Overlapped) -->
+  <div class="fixed inset-0 bg-inverse-surface/60 backdrop-blur-sm z-[60] hidden transition-opacity" id="mobileNavBackdrop" onclick="closeMobileNav()"></div>
+  <aside class="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-surface-container-lowest shadow-2xl z-[70] p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 overflow-y-auto" id="mobileNavDrawer" aria-label="Mobile Navigation Menu">
     <div>
-      <div class="flex items-center justify-between pb-6 border-b border-surface-variant/40">
+      <div class="flex items-center justify-between pb-5 border-b border-surface-variant/40">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl p-[2px] bg-gradient-to-br from-emerald-400 via-teal-400 to-amber-400 overflow-hidden flex-shrink-0 shadow-md">
             <div class="w-full h-full rounded-[10px] bg-[#0c121e] overflow-hidden flex items-center justify-center">
@@ -324,38 +324,52 @@
             <span class="text-[10px] font-bold text-primary font-['Public_Sans']">CIVIC TECH · FSSAI</span>
           </div>
         </div>
-        <button class="p-2 rounded-full hover:bg-surface-container-high text-on-surface-variant" onclick="closeMobileNav()">
+        <button class="w-9 h-9 rounded-full hover:bg-surface-container-high text-on-surface-variant flex items-center justify-center transition-colors cursor-pointer" onclick="closeMobileNav()" aria-label="Close Navigation Menu">
           <span class="material-symbols-outlined text-[22px]">close</span>
         </button>
       </div>
 
-      <nav class="flex flex-col gap-2 pt-6">
-        <button class="w-full text-left px-4 py-3 rounded-xl font-semibold text-sm bg-primary text-on-primary flex items-center gap-3" onclick="switchPerspective('available-food'); closeMobileNav();">
-          <span class="material-symbols-outlined">radar</span> Available Food
+      <!-- User Info Badge in Mobile Drawer -->
+      <div class="mt-4 p-3 rounded-xl bg-surface-container-low border border-surface-variant/40 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary to-blue-500 text-on-primary flex items-center justify-center font-bold text-sm shadow-xs flex-shrink-0" id="mobileAvatarText">A</div>
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-bold text-on-surface truncate" id="mobileProfileName">Asha Community Shelter</span>
+            <span class="text-[10px] text-on-surface-variant font-medium truncate" id="mobileProfileRole">Recipient NGO • Sector 4</span>
+          </div>
+        </div>
+        <button class="p-1.5 rounded-lg text-error hover:bg-error-container/20 transition-colors flex-shrink-0 cursor-pointer" onclick="handleLogout(); closeMobileNav();" title="Sign Out">
+          <span class="material-symbols-outlined text-[18px]">logout</span>
         </button>
-        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('volunteer'); closeMobileNav();">
-          <span class="material-symbols-outlined text-amber-600">electric_moped</span> Volunteer Courier Squad
+      </div>
+
+      <nav class="flex flex-col gap-1.5 pt-5">
+        <button class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-sm bg-primary text-on-primary flex items-center gap-3 transition-colors cursor-pointer" data-role="available-food" onclick="switchPerspective('available-food'); closeMobileNav();">
+          <span class="material-symbols-outlined text-[20px]">radar</span> Available Food
         </button>
-        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('donor'); closeMobileNav();">
-          <span class="material-symbols-outlined text-primary">restaurant</span> Donate Food
+        <button class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-3 transition-colors cursor-pointer" data-role="volunteer" onclick="switchPerspective('volunteer'); closeMobileNav();">
+          <span class="material-symbols-outlined text-[20px] text-amber-600">electric_moped</span> Volunteer Courier Squad
         </button>
-        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('dashboard'); closeMobileNav();">
-          <span class="material-symbols-outlined text-primary">dashboard</span> Dashboard
+        <button class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-3 transition-colors cursor-pointer" data-role="donor" onclick="switchPerspective('donor'); closeMobileNav();">
+          <span class="material-symbols-outlined text-[20px] text-primary">restaurant</span> Donate Food
         </button>
-        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('admin'); closeMobileNav();">
-          <span class="material-symbols-outlined text-primary">analytics</span> Impact &amp; Operations
+        <button class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-3 transition-colors cursor-pointer" data-role="dashboard" onclick="switchPerspective('dashboard'); closeMobileNav();">
+          <span class="material-symbols-outlined text-[20px] text-primary">dashboard</span> Dashboard
         </button>
-        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('judge'); closeMobileNav();">
-          <span class="material-symbols-outlined text-primary">emoji_events</span> Judge Pitch Guide
+        <button class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-3 transition-colors cursor-pointer" data-role="admin" onclick="switchPerspective('admin'); closeMobileNav();">
+          <span class="material-symbols-outlined text-[20px] text-primary">analytics</span> Impact &amp; Operations
         </button>
-        <button class="w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-3" onclick="switchPerspective('auth'); closeMobileNav();">
-          <span class="material-symbols-outlined text-primary">lock</span> Portal Login
+        <button class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-3 transition-colors cursor-pointer" data-role="judge" onclick="switchPerspective('judge'); closeMobileNav();">
+          <span class="material-symbols-outlined text-[20px] text-primary">emoji_events</span> Judge Pitch Guide
+        </button>
+        <button class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl font-medium text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-3 transition-colors cursor-pointer" data-role="auth" onclick="switchPerspective('auth'); closeMobileNav();">
+          <span class="material-symbols-outlined text-[20px] text-primary">lock</span> Portal Auth / Switch
         </button>
       </nav>
     </div>
 
     <div class="pt-6 border-t border-surface-variant/40 flex flex-col gap-3">
-      <button class="w-full py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-xs font-bold text-on-surface transition-colors flex items-center justify-center gap-1.5" onclick="resetDemoData(); closeMobileNav();">
+      <button class="w-full py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-xs font-bold text-on-surface transition-colors flex items-center justify-center gap-1.5 cursor-pointer" onclick="resetDemoData(); closeMobileNav();">
         <span class="material-symbols-outlined text-[16px]">refresh</span> Reset Demo Data
       </button>
       <div class="text-[11px] text-on-surface-variant text-center font-mono">FSSAI Protocol Active · v2.4</div>
@@ -1293,7 +1307,7 @@
        ========================================================================== -->
 
   <!-- Modal 1: Claim Modal (Exact User Component with Cryptographic PIN) -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="claimModal">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="claimModal">
     <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
       <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
         <div class="flex items-center gap-2.5">
@@ -1353,7 +1367,7 @@
   </div>
 
   <!-- Modal 2: Donor Verify Pickup PIN Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDonorVerify">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDonorVerify">
     <div class="bg-surface-container-lowest rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
       <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
         <div class="flex items-center gap-2.5">
@@ -1406,7 +1420,7 @@
   </div>
 
   <!-- Modal 3: Emergency Dispatch Hotline Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDispatchHotline">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDispatchHotline">
     <div class="bg-surface-container-lowest rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
       <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
         <div class="flex items-center gap-2.5">
@@ -1444,7 +1458,7 @@
   </div>
 
   <!-- Modal 4: Radius Selection Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalRadius">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalRadius">
     <div class="bg-surface-container-lowest rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-surface-variant flex flex-col gap-4 modal-spring">
       <div class="flex items-center justify-between pb-2 border-b border-surface-variant/40">
         <div class="flex items-center gap-2">
@@ -1478,7 +1492,7 @@
   </div>
 
   <!-- Modal 5: Email Verification Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalEmailVerify">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalEmailVerify">
     <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
       <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
         <div class="flex items-center gap-2.5">
@@ -1522,7 +1536,7 @@
   </div>
 
   <!-- Modal 6: Forgot Password Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalForgotPassword">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalForgotPassword">
     <div class="bg-surface-container-lowest rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl border border-surface-variant flex flex-col gap-5 modal-spring">
       <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
         <div class="flex items-center gap-2.5">
@@ -1603,7 +1617,7 @@
   </div>
 
   <!-- Modal 6b: Commercial Food Donor Registration & KYC Dialog (FSSAI + GSTIN) -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDonorRegister">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalDonorRegister">
     <div class="bg-surface-container-lowest rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-emerald-500/30 flex flex-col gap-6 modal-spring max-h-[92vh] overflow-y-auto">
       
       <!-- Header -->
@@ -1877,7 +1891,7 @@
   </div>
 
   <!-- Modal 7: Citizen Volunteer Courier Registration Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalVolunteerRegister">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalVolunteerRegister">
     <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-amber-500/30 flex flex-col gap-6 modal-spring max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-surface-variant/40">
         <div class="flex items-center gap-3">
@@ -2111,7 +2125,7 @@
   </div>
 
   <!-- Modal 8: Volunteer Mission Dispatch Cockpit Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalVolunteerMission">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/40 backdrop-blur-md hidden items-center justify-center p-6" id="modalVolunteerMission">
     <div class="bg-surface-container-lowest rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-amber-500/30 flex flex-col gap-6 modal-spring max-h-[92vh] overflow-y-auto">
       
       <!-- Header -->
@@ -2221,7 +2235,7 @@
   </div>
 
   <!-- Modal 9: Official Section 80G & Corporate Social Responsibility (CSR) Tax Exemption Certificate Dialog -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/50 backdrop-blur-md hidden items-center justify-center p-4 md:p-6" id="modalCsrCertificate">
+  <div class="fixed inset-0 z-[80] bg-inverse-surface/50 backdrop-blur-md hidden items-center justify-center p-4 md:p-6" id="modalCsrCertificate">
     <div class="bg-surface-container-lowest rounded-3xl max-w-3xl w-full p-6 md:p-8 shadow-2xl border border-emerald-500/40 flex flex-col gap-6 modal-spring max-h-[94vh] overflow-y-auto">
       
       <!-- Top Action Bar -->
